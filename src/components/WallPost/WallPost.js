@@ -6,7 +6,7 @@ class WallPost extends Component {
     render() {
         return (
             <div>
-                WallPost here
+                WallPost here - {this.props.item}
             </div>
         );
     }
