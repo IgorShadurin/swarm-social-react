@@ -8,7 +8,6 @@ import UserWallet from "../../UserWallet";
 import WallPost from "../../WallPost";
 import WallCreatePost from "../../WallCreatePost";
 import UserInfo from "../../UserInfo";
-import {Link} from "react-router-dom";
 
 class UserPage extends Component {
     render() {
@@ -35,7 +34,7 @@ class UserPage extends Component {
                     <div className="col-sm-1"/>
                     <div className="col-sm-5">
                         <WallCreatePost/>
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(item => <WallPost item={item}/>)}
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(item => <WallPost key={item} item={item}/>)}
                     </div>
                 </div>
             </Fragment>
