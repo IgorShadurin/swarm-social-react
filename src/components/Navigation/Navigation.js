@@ -32,7 +32,7 @@ class Navigation extends Component {
                             </Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link" to="./settings">
+                            <Link className="nav-link" to="./config">
                                 <FontAwesomeIcon icon="cog"/>
                             </Link>
                         </li>

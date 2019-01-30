@@ -1,13 +1,17 @@
 import React, {Component, Fragment} from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+//import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {connect} from 'react-redux'
 import './UserPage.css';
-
+//import PropTypes from 'prop-types'
 import UserStorage from "../../UserStorage";
 import UserFollowings from "../../UserFollowings";
 import UserWallet from "../../UserWallet";
 import WallPost from "../../WallPost";
 import WallCreatePost from "../../WallCreatePost";
 import UserInfo from "../../UserInfo";
+import Wall from "../../Wall";
+
+//import {getUser} from '../../../store/social/actions'
 
 class UserPage extends Component {
     render() {
@@ -33,8 +37,7 @@ class UserPage extends Component {
                     </div>
                     <div className="col-sm-1"/>
                     <div className="col-sm-5">
-                        <WallCreatePost/>
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(item => <WallPost key={item} item={item}/>)}
+                        <Wall/>
                     </div>
                 </div>
             </Fragment>
@@ -42,4 +45,22 @@ class UserPage extends Component {
     }
 }
 
-export default UserPage;
+/*UserPage.propTypes = {
+    user: PropTypes.shape({
+        first_name: PropTypes.string
+    }),
+    getUser: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = state => ({
+    //count: state.getIn(['count']),
+    //user: state.getIn(['social', 'user'])
+    user: state.social.user
+});
+
+const mapDispatchToProps = dispatch => ({
+    getUser: () => dispatch(getUser()),
+});*/
+
+//export default connect(mapStateToProps, mapDispatchToProps)(UserPage)
+export default connect()(UserPage)

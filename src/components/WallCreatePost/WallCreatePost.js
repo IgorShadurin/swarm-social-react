@@ -6,7 +6,8 @@ class WallCreatePost extends Component {
     render() {
         return (
             <div>
-                WallCreatePost here
+                {/*<button onClick={this.props.getUser}>Create wall post (?? how to simple connect methods)</button>*/}
+                Optimized this component
             </div>
         );
     }

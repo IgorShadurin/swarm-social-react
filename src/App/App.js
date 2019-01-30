@@ -16,6 +16,7 @@ library.add(faComment, faWallet, faCog);
 
 
 class App extends Component {
+    // todo wtf: pages started from 'set' (SETtings,SETup) not open
     render() {
         return (
             <div className="App">
@@ -24,13 +25,18 @@ class App extends Component {
                         <Fragment>
                             <Navigation/>
                             <Switch>
+                                <Route path="/:swarm_protocol?/:swarm_hash?/config/:hash?"
+                                       render={() => <h1>Config only</h1>}/>
+
                                 <Route path="/:swarm_protocol?/:swarm_hash?/dialog/:hash?"
                                        render={() => <h1>Dialog only</h1>}/>
+
                                 <Route path="/:swarm_protocol?/:swarm_hash?/wallet/:hash?"
                                        render={() => <h1>Wallet only</h1>}/>
-                                <Route path="/:swarm_protocol?/:swarm_hash?/settings/:hash?"
-                                       render={() => <h1>Settings only</h1>}/>
-                                <Route exact path="/:swarm_protocol?/:swarm_hash?/" component={UserPage}/>
+
+                                <Route exact
+                                       path="/:swarm_protocol?/:swarm_hash?/:hash?"
+                                       component={UserPage}/>
                             </Switch>
                         </Fragment>
                     </Router>
