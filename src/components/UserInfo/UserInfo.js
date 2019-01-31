@@ -2,11 +2,12 @@ import React, {Component, Fragment} from 'react';
 //import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import './UserInfo.css';
 import {connect} from "react-redux";
-import {getUser} from "../../store/social/actions";
+import * as actions from "../../store/social/actions";
 import PropTypes from "prop-types";
 
 class UserInfo extends Component {
     render() {
+        const {getUser} = this.props;
         return (
             <Fragment>
                 <p>
@@ -16,7 +17,11 @@ class UserInfo extends Component {
                 <p>
                     {this.props.user ? <span>{this.props.user.first_name}</span> : 'User is EMPTY'}
                 </p>
-                <button onClick={this.props.getUser}>GET USER NOW</button>
+                <button onClick={() => {
+                    getUser('313d969dd48af23991c09fe0fa549f39779caeeaa41f73229bf63e9a0538f9b2');
+                    //this.props.getUser();
+                }}>GET USER NOW
+                </button>
 
             </Fragment>
         );
@@ -36,8 +41,8 @@ const mapStateToProps = state => ({
     user: state.social.user
 });
 
-const mapDispatchToProps = dispatch => ({
-    getUser: () => dispatch(getUser()),
-});
+/*const mapDispatchToProps = dispatch => ({
+    getUser: (hash) => dispatch(getUser(hash)),
+});*/
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserInfo);
+export default connect(mapStateToProps, actions)(UserInfo);
