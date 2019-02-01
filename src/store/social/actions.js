@@ -1,24 +1,24 @@
 import * as types from './actionTypes';
-import Social from '../../services/Social';
-import Blog from 'free-core/js/Blog';
-import SwarmApi from 'free-core/js/SwarmApi';
-import BeefreeCore from '../../BeefreeCore/BeefreeCore';
+import Core from '../../Beefree/Core';
 
-/*const swarm = new SwarmApi('http://prototype.beefree.me');
-const blog = new Blog();
-blog.swarm = swarm;*/
-
-//const beefree = new BeefreeCore();
-
+const bee = new Core();
+bee.getPost(2, '256fc77b82c52c7725d797a7d18bc577503218b732c1aa49465bd0a12c5d1ea3')
+    .then(data => console.log(data));
 export const getUser = (hash) => {
-    //return dispatch => blog.getProfile(hash).then(data => console.log(data))
-    //return dispatch => Social.getProfileAsync(hash)
-    return dispatch => BeefreeCore.getProfile(hash)
+    return dispatch => bee.getUser(hash)
         .then(data => (dispatch({
             type: types.SOCIAL_USER_FETCHED,
             data
         })));
 };
+
+/*export const getPost = (id, hash) => {
+    return dispatch => bee.getPost(id, hash)
+        .then(data => (dispatch({
+            type: types.SOCIAL_USER_FETCHED,
+            data
+        })));
+};*/
 
 export const createWallPost = () => ({
     type: types.SOCIAL_WALL_POST_CREATED,

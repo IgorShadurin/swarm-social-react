@@ -4,6 +4,7 @@ import './UserInfo.css';
 import {connect} from "react-redux";
 import * as actions from "../../store/social/actions";
 import PropTypes from "prop-types";
+import User from "../../Beefree/User";
 
 class UserInfo extends Component {
     render() {
@@ -29,9 +30,7 @@ class UserInfo extends Component {
 }
 
 UserInfo.propTypes = {
-    user: PropTypes.shape({
-        first_name: PropTypes.string
-    }),
+    user: PropTypes.instanceOf(User),
     getUser: PropTypes.func.isRequired,
 };
 

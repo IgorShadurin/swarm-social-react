@@ -13,7 +13,6 @@
     "connected-react-router": "^6.2.2",
     "free-core": "git+https://github.com/SwarmOrange/free-core.git",
     "history": "^4.7.2",
-    "i": "^0.3.6",
     "jquery": "^3.3.1",
     "npm": "^6.7.0",
     "popper.js": "^1.14.7",
