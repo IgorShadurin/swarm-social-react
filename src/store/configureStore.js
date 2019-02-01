@@ -6,6 +6,11 @@ import thunk from 'redux-thunk';
 
 export const history = createBrowserHistory();
 
+const logger = store => next => action => {
+    console.log('dispatching', action);
+    return next(action);
+};
+
 export default function configureStore(preloadedState) {
     const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
     return createStore(
@@ -14,7 +19,8 @@ export default function configureStore(preloadedState) {
         composeEnhancer(
             applyMiddleware(
                 routerMiddleware(history), // for dispatching history actions
-                thunk
+                thunk,
+                logger
                 // ... other middlewares ...
             ),
         ),

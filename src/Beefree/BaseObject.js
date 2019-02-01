@@ -13,4 +13,8 @@ export default class BaseObject {
     getKeys() {
         return [];
     }
+
+    static fromObject(object) {
+        return new this(object);
+    }
 }
