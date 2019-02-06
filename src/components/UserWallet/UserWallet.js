@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+//import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import './UserWallet.css';
 
 class UserWallet extends Component {

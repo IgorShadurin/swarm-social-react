@@ -27,6 +27,17 @@ export const getUser = (hash) => {
 export const createWallPost = () => ({
     type: types.SOCIAL_WALL_POST_CREATED,
     data: {
-        text: "My new text ",
+        description: "My new text ",
     },
 });
+
+export const loadWallPost = (id, hash) => {
+    return dispatch => bee.getPost(id, hash)
+        .then(data => {
+            console.log(data);
+            return dispatch({
+                type: types.SOCIAL_WALL_POST_LOADED,
+                data
+            });
+        });
+};

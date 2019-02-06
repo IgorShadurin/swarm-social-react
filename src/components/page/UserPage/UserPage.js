@@ -6,8 +6,8 @@ import './UserPage.css';
 import UserStorage from "../../UserStorage";
 import UserFollowings from "../../UserFollowings";
 import UserWallet from "../../UserWallet";
-import WallPost from "../../WallPost";
-import WallCreatePost from "../../WallCreatePost";
+//import WallPost from "../../WallPost";
+//import WallCreatePost from "../../WallCreatePost";
 import UserInfo from "../../UserInfo";
 import Wall from "../../Wall";
 

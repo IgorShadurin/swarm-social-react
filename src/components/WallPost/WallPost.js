@@ -1,15 +1,15 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 //import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import './WallPost.css';
 import {connect} from "react-redux";
-import {createWallPost} from "../../store/social/actions";
+//import {createWallPost} from "../../store/social/actions";
 import PropTypes from "prop-types";
 
 class WallPost extends Component {
     render() {
         return (
             <div>
-                WallPost here - {this.props.item.text}
+                WallPost here - {this.props.item.description}
             </div>
         );
     }

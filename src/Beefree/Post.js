@@ -1,4 +1,5 @@
 import BaseObject from "./BaseObject";
+import PostAttachment from "./PostAttachment";
 
 export default class Post extends BaseObject {
     constructor(data = {}) {
@@ -10,7 +11,11 @@ export default class Post extends BaseObject {
         return [
             'id',
             'description',
-            'attachments'
+            {
+                name: 'attachments',
+                type: BaseObject.TYPE_ARRAY,
+                array_type: PostAttachment.name
+            }
         ];
     }
 }

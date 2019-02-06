@@ -3,7 +3,7 @@ import './UserInfo.css';
 import {connect} from "react-redux";
 import * as actions from "../../store/social/actions";
 import PropTypes from "prop-types";
-import User from "../../Beefree/User";
+//import User from "../../Beefree/User";
 
 class UserInfo extends Component {
     // todo because dispatching - all classes converts to objects

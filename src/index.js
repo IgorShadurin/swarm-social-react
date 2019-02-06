@@ -1,9 +1,9 @@
 import App from './App';
-import React, {Fragment} from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 //import {rootReducer} from './store/reducers';
-import configureStore, {history} from './store/configureStore'
+import configureStore from './store/configureStore'
 import Immutable from "seamless-immutable";
 
 // todo how to optimize default state from here and social reducer
