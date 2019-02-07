@@ -1,12 +1,21 @@
 import * as types from './actionTypes';
 import Core from '../../Beefree/Core';
 
-const bee = new Core();
-/*bee.getPost(2, '256fc77b82c52c7725d797a7d18bc577503218b732c1aa49465bd0a12c5d1ea3')
-    .then(data => console.log(data));*/
+// todo optimize for uploaded to swarm site
+const bee = new Core('http://prototype.beefree.me', 'bba12829ba38e978bff9de0f07177fd8f1e124cbdcfb6b3303221dad74a9a5b4');
 
-export const getUser = (hash) => {
-    return dispatch => bee.getUser(hash)
+export const getMyProfile = () => {
+    return dispatch => bee.getMyProfile()
+        .then(data => {
+            return dispatch({
+                type: types.SOCIAL_USER_FETCHED,
+                data
+            });
+        });
+};
+
+export const getProfile = (hash) => {
+    return dispatch => bee.getProfile(hash)
         .then(data => {
             //console.log(data);
             return dispatch({
@@ -16,13 +25,17 @@ export const getUser = (hash) => {
         });
 };
 
-/*export const getPost = (id, hash) => {
-    return dispatch => bee.getPost(id, hash)
-        .then(data => (dispatch({
-            type: types.SOCIAL_USER_FETCHED,
-            data
-        })));
-};*/
+export const saveMyProfile = (data) => {
+    return dispatch => bee.saveMyProfile(data)
+        .then(hash => {
+            console.log(hash);
+            return dispatch({
+                type: types.SOCIAL_PROFILE_SAVED,
+                hash,
+                data
+            });
+        });
+};
 
 export const createWallPost = () => ({
     type: types.SOCIAL_WALL_POST_CREATED,

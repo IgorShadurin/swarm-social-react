@@ -19,9 +19,12 @@ export default function reduce(state = initialState, action = {}) {
                 wallPosts: state.wallPosts.concat(action.data)
             });
         case types.SOCIAL_WALL_POST_LOADED:
-            const posts = state.wallPosts.concat(action.data);
             return state.merge({
-                wallPosts: posts
+                wallPosts: state.wallPosts.concat(action.data)
+            });
+        case types.SOCIAL_PROFILE_SAVED:
+            return state.merge({
+                user: action.data
             });
         default:
             return state;

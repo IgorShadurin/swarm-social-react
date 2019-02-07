@@ -3,27 +3,13 @@ import './UserInfo.css';
 import {connect} from "react-redux";
 import * as actions from "../../store/social/actions";
 import PropTypes from "prop-types";
-//import User from "../../Beefree/User";
 
 class UserInfo extends Component {
-    // todo because dispatching - all classes converts to objects
-    // todo display data only from objects or convert some ways object to class obj
-    // todo or use mapStateToProps or middleware to convert??
-    // todo or before class creation just validate object and after dispatching convert to object
-    /*componentDidUpdate(prevProps) {
-        console.log(prevProps.user,this.props.user);
-        if (this.props.user == prevProps.user) {
-            console.log('Equal');
-        } else {
-            console.log('Not equal');
-        }
-    }*/
-
     render() {
-        //console.log(User.fromObject({first_name:"hello"}));
 
-        const {getUser, user} = this.props;
+        const {getProfile, getMyProfile, user, saveMyProfile} = this.props;
         //console.log(user);
+
         return (
             <Fragment>
                 <p>
@@ -35,9 +21,21 @@ class UserInfo extends Component {
                         <span>{user.first_name}</span> : 'User is EMPTY'}
                 </p>
                 <button onClick={() => {
-                    getUser('313d969dd48af23991c09fe0fa549f39779caeeaa41f73229bf63e9a0538f9b2');
-                    //this.props.getUser();
+                    getProfile('313d969dd48af23991c09fe0fa549f39779caeeaa41f73229bf63e9a0538f9b2');
+
                 }}>GET USER NOW
+                </button>
+
+                <button onClick={() => {
+                    getMyProfile();
+
+                }}>Get current user
+                </button>
+
+                <button onClick={() => {
+                    saveMyProfile({first_name: 'wowowo lolo lll'});
+                }}>
+                    Save user now
                 </button>
 
             </Fragment>
@@ -46,19 +44,14 @@ class UserInfo extends Component {
 }
 
 UserInfo.propTypes = {
-    //user: PropTypes.instanceOf(User),
     user: PropTypes.object,
-    getUser: PropTypes.func.isRequired,
+    getProfile: PropTypes.func.isRequired,
+    getMyProfile: PropTypes.func.isRequired,
+    saveMyProfile: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-    //count: state.getIn(['count']),
-    //user: state.getIn(['social', 'user'])
     user: state.social.user
 });
-
-/*const mapDispatchToProps = dispatch => ({
-    getUser: (hash) => dispatch(getUser(hash)),
-});*/
 
 export default connect(mapStateToProps, actions)(UserInfo);
