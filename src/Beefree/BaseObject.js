@@ -6,4 +6,8 @@ export default class BaseObject {
     getKeys() {
         return [];
     }
+
+    prepareData() {
+
+    }
 }

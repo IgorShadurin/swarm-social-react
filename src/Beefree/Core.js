@@ -19,6 +19,7 @@ export default class Core {
                 const obj = new dataClass(data);
                 const constructor = new ObjectConstructor(data, obj.getKeys());
                 constructor.fillObject(obj);
+                obj.prepareData();
 
                 return obj;
             });

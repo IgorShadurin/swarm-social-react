@@ -5,7 +5,9 @@ import PostAttachment from "./PostAttachment";
 export default class Post extends BaseObject {
     constructor(data = {}) {
         super(data);
-        //console.log(data);
+    }
+
+    prepareData() {
     }
 
     getKeys() {
