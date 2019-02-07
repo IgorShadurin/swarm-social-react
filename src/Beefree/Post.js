@@ -1,4 +1,5 @@
 import BaseObject from "./BaseObject";
+import ObjectConstructor from "./ObjectConstructor";
 import PostAttachment from "./PostAttachment";
 
 export default class Post extends BaseObject {
@@ -13,7 +14,7 @@ export default class Post extends BaseObject {
             'description',
             {
                 name: 'attachments',
-                type: BaseObject.TYPE_ARRAY,
+                type: ObjectConstructor.TYPE_ARRAY,
                 array_type: PostAttachment.name
             }
         ];

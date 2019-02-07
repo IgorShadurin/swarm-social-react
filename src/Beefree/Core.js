@@ -1,6 +1,7 @@
 import {SwarmClient} from "@erebos/swarm-browser";
 import User from "./User";
 import Post from "./Post";
+import ObjectConstructor from "./ObjectConstructor";
 
 export default class Core {
     constructor() {
@@ -13,7 +14,13 @@ export default class Core {
     download(path, dataClass) {
         return this.swarm.bzz.download(path)
             .then(res => res.json())
-            .then(data => new dataClass(data));
+            .then(data => {
+                const obj = new dataClass(data);
+                const constructor = new ObjectConstructor(data, obj.getKeys());
+                constructor.fillObject(obj);
+
+                return obj;
+            });
     }
 
     getUser(hash) {

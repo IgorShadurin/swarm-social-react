@@ -1,13 +1,7 @@
-import ObjectConstructor from "./ObjectConstructor";
-
 export default class BaseObject {
-    static TYPE_ARRAY = 'array';
 
     constructor(data = {}) {
-        let obj = new ObjectConstructor(data, this.getKeys());
-        if (obj.isValid()) {
-            obj.fillObject(this);
-        }
+        this.data = data;
     }
 
     getKeys() {
