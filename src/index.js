@@ -2,7 +2,6 @@ import App from './App';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-//import {rootReducer} from './store/reducers';
 import configureStore from './store/configureStore'
 import Immutable from "seamless-immutable";
 
