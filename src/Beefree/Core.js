@@ -10,6 +10,7 @@ export default class Core {
         });
         this.currentHash = initHash;
         this.socialDirectory = socialDirectory;
+        this.user = {};
     }
 
     download(path, dataClass) {
@@ -55,11 +56,21 @@ export default class Core {
     }
 
     getMyProfile() {
-        return this.getProfile();
+        return this.getProfile()
+            .then(data => {
+                this.user = data;
+
+                return data;
+            });
     }
 
     saveMyProfile(data) {
-        return this.saveProfile(data);
+        return this.saveProfile(data)
+            .then(() => {
+                this.user = data;
+
+                return data;
+            });
     }
 
     saveProfile(data) {
@@ -73,5 +84,33 @@ export default class Core {
 
     getPost(id, hash = this.currentHash) {
         return this.download(`${hash}/${this.socialDirectory}/post/${id}/info.json`, Post);
+    }
+
+    createPost(data) {
+        let id = 1;
+        let user = {};
+        if (this.user && this.user.last_post_id) {
+            id = this.user.last_post_id + 1;
+            user = Object.assign({}, this.user, {
+                last_post_id: id
+            });
+        }
+
+        data.id = id;
+        let result = {
+            data,
+            hash: ''
+        };
+
+        // todo validate data
+        return this.uploadFile(data, `${this.socialDirectory}/post/${id}/info.json`)
+            .then(() => {
+                return this.saveMyProfile(user);
+            })
+            .then((hash) => {
+                result.hash = hash;
+
+                return result;
+            });
     }
 }

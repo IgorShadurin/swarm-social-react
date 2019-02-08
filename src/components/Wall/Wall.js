@@ -15,13 +15,13 @@ class Wall extends Component {
         //console.log(this.props);
         let posts = <p>Wall is empty</p>;
         if (wallPosts.length) {
-            posts = this.props.wallPosts.map((item, index) => <WallPost key={item.id} item={item}/>);
+            posts = wallPosts.map((item) => <WallPost key={item.id} item={item}/>);
         }
 
         return (
             <Fragment>
                 <WallCreatePost/>
-                <button onClick={createWallPost}>Create wall post</button>
+                <button onClick={() => createWallPost({description: 'Lol, created'})}>Create wall post</button>
 
                 {posts}
             </Fragment>

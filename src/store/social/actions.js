@@ -1,8 +1,15 @@
 import * as types from './actionTypes';
 import Core from '../../Beefree/Core';
 
-// todo optimize for uploaded to swarm site
-const bee = new Core('http://prototype.beefree.me', 'bba12829ba38e978bff9de0f07177fd8f1e124cbdcfb6b3303221dad74a9a5b4');
+//const parts = window.location.href.split('/').filter(word => word.length === 64 || word.length === 128 || (word.length >= 11 && word.endsWith('.eth')));
+const parts = window.location.href.split('/').filter(word => word.length === 64 || word.length === 128);
+let currentHash = 'bba12829ba38e978bff9de0f07177fd8f1e124cbdcfb6b3303221dad74a9a5b4';
+if (parts.length > 0) {
+    currentHash = parts[0];
+}
+
+console.log('currentHash', currentHash);
+const bee = new Core('http://prototype.beefree.me', currentHash);
 
 export const init = () => {
     return (dispatch) => bee.getMyProfile()
@@ -67,29 +74,18 @@ export const saveMyProfile = (data) => {
         });
 };
 
-export const createWallPost = () => {
+export const createWallPost = (data) => {
+    // todo queue for all "change swarm" queries for correct using (or block ui when change)
     return (dispatch, getState) => {
-        console.log(getState().social.user);
-        let user = getState().social.user;
-        user = user.merge({
-            last_post_id: user.last_post_id + 1
-        });
+        bee.createPost(data)
+            .then(result => {
+                const dispatchData = {
+                    type: types.SOCIAL_WALL_POST_CREATED,
+                    data: result.data
+                };
 
-        dispatch({
-            type: types.SOCIAL_USER_FETCHED,
-            data: user
-        });
-        // todo update last post id in user profile
-        //saveMyProfile(user);
-        const data = {
-            type: types.SOCIAL_WALL_POST_CREATED,
-            data: {
-                id: user.last_post_id,
-                description: "My new text ",
-            }
-        };
-        console.log(data);
-        return dispatch(data);
+                return dispatch(dispatchData);
+            });
     }
 };
 
