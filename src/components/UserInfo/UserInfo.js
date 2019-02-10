@@ -8,7 +8,6 @@ class UserInfo extends Component {
     render() {
 
         const {getProfile, getMyProfile, user, saveMyProfile} = this.props;
-        //console.log(user);
 
         return (
             <Fragment>
@@ -16,10 +15,20 @@ class UserInfo extends Component {
                     USER INFO HERE
 
                 </p>
-                <p>
-                    {this.props.user ?
-                        <span>{user.first_name}</span> : 'User is EMPTY'}
-                </p>
+
+                {this.props.user ?
+                    <Fragment>
+                        <p>First name: {user.first_name}</p>
+                        <p>Last name: {user.last_name}</p>
+                        <p>Birth date: {user.birth_date}</p>
+                        <p>Location: {user.location.name}</p>
+                        <p>
+                            <img src={user.photo.original} alt=""/>
+                        </p>
+                        <p>About: {user.about}</p>
+                    </Fragment>
+                    : <p>User is EMPTY</p>}
+
                 <button onClick={() => {
                     getProfile('313d969dd48af23991c09fe0fa549f39779caeeaa41f73229bf63e9a0538f9b2');
 

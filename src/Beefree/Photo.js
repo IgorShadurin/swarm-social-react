@@ -1,6 +1,6 @@
 import BaseObject from "./BaseObject";
 
-export default class PostAttachment extends BaseObject {
+export default class Photo extends BaseObject {
     constructor(data = {}) {
         super(data);
         //console.log(data);
@@ -12,9 +12,6 @@ export default class PostAttachment extends BaseObject {
             'previews',
             'type',
             'url',
-            'post_id',
-            'order',
-            'object'
         ];
     }
 }
