@@ -21,10 +21,10 @@ class UserInfo extends Component {
                         <p>First name: {user.first_name}</p>
                         <p>Last name: {user.last_name}</p>
                         <p>Birth date: {user.birth_date}</p>
-                        <p>Location: {user.location.name}</p>
-                        <p>
+                        {user.location && <p>Location: {user.location.name}</p>}
+                        {user.photo && <p>
                             <img src={user.photo.original} alt=""/>
-                        </p>
+                        </p>}
                         <p>About: {user.about}</p>
                     </Fragment>
                     : <p>User is EMPTY</p>}

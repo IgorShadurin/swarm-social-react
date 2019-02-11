@@ -13,16 +13,20 @@ export default class Core {
         this.user = {};
     }
 
+    prepareObject(data, dataClass) {
+        const obj = new dataClass(data);
+        const constructor = new ObjectConstructor(data, obj.getKeys());
+        constructor.fillObject(obj);
+        obj.prepareData();
+
+        return obj;
+    }
+
     download(path, dataClass) {
         return this.swarm.bzz.download(path)
             .then(res => res.json())
             .then(data => {
-                const obj = new dataClass(data);
-                const constructor = new ObjectConstructor(data, obj.getKeys());
-                constructor.fillObject(obj);
-                obj.prepareData();
-
-                return obj;
+                return this.prepareObject(data, dataClass);
             });
     }
 
@@ -65,17 +69,17 @@ export default class Core {
     }
 
     saveMyProfile(data) {
-        return this.saveProfile(data)
-            .then(() => {
-                this.user = data;
+        return this.saveProfile(data);
+    }
+
+    saveProfile(profile) {
+        // todo validate data
+        return this.uploadFile(profile, `${this.socialDirectory}/profile.json`)
+            .then(data => {
+                this.user = this.prepareObject(profile, User);
 
                 return data;
             });
-    }
-
-    saveProfile(data) {
-        // todo validate data
-        return this.uploadFile(data, `${this.socialDirectory}/profile.json`);
     }
 
     getProfile(hash = this.currentHash) {
@@ -88,13 +92,17 @@ export default class Core {
 
     createPost(data) {
         let id = 1;
-        let user = {};
+        let user = this.user && this.user._data ? this.user._data : {};
+        console.log(user);
         if (this.user && this.user.last_post_id) {
             id = this.user.last_post_id + 1;
-            user = Object.assign({}, this.user, {
-                last_post_id: id
-            });
         }
+
+        user = Object.assign({}, user, {
+            last_post_id: id
+        });
+
+        console.log(user);
 
         data.id = id;
         let result = {

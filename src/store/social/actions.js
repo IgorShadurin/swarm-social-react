@@ -1,15 +1,18 @@
 import * as types from './actionTypes';
 import Core from '../../Beefree/Core';
+import Queue from 'promise-queue';
 
 //const parts = window.location.href.split('/').filter(word => word.length === 64 || word.length === 128 || (word.length >= 11 && word.endsWith('.eth')));
 const parts = window.location.href.split('/').filter(word => word.length === 64 || word.length === 128);
-let currentHash = 'bba12829ba38e978bff9de0f07177fd8f1e124cbdcfb6b3303221dad74a9a5b4';
+let currentHash = '88eafbe85f0389f84eaa697b576197b33aa6277fb4ae02eabc617b47163c3b50';
 if (parts.length > 0) {
     currentHash = parts[0];
 }
 
 console.log('currentHash', currentHash);
-const bee = new Core('http://prototype.beefree.me', currentHash);
+//const bee = new Core('http://prototype.beefree.me', currentHash);
+const bee = new Core('https://swarm-gateways.net', currentHash);
+const queue = new Queue(1, Infinity);
 
 export const init = () => {
     return (dispatch) => bee.getMyProfile()
@@ -63,29 +66,35 @@ export const getProfile = (hash) => {
 };
 
 export const saveMyProfile = (data) => {
-    return dispatch => bee.saveMyProfile(data)
-        .then(hash => {
-            //console.log(hash);
-            return dispatch({
-                type: types.SOCIAL_PROFILE_SAVED,
-                hash,
-                data
-            });
+    return dispatch => {
+        queue.add(() => {
+            bee.saveMyProfile(data)
+                .then(hash => {
+                    //console.log(hash);
+                    return dispatch({
+                        type: types.SOCIAL_PROFILE_SAVED,
+                        hash,
+                        data
+                    });
+                });
         });
+    }
 };
 
 export const createWallPost = (data) => {
-    // todo queue for all "change swarm" queries for correct using (or block ui when change)
     return (dispatch, getState) => {
-        bee.createPost(data)
-            .then(result => {
-                const dispatchData = {
-                    type: types.SOCIAL_WALL_POST_CREATED,
-                    data: result.data
-                };
+        queue.add(() => {
+            //console.log('run');
+            return bee.createPost(data)
+                .then(result => {
+                    const dispatchData = {
+                        type: types.SOCIAL_WALL_POST_CREATED,
+                        data: result.data
+                    };
 
-                return dispatch(dispatchData);
-            });
+                    return dispatch(dispatchData);
+                });
+        });
     }
 };
 
