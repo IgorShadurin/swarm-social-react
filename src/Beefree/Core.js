@@ -2,6 +2,7 @@ import {SwarmClient} from "@erebos/swarm-browser";
 import User from "./User";
 import Post from "./Post";
 import ObjectConstructor from "./ObjectConstructor";
+import CoreResponse from "./CoreResponse";
 
 export default class Core {
     constructor(url = 'https://swarm-gateways.net', initHash = null, socialDirectory = 'social') {
@@ -30,7 +31,16 @@ export default class Core {
             });
     }
 
+    /**
+     *
+     * @param data
+     * @param path
+     * @param options
+     * @param isStoreHash
+     * @returns {Promise<CoreResponse>}
+     */
     uploadFile(data, path, options = {}, isStoreHash = true) {
+        let content = data;
         options.manifestHash = this.currentHash;
 
         if (path) {
@@ -38,27 +48,33 @@ export default class Core {
         }
 
         // todo check is work for submitted files
-        if (data.type) {
-            options.contentType = data.contentType;
+        if (content.type) {
+            options.contentType = content.contentType;
         } else {
             if (path && path.endsWith('.json')) {
-                data = JSON.stringify(data);
+                content = JSON.stringify(content);
                 options.contentType = 'application/json';
             } else {
                 options.contentType = 'text/plain';
             }
         }
 
-        return this.swarm.bzz.uploadFile(data, options)
-            .then(data => {
+        return this.swarm.bzz.uploadFile(content, options)
+            .then(newHash => {
                 if (isStoreHash) {
-                    this.currentHash = data;
+                    this.currentHash = newHash;
                 }
 
-                return data;
+                //return data;
+                // todo check data field with file
+                return new CoreResponse(newHash, data, content, options);
             });
     }
 
+    /**
+     *
+     * @returns {Promise<User>}
+     */
     getMyProfile() {
         return this.getProfile()
             .then(data => {
@@ -68,22 +84,31 @@ export default class Core {
             });
     }
 
-    saveMyProfile(data) {
-        return this.saveProfile(data);
-    }
-
-    saveProfile(profile) {
-        // todo validate data
-        return this.uploadFile(profile, `${this.socialDirectory}/profile.json`)
-            .then(data => {
-                this.user = this.prepareObject(profile, User);
-
-                return data;
-            });
-    }
-
+    /**
+     *
+     * @param hash
+     * @returns {Promise<User>}
+     */
     getProfile(hash = this.currentHash) {
         return this.download(`${hash}/${this.socialDirectory}/profile.json`, User);
+    }
+
+    saveProfile(profile, isUseOldProfile = true) {
+        // todo validate data
+        let newProfile = profile;
+        console.log(isUseOldProfile);
+        if (isUseOldProfile) {
+            newProfile = Object.assign({}, this.user._data, profile);
+        }
+
+        console.log(newProfile);
+
+        return this.uploadFile(newProfile, `${this.socialDirectory}/profile.json`)
+            .then(responseData => {
+                this.user = this.prepareObject(newProfile, User);
+
+                return responseData;
+            });
     }
 
     getPost(id, hash = this.currentHash) {
@@ -93,7 +118,6 @@ export default class Core {
     createPost(data) {
         let id = 1;
         let user = this.user && this.user._data ? this.user._data : {};
-        console.log(user);
         if (this.user && this.user.last_post_id) {
             id = this.user.last_post_id + 1;
         }
@@ -101,8 +125,6 @@ export default class Core {
         user = Object.assign({}, user, {
             last_post_id: id
         });
-
-        console.log(user);
 
         data.id = id;
         let result = {
@@ -113,7 +135,7 @@ export default class Core {
         // todo validate data
         return this.uploadFile(data, `${this.socialDirectory}/post/${id}/info.json`)
             .then(() => {
-                return this.saveMyProfile(user);
+                return this.saveProfile(user);
             })
             .then((hash) => {
                 result.hash = hash;

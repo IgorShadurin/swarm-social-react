@@ -12,6 +12,7 @@ if (parts.length > 0) {
 console.log('currentHash', currentHash);
 //const bee = new Core('http://prototype.beefree.me', currentHash);
 const bee = new Core('https://swarm-gateways.net', currentHash);
+//const bee = new Core('http://127.0.0.1:8500', currentHash);
 const queue = new Queue(1, Infinity);
 
 export const init = () => {
@@ -28,7 +29,7 @@ export const init = () => {
             if (data.last_post_id) {
                 const displayPosts = Math.min(10, data.last_post_id);
                 // todo use promise batch actions? (from lib)
-                // todo pre-create posts in correct ways (prevent random displaying)
+                // todo pre-create posts with correct way (prevent random displaying)
                 /*for (let i = displayPosts; i > 0; i--) {
                     dispatch(getPost(i));
                 }*/
@@ -68,13 +69,13 @@ export const getProfile = (hash) => {
 export const saveMyProfile = (data) => {
     return dispatch => {
         queue.add(() => {
-            bee.saveMyProfile(data)
-                .then(hash => {
-                    //console.log(hash);
+            bee.saveProfile(data)
+                .then(responseData => {
+                    console.log(responseData);
                     return dispatch({
                         type: types.SOCIAL_PROFILE_SAVED,
-                        hash,
-                        data
+                        hash: responseData.newHash,
+                        data: responseData.data
                     });
                 });
         });
