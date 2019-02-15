@@ -1,3 +1,6 @@
+import './css/bootstrap-grid.min.css';
+import './css/style.css';
+import './css/adaptiv.css';
 import App from './App';
 import React from 'react';
 import ReactDOM from 'react-dom';
