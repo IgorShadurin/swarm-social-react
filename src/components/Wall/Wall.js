@@ -7,6 +7,8 @@ import * as actions from "../../store/social/actions";
 import PropTypes from "prop-types";
 import WallCreatePost from "../WallCreatePost";
 import WallPost from "../WallPost";
+import avatar from '../../img/423.jpg'
+
 
 class Wall extends Component {
 
@@ -20,10 +22,29 @@ class Wall extends Component {
 
         return (
             <Fragment>
-                <WallCreatePost/>
-                <button onClick={() => createWallPost({description: 'Lol, created'})}>Create wall post</button>
 
-                {posts}
+                <div className="container">
+                    <WallCreatePost/>
+
+
+                    <div className="row">
+                        <div className="col-md-2"/>
+                        <div className="col-md-10">
+                            <div className="posts-wrap">
+
+                                {posts}
+
+                            </div>
+                            <div className="more-btn">
+                                <a href="">Show more</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/*<button onClick={() => createWallPost({description: 'Lol, created'})}>Create wall post</button>*/}
+
+
             </Fragment>
         );
     }

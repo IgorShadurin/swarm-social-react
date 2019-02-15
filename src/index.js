@@ -1,4 +1,8 @@
 import './css/bootstrap-grid.min.css';
+//import 'bootstrap/dist/css/bootstrap.min.css';
+//import 'popper.js/dist/popper.min';
+//import 'jquery/dist/jquery.min';
+//import 'bootstrap/dist/js/bootstrap.min';
 import './css/style.css';
 import './css/adaptiv.css';
 import App from './App';
