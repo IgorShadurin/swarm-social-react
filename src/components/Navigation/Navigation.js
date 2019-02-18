@@ -2,11 +2,15 @@ import React, {Component} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import './Navigation.css';
 import {Link} from "react-router-dom";
+import {connect} from "react-redux";
+import logo from '../../img/logo.png'
+import avatar from '../../img/423.jpg'
+import ObjectConstructor from "../../Beefree/ObjectConstructor";
+import User from "../../Beefree/User";
 
 class Navigation extends Component {
     render() {
-        return (
-            <nav className="Navigation navbar navbar-expand-lg navbar-light">
+        /*<nav className="Navigation navbar navbar-expand-lg navbar-light">
                 <Link className="navbar-brand" to="./">
                     <strong>beefree</strong>
                 </Link>
@@ -17,9 +21,6 @@ class Navigation extends Component {
 
                 <div className="collapse navbar-collapse" id="navbarColor03">
                     <ul className="navbar-nav mr-auto">
-                        {/*<li className="nav-item active">
-                            <Link className="nav-link" to="./">Home <span className="sr-only">(current)</span></Link>
-                        </li>*/}
                         <li className="nav-item">
                             <Link className="nav-link" to="./dialog">
                                 <FontAwesomeIcon icon="comment"/>
@@ -37,15 +38,70 @@ class Navigation extends Component {
                             </Link>
                         </li>
                     </ul>
-                    {/*<form className="form-inline">
-                        <input className="form-control mr-sm-2" type="search" placeholder="Search"
-                               aria-label="Search"/>
-                        <button className="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
-                    </form>*/}
+                </div>
+            </nav>*/
+        const {user} = this.props;
+        const fullName = User.getFullName(user);
+
+        return (
+            <nav>
+                <div className="container">
+                    <div className="row">
+                        <div className="col-md-6">
+                            <div className="logo-wrap">
+                                <img src={logo} alt="Logo"/>
+                            </div>
+                        </div>
+                        <div className="col-md-6">
+                            <div className="r-bar-wrap">
+                                <div className="settings-wrap">
+                                    <div className="msg _item new">
+                                        <a href="">
+                                            <i className="fas fa-comment"></i>
+                                        </a>
+                                    </div>
+                                    <div className="wallet _item">
+                                        <a href="">
+                                            <i className="fas fa-wallet"></i>
+                                        </a>
+                                    </div>
+                                    <div className="sett _item">
+                                        <a href="">
+                                            <i className="fas fa-cog"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div className="ac-info-wrap">
+                                    <div className="info-wrap">
+                                        <div className="name">
+                                            <p>
+                                                {user && fullName}
+                                            </p>
+                                        </div>
+                                        <div className="balance">
+                                            <p>
+                                                ETH 2.6423
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="avatar-wrap">
+                                        <div className="img-wrap">
+                                            <img src={avatar} alt=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </nav>
         );
     }
 }
 
-export default Navigation;
+//export default Navigation;
+const mapStateToProps = state => ({
+    user: state.social.user
+});
+
+export default connect(mapStateToProps)(Navigation);

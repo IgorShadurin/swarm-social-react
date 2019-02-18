@@ -1,5 +1,5 @@
-import './css/bootstrap-grid.min.css';
-//import 'bootstrap/dist/css/bootstrap.min.css';
+//import './css/bootstrap-grid.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 //import 'popper.js/dist/popper.min';
 //import 'jquery/dist/jquery.min';
 //import 'bootstrap/dist/js/bootstrap.min';

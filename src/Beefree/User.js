@@ -21,4 +21,11 @@ export default class User extends BaseObject {
             'version'
         ];
     }
+
+    static getFullName(user) {
+        const firstName = user && user.first_name ? user.first_name : '...';
+        const lastName = user && user.last_name ? user.last_name : '';
+
+        return `${firstName} ${lastName}`;
+    }
 }

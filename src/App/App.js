@@ -1,7 +1,5 @@
 import React, {Component, Fragment} from 'react';
 import './App.css';
-import logo from '../img/logo.png'
-import avatar from '../img/423.jpg'
 
 import {library} from '@fortawesome/fontawesome-svg-core';
 import {faWallet, faComment, faCog} from '@fortawesome/free-solid-svg-icons';
@@ -24,58 +22,8 @@ class App extends Component {
     render() {
         return (
             <Fragment>
-                <nav>
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-md-6">
-                                <div className="logo-wrap">
-                                    <img src={logo} alt="Logo"/>
-                                </div>
-                            </div>
-                            <div className="col-md-6">
-                                <div className="r-bar-wrap">
-                                    <div className="settings-wrap">
-                                        <div className="msg _item new">
-                                            <a href="">
-                                                <i className="fas fa-comment"></i>
-                                            </a>
-                                        </div>
-                                        <div className="wallet _item">
-                                            <a href="">
-                                                <i className="fas fa-wallet"></i>
-                                            </a>
-                                        </div>
-                                        <div className="sett _item">
-                                            <a href="">
-                                                <i className="fas fa-cog"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div className="ac-info-wrap">
-                                        <div className="info-wrap">
-                                            <div className="name">
-                                                <p>
-                                                    Brandon Hayes
-                                                </p>
-                                            </div>
-                                            <div className="balance">
-                                                <p>
-                                                    ETH 2.6423
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div className="avatar-wrap">
-                                            <div className="img-wrap">
-                                                <img src={avatar} alt=""/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
 
+                <Navigation/>
                 <section id="main-body">
                     <div className="container">
                         <Router>
@@ -101,7 +49,6 @@ class App extends Component {
                 </section>
 
                 <footer>
-
                 </footer>
 
             </Fragment>

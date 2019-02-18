@@ -308,7 +308,7 @@ class UserPage extends Component {
                                                                                 <div className="way">
                                                                                     <p>
 																						<span className="dir">
-																							sent to
+																							sent to&nbsp;
 																						</span>
                                                                                         <span className="recep">
 																							<a href="">
@@ -392,7 +392,7 @@ class UserPage extends Component {
                                                                                 <div className="way">
                                                                                     <p>
 																						<span className="dir">
-																							from
+																							from&nbsp;
 																						</span>
                                                                                         <span className="recep">
 																							<a href="">
@@ -446,5 +446,10 @@ const mapDispatchToProps = dispatch => ({
     getUser: () => dispatch(getUser()),
 });*/
 
+const mapStateToProps = state => ({
+    user: state.social.user
+});
+
 //export default connect(mapStateToProps, mapDispatchToProps)(UserPage)
-export default connect()(UserPage)
+export default connect(mapStateToProps)(UserPage)
+//export default connect()(UserPage)

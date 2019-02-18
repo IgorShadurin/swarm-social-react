@@ -22,29 +22,21 @@ class Wall extends Component {
 
         return (
             <Fragment>
-
                 <div className="container">
                     <WallCreatePost/>
-
 
                     <div className="row">
                         <div className="col-md-2"/>
                         <div className="col-md-10">
                             <div className="posts-wrap">
-
                                 {posts}
-
                             </div>
-                            <div className="more-btn">
+                            {false && <div className="more-btn">
                                 <a href="">Show more</a>
-                            </div>
+                            </div>}
                         </div>
                     </div>
                 </div>
-
-                {/*<button onClick={() => createWallPost({description: 'Lol, created'})}>Create wall post</button>*/}
-
-
             </Fragment>
         );
     }

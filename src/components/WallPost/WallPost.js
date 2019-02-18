@@ -3,10 +3,13 @@ import './WallPost.css';
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import avatar from '../../img/423.jpg'
-
+import User from "../../Beefree/User";
 
 class WallPost extends Component {
     render() {
+        const {user} = this.props;
+        const fullName = User.getFullName(user);
+
         return (
             <div className="post">
                 <div className="container">
@@ -20,7 +23,7 @@ class WallPost extends Component {
                                     <div className="info-wrap">
                                         <a href="">
                                             <p className="name">
-                                                Brandon Hayes
+                                                {fullName}
                                             </p>
                                             <p className="date">
                                                 Yesterday - 13:55
@@ -63,8 +66,6 @@ class WallPost extends Component {
                     </div>
                 </div>
             </div>
-
-
         );
     }
 }
@@ -76,4 +77,8 @@ WallPost.propTypes = {
     //createWallPost: PropTypes.func.isRequired,
 };
 
-export default connect()(WallPost);
+const mapStateToProps = state => ({
+    user: state.social.user
+});
+
+export default connect(mapStateToProps)(WallPost);
