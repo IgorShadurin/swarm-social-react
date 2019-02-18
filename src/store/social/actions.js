@@ -86,6 +86,10 @@ export const createWallPost = (data) => {
     return (dispatch, getState) => {
         queue.add(() => {
             //console.log('run');
+            dispatch({
+                type: types.SOCIAL_WALL_POST_STARTED
+            });
+
             return bee.createPost(data)
                 .then(result => {
                     const dispatchData = {

@@ -12,7 +12,6 @@ class WallCreatePost extends Component {
 
         this.state = {
             text: '',
-            isPosting: false
         };
     }
 
@@ -22,15 +21,16 @@ class WallCreatePost extends Component {
         });
     };
 
-    /*onPost = (e) => {
+    onPost = (e) => {
         const {createWallPost} = this.props;
-        console.log(createWallPost);
-    };*/
+        createWallPost({description: this.state.text});
+        this.setState({
+            text: ''
+        });
+    };
 
     render() {
-        //{/*<button onClick={() => createWallPost({description: 'Lol, created'})}>Create wall post</button>*/}
-        const {createWallPost} = this.props;
-        console.log(createWallPost);
+        const {isWallPosting} = this.props;
 
         return (
             <div className="row new-post">
@@ -44,7 +44,7 @@ class WallCreatePost extends Component {
                         <div className="input-field">
                             <textarea name="" id="" cols="" rows="2" placeholder="Create a post..."
                                       onChange={this.onChange}
-                                      value={this.state.value}/>
+                                      value={this.state.text}/>
                         </div>
                         <div className="btns-wrap">
                             <div className="btns">
@@ -54,8 +54,10 @@ class WallCreatePost extends Component {
                                 {/*<a href="">
                                     <i className="fas fa-video"/>
                                 </a>*/}
-                                <button className="btn btn-primary"
-                                        onClick={() => createWallPost({description: this.state.text})}>
+                                <button
+                                    className="btn btn-primary"
+                                    disabled={isWallPosting}
+                                    onClick={() => this.onPost()}>
                                     Post
                                 </button>
                             </div>
@@ -68,8 +70,7 @@ class WallCreatePost extends Component {
 }
 
 const mapStateToProps = state => ({
-    //wallPosts: state.social.wallPosts
+    isWallPosting: state.social.isWallPosting
 });
 
-//export default WallCreatePost;
 export default connect(mapStateToProps, actions)(WallCreatePost);

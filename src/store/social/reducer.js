@@ -20,11 +20,16 @@ export default function reduce(state = initialState, action = {}) {
             return state.merge({
                 user: action.data
             });
+        case types.SOCIAL_WALL_POST_STARTED:
+            return state.merge({
+                isWallPosting: true
+            });
         case types.SOCIAL_WALL_POST_CREATED:
             posts = Immutable.asMutable(state.wallPosts);
             posts.unshift(action.data);
             return state.merge({
-                wallPosts: Immutable(posts)
+                wallPosts: Immutable(posts),
+                isWallPosting: false
             });
         case types.SOCIAL_WALL_POST_LOADED:
             posts = Immutable.asMutable(state.wallPosts);

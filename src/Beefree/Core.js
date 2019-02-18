@@ -96,7 +96,7 @@ export default class Core {
     saveProfile(profile, isUseOldProfile = true) {
         // todo validate data
         let newProfile = profile;
-        console.log(isUseOldProfile);
+        //console.log(isUseOldProfile);
         if (isUseOldProfile) {
             newProfile = Object.assign({}, this.user._data, profile);
         }
