@@ -23,6 +23,17 @@ export default class Core {
         return obj;
     }
 
+    onChangeHash(newHash) {
+
+    }
+
+    changeCurrentHash(newHash) {
+        this.currentHash = newHash;
+        if (this.onChangeHash) {
+            this.onChangeHash(newHash);
+        }
+    }
+
     download(path, dataClass) {
         return this.swarm.bzz.download(path)
             .then(res => res.json())
@@ -62,7 +73,8 @@ export default class Core {
         return this.swarm.bzz.uploadFile(content, options)
             .then(newHash => {
                 if (isStoreHash) {
-                    this.currentHash = newHash;
+                    //this.currentHash = newHash;
+                    this.changeCurrentHash(newHash)
                 }
 
                 //return data;

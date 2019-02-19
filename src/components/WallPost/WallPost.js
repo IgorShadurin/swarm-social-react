@@ -6,8 +6,31 @@ import avatar from '../../img/423.jpg'
 import User from "../../Beefree/User";
 
 class WallPost extends Component {
+    onLike = (e, id) => {
+        e.preventDefault();
+        console.log(id);
+    };
+
+    onDislike = (e, id) => {
+        e.preventDefault();
+        console.log(id);
+
+    };
+
+    onShare = (e) => {
+        e.preventDefault();
+    };
+
+    onDeletePost = (e) => {
+        e.preventDefault();
+        const {deleteWallPost} = this.props;
+        if (window.confirm('Really delete?')) {
+            //deleteWallPost();
+        }
+    };
+
     render() {
-        const {user} = this.props;
+        const {user, item} = this.props;
         const fullName = User.getFullName(user);
 
         return (
@@ -21,7 +44,7 @@ class WallPost extends Component {
                                         <img src={avatar} alt=""/>
                                     </div>
                                     <div className="info-wrap">
-                                        <a href="">
+                                        <a href="#">
                                             <p className="name">
                                                 {fullName}
                                             </p>
@@ -36,28 +59,28 @@ class WallPost extends Component {
                                         <a href="">
                                             <i className="far fa-edit"/>
                                         </a>
-                                        <a href="">
-                                            <i className="far fa-eye"/>
+                                        <a href="#" onClick={this.onDeletePost}>
+                                            <i className="far fa-times-circle"/>
                                         </a>
                                     </div>
                                 </div>
                             </div>
                             <div className="post-content">
-                                {this.props.item.description.split('\n').map((item, i) => {
+                                {item.description.split('\n').map((item, i) => {
                                     return <p key={i}>{item}</p>;
                                 })}
                             </div>
                             <div className="post-end">
                                 <div className="likes-wrap">
-                                    <a className="like" href="">
-                                        <i className="fas fa-thumbs-up"/> <span>9</span>
+                                    <a className="like" href="#" onClick={(e) => this.onLike(e, item.id)}>
+                                        <i className="fas fa-thumbs-up"/> <span>0</span>
                                     </a>
-                                    <a className="dislike" href="">
+                                    <a className="dislike" href="#" onClick={(e) => this.onDislike(e, item.id)}>
                                         <i className="fas fa-thumbs-down"/> <span>0</span>
                                     </a>
                                 </div>
                                 <div className="share-wrap">
-                                    <a href="">
+                                    <a href="#" onClick={this.onShare}>
                                         Share <i className="fas fa-retweet"/>
                                     </a>
                                 </div>
@@ -74,7 +97,7 @@ WallPost.propTypes = {
     item: PropTypes.shape({
         text: PropTypes.string
     }),
-    //createWallPost: PropTypes.func.isRequired,
+    deleteWallPost: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

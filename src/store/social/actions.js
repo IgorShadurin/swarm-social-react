@@ -10,9 +10,21 @@ if (parts.length > 0) {
 }
 
 console.log('currentHash', currentHash);
-//const bee = new Core('http://prototype.beefree.me', currentHash);
-const bee = new Core('https://swarm-gateways.net', currentHash);
-//const bee = new Core('http://127.0.0.1:8500', currentHash);
+let bee = null;
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    // dev code
+    //const bee = new Core('https://swarm-gateways.net', currentHash);
+    bee = new Core('http://prototype.beefree.me', currentHash);
+} else {
+    // production code
+    bee = new Core(window.location.origin, currentHash);
+}
+
+bee.onChangeHash = (hash) => {
+    console.log('new hash is: ' + hash);
+    //onChangeHash(hash);
+};
+
 const queue = new Queue(1, Infinity);
 
 export const init = () => {
@@ -43,6 +55,14 @@ export const init = () => {
                 type: types.SOCIAL_INIT
             });
         });
+};
+
+export const onChangeHash = (data) => {
+    // todo binded to all changes
+    return dispatch => dispatch({
+        type: types.SOCIAL_ON_CHANGE_HASH,
+        data
+    });
 };
 
 export const getMyProfile = () => {

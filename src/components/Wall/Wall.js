@@ -3,17 +3,16 @@ import React, {Component, Fragment} from 'react';
 import './Wall.css';
 import {connect} from "react-redux";
 import * as actions from "../../store/social/actions";
-
 import PropTypes from "prop-types";
 import WallCreatePost from "../WallCreatePost";
 import WallPost from "../WallPost";
-import avatar from '../../img/423.jpg'
 
+//import avatar from '../../img/423.jpg'
 
 class Wall extends Component {
 
     render() {
-        const {createWallPost, wallPosts} = this.props;
+        const {wallPosts} = this.props;
         //console.log(this.props);
         let posts = <p>Wall is empty</p>;
         if (wallPosts.length) {
@@ -32,7 +31,7 @@ class Wall extends Component {
                                 {posts}
                             </div>
                             {false && <div className="more-btn">
-                                <a href="">Show more</a>
+                                <a href="#">Show more</a>
                             </div>}
                         </div>
                     </div>
@@ -46,7 +45,7 @@ Wall.propTypes = {
     wallPosts: PropTypes.arrayOf(PropTypes.shape({
         text: PropTypes.string
     })).isRequired,
-    createWallPost: PropTypes.func.isRequired,
+    //createWallPost: PropTypes.func.isRequired,
     getPost: PropTypes.func.isRequired,
 };
 
