@@ -21,14 +21,13 @@ class App extends Component {
     // todo wtf: pages started from 'set' (SETtings,SETup) not open
     render() {
         return (
-            <Fragment>
+            <Router>
+                <Fragment>
+                    <Navigation/>
 
-                <Navigation/>
-                <section id="main-body">
-                    <div className="container">
-                        <Router>
-                            <Fragment>
-                                {/*<Navigation/>*/}
+                    <section id="main-body">
+                        <div className="container">
+
                                 <Switch>
                                     <Route path="/:swarm_protocol?/:swarm_hash?/config/:hash?"
                                            render={() => <h1>Config only</h1>}/>
@@ -43,15 +42,13 @@ class App extends Component {
                                            path="/:swarm_protocol?/:swarm_hash?/:hash?"
                                            component={UserPage}/>
                                 </Switch>
-                            </Fragment>
-                        </Router>
-                    </div>
-                </section>
+                        </div>
+                    </section>
 
-                <footer>
-                </footer>
-
-            </Fragment>
+                    <footer>
+                    </footer>
+                </Fragment>
+            </Router>
         );
     }
 }

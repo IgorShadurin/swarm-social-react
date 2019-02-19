@@ -48,27 +48,29 @@ class Navigation extends Component {
                 <div className="container">
                     <div className="row">
                         <div className="col-md-6">
-                            <div className="logo-wrap">
-                                <img src={logo} alt="Logo"/>
-                            </div>
+                            <Link className="nav-link" to="./">
+                                <div className="logo-wrap">
+                                    beefree
+                                </div>
+                            </Link>
                         </div>
                         <div className="col-md-6">
                             <div className="r-bar-wrap">
                                 <div className="settings-wrap">
                                     <div className="msg _item new">
-                                        <a href="">
+                                        <Link className="nav-link" to="./dialog">
                                             <i className="fas fa-comment"></i>
-                                        </a>
+                                        </Link>
                                     </div>
                                     <div className="wallet _item">
-                                        <a href="">
+                                        <Link className="nav-link" to="./wallet">
                                             <i className="fas fa-wallet"></i>
-                                        </a>
+                                        </Link>
                                     </div>
                                     <div className="sett _item">
-                                        <a href="">
+                                        <Link className="nav-link" to="./config">
                                             <i className="fas fa-cog"></i>
-                                        </a>
+                                        </Link>
                                     </div>
                                 </div>
                                 <div className="ac-info-wrap">

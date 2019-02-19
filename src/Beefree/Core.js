@@ -42,6 +42,10 @@ export default class Core {
             });
     }
 
+    delete(path) {
+        return this.swarm.bzz.deleteResource(this.currentHash, path);
+    }
+
     /**
      *
      * @param data
@@ -154,5 +158,9 @@ export default class Core {
 
                 return result;
             });
+    }
+
+    deletePost(id) {
+        return this.delete(`${this.socialDirectory}/post/${id}`);
     }
 }

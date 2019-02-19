@@ -37,6 +37,12 @@ export default function reduce(state = initialState, action = {}) {
             return state.merge({
                 wallPosts: Immutable(posts)
             });
+        case types.SOCIAL_WALL_POST_DELETED:
+            posts = Immutable.asMutable(state.wallPosts);
+            posts = posts.filter(item => item.id !== action.id);
+            return state.merge({
+                wallPosts: Immutable(posts)
+            });
         case types.SOCIAL_PROFILE_SAVED:
             return state.merge({
                 user: action.data

@@ -13,7 +13,7 @@ console.log('currentHash', currentHash);
 let bee = null;
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     // dev code
-    //const bee = new Core('https://swarm-gateways.net', currentHash);
+    //bee = new Core('https://swarm-gateways.net', currentHash);
     bee = new Core('http://prototype.beefree.me', currentHash);
 } else {
     // production code
@@ -115,6 +115,29 @@ export const createWallPost = (data) => {
                     const dispatchData = {
                         type: types.SOCIAL_WALL_POST_CREATED,
                         data: result.data
+                    };
+
+                    return dispatch(dispatchData);
+                });
+        });
+    }
+};
+
+export const deleteWallPost = (id) => {
+    return (dispatch, getState) => {
+        queue.add(() => {
+            //console.log('run');
+            dispatch({
+                type: types.SOCIAL_WALL_POST_DELETING,
+                id
+            });
+
+            return bee.deletePost(id)
+                .then(result => {
+                    const dispatchData = {
+                        type: types.SOCIAL_WALL_POST_DELETED,
+                        data: result.data,
+                        id
                     };
 
                     return dispatch(dispatchData);

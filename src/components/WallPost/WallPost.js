@@ -4,6 +4,7 @@ import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import avatar from '../../img/423.jpg'
 import User from "../../Beefree/User";
+import * as actions from "../../store/social/actions";
 
 class WallPost extends Component {
     onLike = (e, id) => {
@@ -17,16 +18,22 @@ class WallPost extends Component {
 
     };
 
-    onShare = (e) => {
+    onShare = (e, id) => {
         e.preventDefault();
+        console.log(id);
     };
 
-    onDeletePost = (e) => {
+    onDeletePost = (e, id) => {
         e.preventDefault();
         const {deleteWallPost} = this.props;
         if (window.confirm('Really delete?')) {
-            //deleteWallPost();
+            deleteWallPost(id);
         }
+    };
+
+    onEditPost = (e, id) => {
+        e.preventDefault();
+        console.log(id);
     };
 
     render() {
@@ -56,10 +63,10 @@ class WallPost extends Component {
                                 </div>
                                 <div className="r-side">
                                     <div className="btns-wrap">
-                                        <a href="">
+                                        <a href="#" onClick={(e) => this.onEditPost(e, item.id)}>
                                             <i className="far fa-edit"/>
                                         </a>
-                                        <a href="#" onClick={this.onDeletePost}>
+                                        <a href="#" onClick={(e) => this.onDeletePost(e, item.id)}>
                                             <i className="far fa-times-circle"/>
                                         </a>
                                     </div>
@@ -80,7 +87,7 @@ class WallPost extends Component {
                                     </a>
                                 </div>
                                 <div className="share-wrap">
-                                    <a href="#" onClick={this.onShare}>
+                                    <a href="#" onClick={(e) => this.onShare(e, item.id)}>
                                         Share <i className="fas fa-retweet"/>
                                     </a>
                                 </div>
@@ -104,4 +111,4 @@ const mapStateToProps = state => ({
     user: state.social.user
 });
 
-export default connect(mapStateToProps)(WallPost);
+export default connect(mapStateToProps, actions)(WallPost);

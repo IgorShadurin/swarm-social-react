@@ -24,6 +24,9 @@ nav .logo-wrap {
     align-items: center;
     padding-top: 10px;
     padding-bottom: 10px;
+    font-size: 25px;
+    font-weight: bold;
+    color: black;
 }
 
 nav .logo-wrap img {
