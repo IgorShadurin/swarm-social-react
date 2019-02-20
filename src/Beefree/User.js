@@ -1,4 +1,5 @@
 import BaseObject from "./BaseObject";
+import defaultAvatar from '../img/user/default.jpg'
 
 export default class User extends BaseObject {
     constructor(data = {}) {
@@ -27,5 +28,9 @@ export default class User extends BaseObject {
         const lastName = user && user.last_name ? user.last_name : '';
 
         return `${firstName} ${lastName}`;
+    }
+
+    static getAvatar(user, size = 'preview') {
+        return user && user.avatar && user.avatar.original ? user.avatar.original : defaultAvatar;
     }
 }

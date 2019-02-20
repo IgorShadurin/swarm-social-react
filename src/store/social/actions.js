@@ -26,6 +26,7 @@ bee.onChangeHash = (hash) => {
 };
 
 const queue = new Queue(1, Infinity);
+const postsQueue = new Queue(1, Infinity);
 
 export const init = () => {
     return (dispatch) => bee.getMyProfile()
@@ -39,21 +40,24 @@ export const init = () => {
         })
         .then(data => {
             if (data.last_post_id) {
-                const displayPosts = Math.min(10, data.last_post_id);
-                // todo use promise batch actions? (from lib)
-                // todo pre-create posts with correct way (prevent random displaying)
-                /*for (let i = displayPosts; i > 0; i--) {
-                    dispatch(getPost(i));
-                }*/
-                for (let i = 1; i <= displayPosts; i++) {
-                    dispatch(getPost(i));
+                const lastPostId = data.last_post_id;
+                for (let i = 0; i < 10; i++) {
+                    const id = lastPostId - i;
+                    if (id > 0) {
+                        //console.log('ID: ' + id);
+                        postsQueue.add(() => {
+                            dispatch(getPost(id, true))
+                        });
+                    } else {
+                        postsQueue.add(() => {
+                            dispatch({
+                                type: types.SOCIAL_INIT
+                            });
+                        });
+                        break;
+                    }
                 }
             }
-        })
-        .then(() => {
-            return dispatch({
-                type: types.SOCIAL_INIT
-            });
         });
 };
 
@@ -146,13 +150,18 @@ export const deleteWallPost = (id) => {
     }
 };
 
-export const getPost = (id) => {
+export const getPost = (id, addReversed = false) => {
     return dispatch => bee.getPost(id)
         .then(data => {
             console.log(data);
             return dispatch({
                 type: types.SOCIAL_WALL_POST_LOADED,
+                isAddReversed: addReversed,
                 data
             });
-        });
+        })
+        .catch(error => dispatch({
+            type: types.SOCIAL_WALL_POST_LOADING_FAILED,
+            data: error
+        }));
 };

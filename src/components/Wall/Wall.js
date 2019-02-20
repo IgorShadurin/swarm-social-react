@@ -10,9 +10,14 @@ import WallPost from "../WallPost";
 //import avatar from '../../img/423.jpg'
 
 class Wall extends Component {
+    onShowMore = (e) => {
+        e.preventDefault();
+        console.log('Show more here');
+    };
 
     render() {
-        const {wallPosts} = this.props;
+        const {wallPosts, user, isInit} = this.props;
+        console.log(user);
         //console.log(this.props);
         let posts = <p>Wall is empty</p>;
         if (wallPosts.length) {
@@ -30,8 +35,8 @@ class Wall extends Component {
                             <div className="posts-wrap">
                                 {posts}
                             </div>
-                            {false && <div className="more-btn">
-                                <a href="#">Show more</a>
+                            {isInit && user && user.last_post_id > 10 && <div className="more-btn">
+                                <a href="#" onClick={this.onShowMore}>Show more</a>
                             </div>}
                         </div>
                     </div>
@@ -50,7 +55,9 @@ Wall.propTypes = {
 };
 
 const mapStateToProps = state => ({
-    wallPosts: state.social.wallPosts
+    wallPosts: state.social.wallPosts,
+    user: state.social.user,
+    isInit: state.social.isInit
 });
 
 export default connect(mapStateToProps, actions)(Wall);

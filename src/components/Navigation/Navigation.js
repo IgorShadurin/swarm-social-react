@@ -1,45 +1,15 @@
 import React, {Component} from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import './Navigation.css';
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
-import logo from '../../img/logo.png'
 import avatar from '../../img/423.jpg'
-import ObjectConstructor from "../../Beefree/ObjectConstructor";
 import User from "../../Beefree/User";
+//import ObjectConstructor from "../../Beefree/ObjectConstructor";
+//import logo from '../../img/logo.png'
+//import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 class Navigation extends Component {
     render() {
-        /*<nav className="Navigation navbar navbar-expand-lg navbar-light">
-                <Link className="navbar-brand" to="./">
-                    <strong>beefree</strong>
-                </Link>
-                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03"
-                        aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon"/>
-                </button>
-
-                <div className="collapse navbar-collapse" id="navbarColor03">
-                    <ul className="navbar-nav mr-auto">
-                        <li className="nav-item">
-                            <Link className="nav-link" to="./dialog">
-                                <FontAwesomeIcon icon="comment"/>
-                            </Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="./wallet">
-                                <FontAwesomeIcon icon="wallet"/>
-
-                            </Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="./config">
-                                <FontAwesomeIcon icon="cog"/>
-                            </Link>
-                        </li>
-                    </ul>
-                </div>
-            </nav>*/
         const {user} = this.props;
         const fullName = User.getFullName(user);
 
@@ -59,17 +29,17 @@ class Navigation extends Component {
                                 <div className="settings-wrap">
                                     <div className="msg _item new">
                                         <Link className="nav-link" to="./dialog">
-                                            <i className="fas fa-comment"></i>
+                                            <i className="fas fa-comment"/>
                                         </Link>
                                     </div>
                                     <div className="wallet _item">
                                         <Link className="nav-link" to="./wallet">
-                                            <i className="fas fa-wallet"></i>
+                                            <i className="fas fa-wallet"/>
                                         </Link>
                                     </div>
                                     <div className="sett _item">
                                         <Link className="nav-link" to="./config">
-                                            <i className="fas fa-cog"></i>
+                                            <i className="fas fa-cog"/>
                                         </Link>
                                     </div>
                                 </div>
@@ -101,7 +71,6 @@ class Navigation extends Component {
     }
 }
 
-//export default Navigation;
 const mapStateToProps = state => ({
     user: state.social.user
 });

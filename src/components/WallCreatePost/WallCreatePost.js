@@ -5,7 +5,6 @@ import avatar from '../../img/423.jpg'
 import {connect} from "react-redux";
 import * as actions from "../../store/social/actions";
 
-
 class WallCreatePost extends Component {
     constructor() {
         super();
@@ -56,7 +55,7 @@ class WallCreatePost extends Component {
                                 </a>*/}
                                 <button
                                     className="btn btn-primary"
-                                    disabled={isWallPosting}
+                                    disabled={isWallPosting || this.state.text.length === 0}
                                     onClick={() => this.onPost()}>
                                     Post
                                 </button>

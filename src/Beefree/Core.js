@@ -42,8 +42,20 @@ export default class Core {
             });
     }
 
+    /**
+     *
+     * @param path
+     * @returns {Promise<(string)>}
+     */
     delete(path) {
-        return this.swarm.bzz.deleteResource(this.currentHash, path);
+        console.log(this.currentHash);
+        return this.swarm.bzz.deleteResource(this.currentHash, path)
+            .then(hash => {
+                console.log(hash);
+                this.changeCurrentHash(hash);
+
+                return hash;
+            });
     }
 
     /**
@@ -81,7 +93,6 @@ export default class Core {
                     this.changeCurrentHash(newHash)
                 }
 
-                //return data;
                 // todo check data field with file
                 return new CoreResponse(newHash, data, content, options);
             });
@@ -109,6 +120,12 @@ export default class Core {
         return this.download(`${hash}/${this.socialDirectory}/profile.json`, User);
     }
 
+    /**
+     *
+     * @param profile
+     * @param isUseOldProfile
+     * @returns {Promise<CoreResponse>}
+     */
     saveProfile(profile, isUseOldProfile = true) {
         // todo validate data
         let newProfile = profile;
@@ -127,10 +144,21 @@ export default class Core {
             });
     }
 
+    /**
+     *
+     * @param id
+     * @param hash
+     * @returns {Promise<Post>}
+     */
     getPost(id, hash = this.currentHash) {
         return this.download(`${hash}/${this.socialDirectory}/post/${id}/info.json`, Post);
     }
 
+    /**
+     *
+     * @param data
+     * @returns {Promise<{data: *, hash: string}>}
+     */
     createPost(data) {
         let id = 1;
         let user = this.user && this.user._data ? this.user._data : {};
@@ -160,7 +188,13 @@ export default class Core {
             });
     }
 
+    /**
+     *
+     * @param id
+     * @returns {Promise<string>}
+     */
     deletePost(id) {
-        return this.delete(`${this.socialDirectory}/post/${id}`);
+        // todo check for posts with content. how to remove full dir?
+        return this.delete(`${this.socialDirectory}/post/${id}/info.json`);
     }
 }

@@ -12,10 +12,10 @@ export default function reduce(state = initialState, action = {}) {
     let posts = null;
     switch (action.type) {
         case types.SOCIAL_INIT:
-            /*return state.merge({
-                user: action.data
-            });*/
-            return state;
+            return state.merge({
+                isInit: true
+            });
+            //return state;
         case types.SOCIAL_USER_FETCHED:
             return state.merge({
                 user: action.data
@@ -33,7 +33,12 @@ export default function reduce(state = initialState, action = {}) {
             });
         case types.SOCIAL_WALL_POST_LOADED:
             posts = Immutable.asMutable(state.wallPosts);
-            posts.unshift(action.data);
+            if (action.isAddReversed) {
+                posts.push(action.data);
+            } else {
+                posts.unshift(action.data);
+            }
+
             return state.merge({
                 wallPosts: Immutable(posts)
             });

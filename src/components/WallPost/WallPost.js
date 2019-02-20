@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import './WallPost.css';
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
-import avatar from '../../img/423.jpg'
 import User from "../../Beefree/User";
 import * as actions from "../../store/social/actions";
 
@@ -39,6 +38,7 @@ class WallPost extends Component {
     render() {
         const {user, item} = this.props;
         const fullName = User.getFullName(user);
+        const avatar = User.getAvatar(user);
 
         return (
             <div className="post">
