@@ -2,16 +2,13 @@ import React, {Component} from 'react';
 import './Navigation.css';
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
-import avatar from '../../img/423.jpg'
 import User from "../../Beefree/User";
-//import ObjectConstructor from "../../Beefree/ObjectConstructor";
-//import logo from '../../img/logo.png'
-//import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 class Navigation extends Component {
     render() {
         const {user} = this.props;
         const fullName = User.getFullName(user);
+        const avatar = User.getAvatar(user);
 
         return (
             <nav>
@@ -58,7 +55,9 @@ class Navigation extends Component {
                                     </div>
                                     <div className="avatar-wrap">
                                         <div className="img-wrap">
-                                            <img src={avatar} alt=""/>
+                                            <Link className="nav-link" to="./">
+                                                <img src={avatar} alt="Profile"/>
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>

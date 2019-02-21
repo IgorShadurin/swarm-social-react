@@ -13,8 +13,9 @@ console.log('currentHash', currentHash);
 let bee = null;
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     // dev code
-    //bee = new Core('https://swarm-gateways.net', currentHash);
-    bee = new Core('http://prototype.beefree.me', currentHash);
+    bee = new Core('https://swarm-gateways.net', currentHash);
+    //bee = new Core('http://prototype.beefree.me', currentHash);
+    //bee = new Core('http://127.0.0.1:8500', currentHash);
 } else {
     // production code
     bee = new Core(window.location.origin, currentHash);

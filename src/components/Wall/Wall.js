@@ -7,8 +7,6 @@ import PropTypes from "prop-types";
 import WallCreatePost from "../WallCreatePost";
 import WallPost from "../WallPost";
 
-//import avatar from '../../img/423.jpg'
-
 class Wall extends Component {
     onShowMore = (e) => {
         e.preventDefault();
@@ -19,7 +17,8 @@ class Wall extends Component {
         const {wallPosts, user, isInit} = this.props;
         console.log(user);
         //console.log(this.props);
-        let posts = <p>Wall is empty</p>;
+        //let posts = <p>Wall is empty</p>;
+        let posts = '';
         if (wallPosts.length) {
             posts = wallPosts.map((item) => <WallPost key={item.id} item={item}/>);
         }

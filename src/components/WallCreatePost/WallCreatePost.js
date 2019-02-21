@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 //import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import './WallCreatePost.css';
-import avatar from '../../img/423.jpg'
 import {connect} from "react-redux";
 import * as actions from "../../store/social/actions";
+import User from "../../Beefree/User";
 
 class WallCreatePost extends Component {
     constructor() {
@@ -29,7 +29,8 @@ class WallCreatePost extends Component {
     };
 
     render() {
-        const {isWallPosting} = this.props;
+        const {isWallPosting, user} = this.props;
+        const avatar = User.getAvatar(user);
 
         return (
             <div className="row new-post">
@@ -41,9 +42,14 @@ class WallCreatePost extends Component {
                 <div className="col-md-10">
                     <div className="new-post-field">
                         <div className="input-field">
-                            <textarea name="" id="" cols="" rows="2" placeholder="Create a post..."
-                                      onChange={this.onChange}
-                                      value={this.state.text}/>
+                            <textarea
+                                name=""
+                                id=""
+                                cols=""
+                                rows="2"
+                                placeholder="Create a post..."
+                                onChange={this.onChange}
+                                value={this.state.text}/>
                         </div>
                         <div className="btns-wrap">
                             <div className="btns">
@@ -69,7 +75,8 @@ class WallCreatePost extends Component {
 }
 
 const mapStateToProps = state => ({
-    isWallPosting: state.social.isWallPosting
+    isWallPosting: state.social.isWallPosting,
+    user: state.social.user
 });
 
 export default connect(mapStateToProps, actions)(WallCreatePost);
