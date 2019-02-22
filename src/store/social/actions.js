@@ -13,8 +13,8 @@ console.log('currentHash', currentHash);
 let bee = null;
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     // dev code
-    bee = new Core('https://swarm-gateways.net', currentHash);
-    //bee = new Core('http://prototype.beefree.me', currentHash);
+    //bee = new Core('https://swarm-gateways.net', currentHash);
+    bee = new Core('http://prototype.beefree.me', currentHash);
     //bee = new Core('http://127.0.0.1:8500', currentHash);
 } else {
     // production code
@@ -165,4 +165,20 @@ export const getPost = (id, addReversed = false) => {
             type: types.SOCIAL_WALL_POST_LOADING_FAILED,
             data: error
         }));
+};
+
+export const doLike = (contentType, contentId) => {
+    return dispatch => dispatch({
+        type: types.SOCIAL_ON_CONTENT_LIKE,
+        contentType,
+        contentId
+    });
+};
+
+export const doDislike = (contentType, contentId) => {
+    return dispatch => dispatch({
+        type: types.SOCIAL_ON_CONTENT_DISLIKE,
+        contentType,
+        contentId
+    });
 };

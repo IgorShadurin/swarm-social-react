@@ -1,5 +1,6 @@
 import BaseObject from "./BaseObject";
 import defaultAvatar from '../img/user/default.jpg'
+import ObjectConstructor from "./ObjectConstructor";
 
 export default class User extends BaseObject {
     constructor(data = {}) {
@@ -10,6 +11,7 @@ export default class User extends BaseObject {
         return [
             'first_name',
             'last_name',
+            'username',
             'birth_date',
             'location',
             'photo',
@@ -19,8 +21,38 @@ export default class User extends BaseObject {
             'last_photoalbum_id',
             'last_videoalbum_id',
             'ethereum_wallet',
-            'version'
+            'version',
+            'updated_at_utc'
         ];
+    }
+
+    prepareData() {
+        const iFollow = [
+            {
+                'username': 'user1'
+            },
+            {
+                'username': 'user2'
+            },
+            {
+                'username': 'user3'
+            },
+            {
+                'username': 'user4'
+            },
+        ];
+        this.i_follow = iFollow.map(item => {
+            // todo replace with real data
+            let user = new User();
+            const constructor = new ObjectConstructor(item, ['username']);
+            constructor.fillObject(user);
+
+            return user;
+        });
+    }
+
+    static getNotifications(user) {
+        return 123;
     }
 
     static getFullName(user) {

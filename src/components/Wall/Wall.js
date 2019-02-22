@@ -15,8 +15,6 @@ class Wall extends Component {
 
     render() {
         const {wallPosts, user, isInit} = this.props;
-        console.log(user);
-        //console.log(this.props);
         //let posts = <p>Wall is empty</p>;
         let posts = '';
         if (wallPosts.length) {

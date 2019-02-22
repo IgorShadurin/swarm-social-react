@@ -8,13 +8,16 @@ import * as actions from "../../store/social/actions";
 class WallPost extends Component {
     onLike = (e, id) => {
         e.preventDefault();
-        console.log(id);
+        //console.log(id);
+        // todo move content type to consts
+        this.props.doLike('post', id);
     };
 
     onDislike = (e, id) => {
         e.preventDefault();
-        console.log(id);
-
+        //console.log(id);
+        // todo move content type to constsl
+        this.props.doDislike('post', id);
     };
 
     onShare = (e, id) => {
@@ -36,6 +39,7 @@ class WallPost extends Component {
     };
 
     render() {
+        //console.log(this.props);
         const {user, item} = this.props;
         const fullName = User.getFullName(user);
         const avatar = User.getAvatar(user);
@@ -105,6 +109,9 @@ WallPost.propTypes = {
         text: PropTypes.string
     }),
     deleteWallPost: PropTypes.func.isRequired,
+    doLike: PropTypes.func.isRequired,
+    doDislike: PropTypes.func.isRequired,
+
 };
 
 const mapStateToProps = state => ({

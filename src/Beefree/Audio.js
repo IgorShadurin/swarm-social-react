@@ -12,6 +12,8 @@ export default class Audio extends BaseObject {
             'previews',
             'type',
             'url',
+            'created_at',
+            'updated_at'
         ];
     }
 }

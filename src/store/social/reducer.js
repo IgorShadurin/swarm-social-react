@@ -15,7 +15,6 @@ export default function reduce(state = initialState, action = {}) {
             return state.merge({
                 isInit: true
             });
-            //return state;
         case types.SOCIAL_USER_FETCHED:
             return state.merge({
                 user: action.data
