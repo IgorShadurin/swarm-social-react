@@ -46,6 +46,10 @@ export const init = () => {
                     const id = lastPostId - i;
 
                     //console.log('ID: ' + id);
+                    if (id <= 0) {
+                        break;
+                    }
+
                     postsQueue.add(() => {
                         dispatch(getPost(id, true))
                     });
