@@ -1,5 +1,4 @@
 import React, {Component, Fragment} from 'react';
-//import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import './Wall.css';
 import {connect} from "react-redux";
 import * as actions from "../../store/social/actions";
@@ -33,7 +32,7 @@ class Wall extends Component {
                                 {posts}
                             </div>
                             {isInit && user && user.last_post_id > 10 && <div className="more-btn">
-                                <a href="#" onClick={this.onShowMore}>Show more</a>
+                                <button className="btn btn-beefree" onClick={this.onShowMore}>Show more</button>
                             </div>}
                         </div>
                     </div>
@@ -47,7 +46,6 @@ Wall.propTypes = {
     wallPosts: PropTypes.arrayOf(PropTypes.shape({
         text: PropTypes.string
     })).isRequired,
-    //createWallPost: PropTypes.func.isRequired,
     getPost: PropTypes.func.isRequired,
 };
 

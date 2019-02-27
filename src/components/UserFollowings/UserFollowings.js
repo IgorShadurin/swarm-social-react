@@ -5,13 +5,20 @@ import * as actions from "../../store/social/actions";
 import User from "../../Beefree/User";
 
 class UserFollowings extends Component {
+    onUsernameClick = (e) => {
+        e.preventDefault();
+    };
+
+    onBtnViewAll = () => {
+    };
+
     render() {
         // todo move i_follow to  state.social.i_follow
-        console.log(this.props);
+        //console.log(this.props);
         const iFollow = this.props.user && this.props.user.i_follow ? this.props.user.i_follow : [];
-        const users = iFollow.map(item => (
+        const users = iFollow.map((item, index) => (
             (
-                <div className="item">
+                <div key={index} className="item">
                     <div className="container">
                         <div className="row">
                             <div className="col-9">
@@ -21,9 +28,9 @@ class UserFollowings extends Component {
                                     </div>
                                     <div className="nickname-wrap">
                                         <p>
-                                            <a href="">
+                                            <span className="following-username" onClick={this.onUsernameClick}>
                                                 @{item.username}
-                                            </a>
+                                            </span>
                                         </p>
                                     </div>
                                 </div>
@@ -56,7 +63,7 @@ class UserFollowings extends Component {
                             </div>
                             <div className="col-md-4">
                                 <div className="btn-wrap">
-                                    <a href="">View all</a>
+                                    <button className="btn btn-beefree" onClick={this.onBtnViewAll}>View all</button>
                                 </div>
                             </div>
                         </div>
@@ -78,7 +85,7 @@ class UserFollowings extends Component {
     }
 }
 
-// todo move i_follow to  state.social.i_follow
+// todo move i_follow to state.social.i_follow
 const mapStateToProps = state => ({
     user: state.social.user,
 });

@@ -1,11 +1,141 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 //import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import './UserWallet.css';
 import avatar from './../../img/423.jpg'
-
+import * as actions from "../../store/social/actions";
+import {connect} from "react-redux";
+import User from "../../Beefree/User";
 
 class UserWallet extends Component {
+    onBtnView = () => {
+        console.log('on btn view');
+    };
+
+    onUserClick = () => {
+        console.log('on user click');
+    };
+
     render() {
+        const {user} = this.props;
+        const userAvatar = User.getAvatar(user);
+        const balance = '2.89756431';
+        const balanceUsd = '560.86';
+        //const dailyIncome = '1.4352426';
+        const recentTransactions = [
+            {
+                type: 'in',
+                sumEthereum: '0.12434542',
+                sumUsd: '1.12',
+                user: {
+                    avatar,
+                    username: 'user1'
+                }
+            },
+            {
+                type: 'in',
+                sumEthereum: '0.12434542',
+                sumUsd: '1.12',
+                user: {
+                    avatar,
+                    username: 'user2'
+                }
+            },
+            {
+                type: 'out',
+                sumEthereum: '0.12434542',
+                sumUsd: '1.12',
+                user: {
+                    avatar,
+                    username: 'user3'
+                }
+            },
+            {
+                type: 'out',
+                sumEthereum: '0.12434542',
+                sumUsd: '1.12',
+                user: {
+                    avatar,
+                    username: 'user4'
+                }
+            },
+        ];
+
+        const transactions = recentTransactions.map((item, index) => {
+            let result = null;
+            item.sumEthereum = Number(item.sumEthereum).toFixed(4);
+            if (item.type === 'in') {
+                result = (
+                    <div key={index} className="item transaction">
+                        <div className="tr-req">
+                            <div className="from cursor-pointer" onClick={this.onUserClick}>
+                                <img src={item.user.avatar} alt=""/>
+                            </div>
+                            <div className="arrow">
+                                <i className="fas fa-long-arrow-alt-right"/>
+                            </div>
+                            <div className="to cursor-pointer" onClick={this.onUserClick}>
+                                <img src={userAvatar} alt=""/>
+                            </div>
+                        </div>
+                        <div className="tr-info">
+                            <div className="ammount">
+                                <p>
+                                    <span>+</span>
+                                    <span>{item.sumEthereum} ETH</span>
+                                    <span className="usd"> (${item.sumUsd})</span>
+                                </p>
+                            </div>
+                            <div className="way">
+                                <p>
+                                    <span className="dir">from&nbsp;</span>
+                                    <span className="user-wallet-recipient cursor-pointer"
+                                          onClick={this.onUserClick}>
+                                        @{item.user.username}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                );
+            } else if (item.type === 'out') {
+                result = (
+                    <div key={index} className="item transaction">
+                        <div className="tr-req">
+                            <div className="from cursor-pointer" onClick={this.onUserClick}>
+                                <img src={userAvatar} alt=""/>
+                            </div>
+                            <div className="arrow">
+                                <i className="fas fa-long-arrow-alt-right"/>
+                            </div>
+                            <div className="to cursor-pointer" onClick={this.onUserClick}>
+                                <img src={item.user.avatar} alt=""/>
+                            </div>
+                        </div>
+                        <div className="tr-info">
+                            <div className="ammount">
+                                <p>
+                                    <span>-</span>
+                                    <span>{item.sumEthereum} ETH</span>
+                                    <span className="usd"> (${item.sumUsd})</span>
+                                </p>
+                            </div>
+                            <div className="way">
+                                <p>
+                                    <span className="dir">sent to&nbsp;</span>
+                                    <span className="user-wallet-recipient cursor-pointer"
+                                          onClick={this.onUserClick}>
+                                        @{item.user.username}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            return result;
+        });
+
         return (
             <div className="wallet-block _block">
                 <div className="header-wrap">
@@ -21,7 +151,7 @@ class UserWallet extends Component {
                             </div>
                             <div className="col-md-4">
                                 <div className="btn-wrap">
-                                    <a href="">View</a>
+                                    <button className="btn btn-beefree" onClick={this.onBtnView}>View</button>
                                 </div>
                             </div>
                         </div>
@@ -42,21 +172,18 @@ class UserWallet extends Component {
                                         <div className="item-content">
                                             <div className="cur-bal">
                                                 <p>
-                                                    ETH&nbsp;
-                                                    <span>
-																					2.8975643
-																				</span>
+                                                    ETH&nbsp;<span>{balance}</span>
                                                 </p>
                                             </div>
                                             <div className="cur-bal-usd">
                                                 <p>
-                                                    ($560,20)
+                                                    (${balanceUsd})
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="item">
+                                    {/*<div className="item">
                                         <div className="item-name">
                                             <p>
                                                 Daily income
@@ -65,17 +192,12 @@ class UserWallet extends Component {
                                         <div className="item-content">
                                             <div className="income">
                                                 <p>
-																				<span className="plus">
-																					+
-																				</span>
-                                                    &nbsp;ETH&nbsp;
-                                                    <span>
-																					2.8975643
-																				</span>
+                                                    <span className="plus">+</span>&nbsp;ETH&nbsp;
+                                                    <span>{dailyIncome}</span>
                                                 </p>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>*/}
 
                                     <div className="item transactions">
                                         <div className="item-name">
@@ -85,131 +207,7 @@ class UserWallet extends Component {
                                         </div>
                                         <div className="item-content">
 
-                                            <div className="item transaction">
-                                                <div className="tr-req">
-                                                    <div className="from">
-                                                        <img src={avatar} alt=""/>
-                                                    </div>
-                                                    <div className="arrow">
-                                                        <i className="fas fa-long-arrow-alt-right"/>
-                                                    </div>
-                                                    <div className="to">
-                                                        <img src={avatar} alt=""/>
-                                                    </div>
-                                                </div>
-                                                <div className="tr-info">
-                                                    <div className="ammount">
-                                                        <p>
-																						<span>
-																							+
-																						</span>
-                                                            <span>
-																							0.2432
-																						</span>
-                                                            ETH
-                                                            <span className="usd">
-																							($100)
-																						</span>
-                                                        </p>
-                                                    </div>
-                                                    <div className="way">
-                                                        <p>
-																						<span className="dir">
-																							sent to&nbsp;
-																						</span>
-                                                            <span className="recep">
-																							<a href="">
-																								@lester.hughes
-																							</a>
-																						</span>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="item transaction">
-                                                <div className="tr-req">
-                                                    <div className="from">
-                                                        <img src={avatar} alt=""/>
-                                                    </div>
-                                                    <div className="arrow">
-                                                        <i className="fas fa-long-arrow-alt-right"/>
-                                                    </div>
-                                                    <div className="to">
-                                                        <img src={avatar} alt=""/>
-                                                    </div>
-                                                </div>
-                                                <div className="tr-info">
-                                                    <div className="ammount">
-                                                        <p>
-																						<span>
-																							+
-																						</span>
-                                                            <span>
-																							0.2432
-																						</span>
-                                                            ETH
-                                                            <span className="usd">
-																							($100)
-																						</span>
-                                                        </p>
-                                                    </div>
-                                                    <div className="way">
-                                                        <p>
-																						<span className="dir">
-																							sent to
-																						</span>
-                                                            <span className="recep">
-																							<a href="">
-																								@lester.hughes
-																							</a>
-																						</span>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="item transaction">
-                                                <div className="tr-req">
-                                                    <div className="from">
-                                                        <img src={avatar} alt=""/>
-                                                    </div>
-                                                    <div className="arrow">
-                                                        <i className="fas fa-long-arrow-alt-right"/>
-                                                    </div>
-                                                    <div className="to">
-                                                        <img src={avatar} alt=""/>
-                                                    </div>
-                                                </div>
-                                                <div className="tr-info">
-                                                    <div className="ammount">
-                                                        <p>
-																						<span>
-																							+
-																						</span>
-                                                            <span>
-																							0.2432
-																						</span>
-                                                            ETH
-                                                            <span className="usd">
-																							($100)
-																						</span>
-                                                        </p>
-                                                    </div>
-                                                    <div className="way">
-                                                        <p>
-																						<span className="dir">
-																							from&nbsp;
-																						</span>
-                                                            <span className="recep">
-																							<a href="">
-																								@lester.hughes
-																							</a>
-																						</span>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            {transactions}
 
                                         </div>
                                     </div>
@@ -224,4 +222,8 @@ class UserWallet extends Component {
     }
 }
 
-export default UserWallet;
+const mapStateToProps = state => ({
+    user: state.social.user,
+});
+
+export default connect(mapStateToProps, actions)(UserWallet);

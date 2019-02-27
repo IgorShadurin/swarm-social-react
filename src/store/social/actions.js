@@ -44,20 +44,18 @@ export const init = () => {
                 const lastPostId = data.last_post_id;
                 for (let i = 0; i < 10; i++) {
                     const id = lastPostId - i;
-                    if (id > 0) {
-                        //console.log('ID: ' + id);
-                        postsQueue.add(() => {
-                            dispatch(getPost(id, true))
-                        });
-                    } else {
-                        postsQueue.add(() => {
-                            dispatch({
-                                type: types.SOCIAL_INIT
-                            });
-                        });
-                        break;
-                    }
+
+                    //console.log('ID: ' + id);
+                    postsQueue.add(() => {
+                        dispatch(getPost(id, true))
+                    });
                 }
+
+                postsQueue.add(() => {
+                    dispatch({
+                        type: types.SOCIAL_INIT
+                    });
+                });
             }
         });
 };

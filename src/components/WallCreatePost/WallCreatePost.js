@@ -28,6 +28,10 @@ class WallCreatePost extends Component {
         });
     };
 
+    onUserClick = () => {
+        console.log('user click');
+    };
+
     render() {
         const {isWallPosting, user} = this.props;
         const avatar = User.getAvatar(user);
@@ -35,8 +39,8 @@ class WallCreatePost extends Component {
         return (
             <div className="row new-post">
                 <div className="col-md-2">
-                    <div className="avatar-wrap">
-                        <img src={avatar} alt=""/>
+                    <div className="avatar-wrap cursor-pointer" onClick={this.onUserClick}>
+                        <img src={avatar} alt="Avatar"/>
                     </div>
                 </div>
                 <div className="col-md-10">

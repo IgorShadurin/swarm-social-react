@@ -38,6 +38,15 @@ class WallPost extends Component {
         console.log(id);
     };
 
+    onPostClick = (e) => {
+        console.log('post click');
+
+    };
+
+    onUserClick = (e) => {
+        console.log('user click');
+    };
+
     render() {
         //console.log(this.props);
         const {user, item} = this.props;
@@ -51,28 +60,25 @@ class WallPost extends Component {
                         <div className="col-md-12">
                             <div className="post-header">
                                 <div className="l-side">
-                                    <div className="avatar-wrap">
+                                    <div className="avatar-wrap cursor-pointer" onClick={this.onUserClick}>
                                         <img src={avatar} alt=""/>
                                     </div>
                                     <div className="info-wrap">
-                                        <a href="#">
-                                            <p className="name">
-                                                {fullName}
-                                            </p>
-                                            <p className="date">
-                                                Yesterday - 13:55
-                                            </p>
-                                        </a>
+                                        <p className="name cursor-pointer" onClick={this.onUserClick}>
+                                            {fullName}
+                                        </p>
+                                        <p className="date cursor-pointer" onClick={this.onPostClick}>
+                                            Yesterday - 13:55
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="r-side">
-                                    <div className="btns-wrap">
-                                        <a href="#" onClick={(e) => this.onEditPost(e, item.id)}>
-                                            <i className="far fa-edit"/>
-                                        </a>
-                                        <a href="#" onClick={(e) => this.onDeletePost(e, item.id)}>
-                                            <i className="far fa-times-circle"/>
-                                        </a>
+                                    <div className="btns-wrap opacity-items">
+                                        <i className="far fa-edit cursor-pointer"
+                                           onClick={(e) => this.onEditPost(e, item.id)}/>&nbsp;
+                                        <i className="far fa-times-circle cursor-pointer"
+                                           onClick={(e) => this.onDeletePost(e, item.id)}/>
+
                                     </div>
                                 </div>
                             </div>
@@ -83,17 +89,18 @@ class WallPost extends Component {
                             </div>
                             <div className="post-end">
                                 <div className="likes-wrap">
-                                    <a className="like" href="#" onClick={(e) => this.onLike(e, item.id)}>
+                                    <span className="like cursor-pointer" onClick={(e) => this.onLike(e, item.id)}>
                                         <i className="fas fa-thumbs-up"/> <span>0</span>
-                                    </a>
-                                    <a className="dislike" href="#" onClick={(e) => this.onDislike(e, item.id)}>
+                                    </span>
+                                    <span className="dislike cursor-pointer"
+                                          onClick={(e) => this.onDislike(e, item.id)}>
                                         <i className="fas fa-thumbs-down"/> <span>0</span>
-                                    </a>
+                                    </span>
                                 </div>
-                                <div className="share-wrap">
-                                    <a href="#" onClick={(e) => this.onShare(e, item.id)}>
+                                <div className="share-wrap cursor-pointer">
+                                    <span onClick={(e) => this.onShare(e, item.id)}>
                                         Share <i className="fas fa-retweet"/>
-                                    </a>
+                                    </span>
                                 </div>
                             </div>
                         </div>

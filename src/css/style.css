@@ -244,7 +244,7 @@ section#main-body .main-l-bar-wrap ._block .btn-wrap {
     justify-content: flex-end;
 }
 
-section#main-body .main-l-bar-wrap ._block .btn-wrap a {
+/*section#main-body .main-l-bar-wrap ._block .btn-wrap a {
     font-size: 10px;
     text-decoration: none;
     color: #2b2e3b;
@@ -252,6 +252,17 @@ section#main-body .main-l-bar-wrap ._block .btn-wrap a {
     border: 1px solid #edeff1;
     padding: 4px 20px;
     border-radius: 5px;
+}*/
+
+.btn-beefree {
+    font-size: 10px;
+    text-decoration: none;
+    color: #2b2e3b;
+    font-weight: 600;
+    border: 1px solid #edeff1;
+    padding: 4px 20px;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 /**/
@@ -298,11 +309,13 @@ section#main-body .main-l-bar-wrap .follows-block .content-wrap .items-wrap .ite
     justify-content: flex-start;
 }
 
-section#main-body .main-l-bar-wrap .follows-block .content-wrap .items-wrap .item .nickname-wrap p a {
+/*section#main-body .main-l-bar-wrap .follows-block .content-wrap .items-wrap .item .nickname-wrap p a*/
+.following-username {
     font-size: 14px;
     margin: 0;
     color: #2b2e3b;
     text-decoration: none;
+    cursor: pointer;
 }
 
 section#main-body .main-l-bar-wrap .follows-block .content-wrap .items-wrap .item .followers {
@@ -488,7 +501,13 @@ section#main-body .main-l-bar-wrap .wallet-block .transactions .item-content .it
     font-weight: 300;
 }
 
-section#main-body .main-l-bar-wrap .wallet-block .transactions .item-content .item .tr-info .way .recep a {
+/*section#main-body .main-l-bar-wrap .wallet-block .transactions .item-content .item .tr-info .way .recep a {
+    color: #106eff;
+    font-weight: 600;
+    text-decoration: none;
+}*/
+
+.user-wallet-recipient{
     color: #106eff;
     font-weight: 600;
     text-decoration: none;
@@ -612,7 +631,16 @@ section#main-body .posts-wrap .post .post-end a {
     font-size: 14px;
 }
 
-section#main-body .posts-wrap .post .post-end .likes-wrap {
+.likes-wrap, .share-wrap {
+    font-size: 14px;
+}
+
+.like {
+    margin-right: 15px;
+
+}
+
+/*section#main-body .posts-wrap .post .post-end .likes-wrap {
 
 }
 
@@ -622,7 +650,7 @@ section#main-body .posts-wrap .post .post-end .share-wrap {
 
 section#main-body .posts-wrap .post .post-end .likes-wrap a {
     margin-right: 15px;
-}
+}*/
 
 section#main-body .posts-wrap .post .post-end .likes-wrap a:hover span {
     text-decoration: underline;
@@ -658,7 +686,7 @@ section#main-body .more-btn {
     justify-content: center;
 }
 
-section#main-body .more-btn a {
+/*section#main-body .more-btn a {
     padding: 10px 20px;
     background: #fbfbfb;
     border: 1px solid #edeff1;
@@ -667,6 +695,18 @@ section#main-body .more-btn a {
     font-size: 12px;
     text-decoration: none;
     font-weight: 500;
+}*/
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.opacity-items {
+    opacity: 0.1;
+}
+
+.opacity-items:hover {
+    opacity: 1;
 }
 
 /*/////////////////////////*/
