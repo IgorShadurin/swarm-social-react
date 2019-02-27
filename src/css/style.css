@@ -507,7 +507,7 @@ section#main-body .main-l-bar-wrap .wallet-block .transactions .item-content .it
     text-decoration: none;
 }*/
 
-.user-wallet-recipient{
+.user-wallet-recipient {
     color: #106eff;
     font-weight: 600;
     text-decoration: none;
@@ -703,10 +703,12 @@ section#main-body .more-btn {
 
 .opacity-items {
     opacity: 0.1;
+    transition: opacity .1s ease-out;
 }
 
 .opacity-items:hover {
     opacity: 1;
+    transition: opacity .3s ease-out;
 }
 
 /*/////////////////////////*/

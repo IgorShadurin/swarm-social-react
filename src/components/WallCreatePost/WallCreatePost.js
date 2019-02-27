@@ -32,6 +32,12 @@ class WallCreatePost extends Component {
         console.log('user click');
     };
 
+    attachVideo = () => {
+    };
+
+    attachImage = () => {
+    };
+
     render() {
         const {isWallPosting, user} = this.props;
         const avatar = User.getAvatar(user);
@@ -57,12 +63,10 @@ class WallCreatePost extends Component {
                         </div>
                         <div className="btns-wrap">
                             <div className="btns">
-                                {/*<a href="">
-                                    <i className="fas fa-images"/>
-                                </a>*/}
-                                {/*<a href="">
-                                    <i className="fas fa-video"/>
-                                </a>*/}
+                                <i className="fas fa-images cursor-pointer WallCreatePost-attach"
+                                   onClick={this.attachImage}/>
+                                <i className="fas fa-video cursor-pointer WallCreatePost-attach"
+                                   onClick={this.attachVideo}/>
                                 <button
                                     className="btn btn-primary"
                                     disabled={isWallPosting || this.state.text.length === 0}
