@@ -10,3 +10,4 @@ export const SOCIAL_PROFILE_SAVED = 'social.profileSaved';
 export const SOCIAL_ON_CHANGE_HASH = 'social.onChangeHash';
 export const SOCIAL_ON_CONTENT_LIKE = 'social.onContentLike';
 export const SOCIAL_ON_CONTENT_DISLIKE = 'social.onContentDislike';
+export const SOCIAL_ON_UPLOADED_USER_FILE = 'social.onUploadedUserFile';

@@ -27,6 +27,10 @@ export default class Core {
 
     }
 
+    /**
+     *
+     * @param newHash
+     */
     changeCurrentHash(newHash) {
         this.currentHash = newHash;
         if (this.onChangeHash) {
@@ -34,6 +38,12 @@ export default class Core {
         }
     }
 
+    /**
+     *
+     * @param path
+     * @param dataClass
+     * @returns {Promise<Response>}
+     */
     download(path, dataClass) {
         return this.swarm.bzz.download(path)
             .then(res => res.json())
@@ -76,7 +86,7 @@ export default class Core {
 
         // todo check is work for submitted files
         if (content.type) {
-            options.contentType = content.contentType;
+            options.contentType = content.type;
         } else {
             if (path && path.endsWith('.json')) {
                 content = JSON.stringify(content);
@@ -154,18 +164,34 @@ export default class Core {
         return this.download(`${hash}/${this.socialDirectory}/post/${id}/info.json`, Post);
     }
 
+    _getProfileParam(paramName, defaultValue) {
+        let id = defaultValue;
+
+        if (this.user && this.user[paramName]) {
+            return this.user[paramName];
+        }
+
+        return id;
+    }
+
+    _getUserData() {
+        return this.user && this.user._data ? this.user._data : {};
+    }
+
     /**
      *
      * @param data
      * @returns {Promise<{data: *, hash: string}>}
      */
     createPost(data) {
-        let id = 1;
+        /*let id = 1;
         let user = this.user && this.user._data ? this.user._data : {};
         if (this.user && this.user.last_post_id) {
             id = this.user.last_post_id + 1;
-        }
+        }*/
 
+        let id = this._getProfileParam('last_post_id', 0) + 1;
+        let user = this._getUserData();
         user = Object.assign({}, user, {
             last_post_id: id
         });
@@ -185,6 +211,52 @@ export default class Core {
                 result.hash = hash;
 
                 return result;
+            });
+    }
+
+    /*uploadFileToPost(postId, fileId, file) {
+        return this.uploadFile(data, `${this.socialDirectory}/post/${postId}/${fileId}/`)
+            .then(() => {
+                return this.saveProfile(user);
+            })
+            .then((hash) => {
+                result.hash = hash;
+
+                return result;
+            });
+    }*/
+
+    uploadUserFile(file) {
+        let id = this._getProfileParam('last_file_id', 0) + 1;
+        let user = this._getUserData();
+        user = Object.assign({}, user, {
+            last_file_id: id
+        });
+        const info = {
+            id,
+            contentType: file.type,
+            created_at: '---'
+        };
+
+        return this.uploadFile(file, `${this.socialDirectory}/file/${id}/file`)
+            .then((data) => {
+                this.changeCurrentHash(data.newHash);
+
+                return this.uploadFile(info, `${this.socialDirectory}/file/${id}/info.json`);
+            })
+            .then((data) => {
+                this.changeCurrentHash(data.newHash);
+
+                return this.saveProfile(user);
+            })
+            .then((data) => {
+                this.changeCurrentHash(data.newHash);
+
+                return {
+                    hash: data.newHash,
+                    info,
+                    lastResponse: data
+                };
             });
     }
 

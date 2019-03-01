@@ -184,3 +184,13 @@ export const doDislike = (contentType, contentId) => {
         contentId
     });
 };
+
+export const uploadUserFile = (file) => {
+    return dispatch => bee.uploadUserFile(file)
+        .then(data => {
+            dispatch({
+                type: types.SOCIAL_ON_UPLOADED_USER_FILE,
+                data
+            });
+        });
+};

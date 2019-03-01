@@ -9,6 +9,7 @@ class WallCreatePost extends Component {
     constructor() {
         super();
 
+        this.inputFile = React.createRef();
         this.state = {
             text: '',
         };
@@ -32,10 +33,31 @@ class WallCreatePost extends Component {
         console.log('user click');
     };
 
+    attach = (accept, onChange) => {
+        const input = this.inputFile.current;
+        input.value = null;
+        input.onchange = onChange;
+        input.accept = accept;
+        input.click();
+
+    };
+
     attachVideo = () => {
+        this.attach('video/*', (result) => {
+            console.log(result);
+            console.log('vvvv');
+        });
     };
 
     attachImage = () => {
+        const {uploadUserFile} = this.props;
+        this.attach('image/*', () => {
+            const files = this.inputFile.current.files;
+            if (files && files[0]) {
+                console.log(files[0]);
+                uploadUserFile(files[0]);
+            }
+        });
     };
 
     render() {
@@ -74,6 +96,7 @@ class WallCreatePost extends Component {
                                     Post
                                 </button>
                             </div>
+                            <input className="WallCreatePost-input" type="file" ref={this.inputFile}/>
                         </div>
                     </div>
                 </div>
