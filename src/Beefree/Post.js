@@ -14,8 +14,8 @@ export default class Post extends BaseObject {
         return [
             'id',
             'description',
-            'created_at_utc',
-            'updated_at_utc',
+            'created_at',
+            'updated_at',
             {
                 name: 'attachments',
                 type: ObjectConstructor.TYPE_ARRAY,

@@ -1,6 +1,6 @@
-import BaseObject from "./BaseObject";
+import File from './File';
 
-export default class Audio extends BaseObject {
+export default class Audio extends File {
     constructor(data = {}) {
         super(data);
         //console.log(data);

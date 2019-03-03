@@ -1,8 +1,13 @@
 import {SwarmClient} from "@erebos/swarm-browser";
 import User from "./User";
 import Post from "./Post";
+import File from "./File";
 import ObjectConstructor from "./ObjectConstructor";
 import CoreResponse from "./CoreResponse";
+
+export const FILE_TYPE_ANY_BINARY = 'any_binary';
+export const FILE_TYPE_IMAGE = 'image';
+export const FILE_TYPE_VIDEO = 'video';
 
 export default class Core {
     constructor(url = 'https://swarm-gateways.net', initHash = null, socialDirectory = 'social') {
@@ -25,6 +30,10 @@ export default class Core {
 
     onChangeHash(newHash) {
 
+    }
+
+    getUTCTimestamp() {
+        return new Date().getTime();
     }
 
     /**
@@ -84,8 +93,7 @@ export default class Core {
             options.path = path;
         }
 
-        // todo check is work for submitted files
-        if (content.type) {
+        if (content instanceof window.File) {
             options.contentType = content.type;
         } else {
             if (path && path.endsWith('.json')) {
@@ -139,9 +147,13 @@ export default class Core {
     saveProfile(profile, isUseOldProfile = true) {
         // todo validate data
         let newProfile = profile;
-        //console.log(isUseOldProfile);
         if (isUseOldProfile) {
             newProfile = Object.assign({}, this.user._data, profile);
+        }
+
+        newProfile.updated_at = this.getUTCTimestamp();
+        if (!newProfile.created_at) {
+            newProfile.created_at = this.getUTCTimestamp();
         }
 
         console.log(newProfile);
@@ -165,13 +177,12 @@ export default class Core {
     }
 
     _getProfileParam(paramName, defaultValue) {
-        let id = defaultValue;
-
-        if (this.user && this.user[paramName]) {
-            return this.user[paramName];
+        const data = this._getUserData();
+        if (data[paramName]) {
+            return data[paramName];
         }
 
-        return id;
+        return defaultValue;
     }
 
     _getUserData() {
@@ -214,28 +225,19 @@ export default class Core {
             });
     }
 
-    /*uploadFileToPost(postId, fileId, file) {
-        return this.uploadFile(data, `${this.socialDirectory}/post/${postId}/${fileId}/`)
-            .then(() => {
-                return this.saveProfile(user);
-            })
-            .then((hash) => {
-                result.hash = hash;
-
-                return result;
-            });
-    }*/
-
-    uploadUserFile(file) {
+    uploadUserFile(file, type = File) {
         let id = this._getProfileParam('last_file_id', 0) + 1;
         let user = this._getUserData();
         user = Object.assign({}, user, {
             last_file_id: id
         });
+        // todo implement init for different file types
         const info = {
             id,
-            contentType: file.type,
-            created_at: '---'
+            type: type.getPublicName(),
+            content_type: file.type,
+            created_at: this.getUTCTimestamp(),
+            updated_at: this.getUTCTimestamp()
         };
 
         return this.uploadFile(file, `${this.socialDirectory}/file/${id}/file`)

@@ -1,6 +1,6 @@
 import File from './File';
 
-export default class Video extends File {
+export default class Image extends File {
     constructor(data = {}) {
         super(data);
         //console.log(data);
@@ -13,5 +13,9 @@ export default class Video extends File {
             'type',
             'url',
         ];
+    }
+
+    static getPublicName() {
+        return 'image';
     }
 }

@@ -1,6 +1,6 @@
 import BaseObject from "./BaseObject";
 
-export default class Photo extends BaseObject {
+export default class File extends BaseObject {
     constructor(data = {}) {
         super(data);
         //console.log(data);
@@ -9,9 +9,12 @@ export default class Photo extends BaseObject {
     getKeys() {
         return [
             'id',
-            'previews',
-            'type',
-            'url',
+            'created_at',
+            'updated_at',
         ];
+    }
+
+    static getPublicName() {
+        return 'file';
     }
 }

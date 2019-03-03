@@ -4,6 +4,7 @@ import './WallCreatePost.css';
 import {connect} from "react-redux";
 import * as actions from "../../store/social/actions";
 import User from "../../Beefree/User";
+import Image from "../../Beefree/Image";
 
 class WallCreatePost extends Component {
     constructor() {
@@ -43,6 +44,8 @@ class WallCreatePost extends Component {
     };
 
     attachVideo = () => {
+        alert('Not implemented');
+        return;
         this.attach('video/*', (result) => {
             console.log(result);
             console.log('vvvv');
@@ -53,9 +56,17 @@ class WallCreatePost extends Component {
         const {uploadUserFile} = this.props;
         this.attach('image/*', () => {
             const files = this.inputFile.current.files;
-            if (files && files[0]) {
-                console.log(files[0]);
-                uploadUserFile(files[0]);
+            console.log(files);
+            if (!files || !files.length) {
+                return;
+            }
+
+            for (let file in files) {
+                file = files[file];
+                if (file instanceof window.File) {
+                    console.log(file);
+                    uploadUserFile(file, Image);
+                }
             }
         });
     };
@@ -96,7 +107,7 @@ class WallCreatePost extends Component {
                                     Post
                                 </button>
                             </div>
-                            <input className="WallCreatePost-input" type="file" ref={this.inputFile}/>
+                            <input className="WallCreatePost-input" type="file" ref={this.inputFile} multiple={true}/>
                         </div>
                     </div>
                 </div>

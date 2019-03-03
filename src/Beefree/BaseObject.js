@@ -8,6 +8,10 @@ export default class BaseObject {
     }
 
     prepareData() {
+        // some prepare manipulations
+    }
 
+    static getPublicName() {
+        return 'not_implemented_object';
     }
 }

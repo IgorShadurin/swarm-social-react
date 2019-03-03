@@ -2,9 +2,8 @@ import * as types from './actionTypes';
 import Core from '../../Beefree/Core';
 import Queue from 'promise-queue';
 
-//const parts = window.location.href.split('/').filter(word => word.length === 64 || word.length === 128 || (word.length >= 11 && word.endsWith('.eth')));
 const parts = window.location.href.split('/').filter(word => word.length === 64 || word.length === 128);
-let currentHash = '88eafbe85f0389f84eaa697b576197b33aa6277fb4ae02eabc617b47163c3b50';
+let currentHash = null;
 if (parts.length > 0) {
     currentHash = parts[0];
 }
@@ -27,7 +26,7 @@ bee.onChangeHash = (hash) => {
 };
 
 const queue = new Queue(1, Infinity);
-const postsQueue = new Queue(1, Infinity);
+//const queue = new Queue(1, Infinity);
 
 export const init = () => {
     return (dispatch) => bee.getMyProfile()
@@ -50,12 +49,12 @@ export const init = () => {
                         break;
                     }
 
-                    postsQueue.add(() => {
-                        dispatch(getPost(id, true))
+                    queue.add(() => {
+                        return getPost(id, true)(dispatch);
                     });
                 }
 
-                postsQueue.add(() => {
+                queue.add(() => {
                     dispatch({
                         type: types.SOCIAL_INIT
                     });
@@ -185,12 +184,16 @@ export const doDislike = (contentType, contentId) => {
     });
 };
 
-export const uploadUserFile = (file) => {
-    return dispatch => bee.uploadUserFile(file)
-        .then(data => {
-            dispatch({
-                type: types.SOCIAL_ON_UPLOADED_USER_FILE,
-                data
-            });
+export const uploadUserFile = (file, fileType) => {
+    return dispatch => {
+        queue.add(() => {
+            return bee.uploadUserFile(file, fileType)
+                .then(data => {
+                    dispatch({
+                        type: types.SOCIAL_ON_UPLOADED_USER_FILE,
+                        data
+                    });
+                });
         });
+    }
 };

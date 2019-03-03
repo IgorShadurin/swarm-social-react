@@ -22,7 +22,8 @@ export default class User extends BaseObject {
             'last_videoalbum_id',
             'ethereum_wallet',
             'version',
-            'updated_at_utc'
+            'created_at',
+            'updated_at'
         ];
     }
 
