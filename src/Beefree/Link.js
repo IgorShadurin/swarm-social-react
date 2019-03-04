@@ -14,4 +14,12 @@ export default class Link extends BaseObject {
             'url',
         ];
     }
+
+    static getClassName() {
+        return 'Link';
+    }
+
+    static getDataName() {
+        return 'link';
+    }
 }

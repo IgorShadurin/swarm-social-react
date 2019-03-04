@@ -19,8 +19,16 @@ export default class Post extends BaseObject {
             {
                 name: 'attachments',
                 type: ObjectConstructor.TYPE_ARRAY,
-                array_type: PostAttachment.name
+                array_type: PostAttachment.getClassName()
             }
         ];
+    }
+
+    static getClassName() {
+        return 'Post';
+    }
+
+    static getDataName() {
+        return 'post';
     }
 }

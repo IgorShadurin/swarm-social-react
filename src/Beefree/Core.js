@@ -234,7 +234,7 @@ export default class Core {
         // todo implement init for different file types
         const info = {
             id,
-            type: type.getPublicName(),
+            type: type.getDataName(),
             content_type: file.type,
             created_at: this.getUTCTimestamp(),
             updated_at: this.getUTCTimestamp()

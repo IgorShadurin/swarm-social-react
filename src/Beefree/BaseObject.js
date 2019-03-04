@@ -11,7 +11,11 @@ export default class BaseObject {
         // some prepare manipulations
     }
 
-    static getPublicName() {
-        return 'not_implemented_object';
+    static getClassName() {
+        return 'BaseObject';
+    }
+
+    static getDataName() {
+        return 'BaseObject';
     }
 }

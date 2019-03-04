@@ -7,8 +7,8 @@ export default class ObjectConstructor {
     constructor(data, keys) {
         this.data = {};
         this.classes = {
-            PostAttachment,
-            User
+            'PostAttachment': PostAttachment,
+            'User': User
         };
         if (Object.keys(data).length && Object.keys(keys).length) {
             //console.log(keys, data);

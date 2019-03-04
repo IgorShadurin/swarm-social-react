@@ -14,4 +14,12 @@ export default class Video extends File {
             'url',
         ];
     }
+
+    static getClassName() {
+        return 'Video';
+    }
+
+    static getDataName() {
+        return 'video';
+    }
 }

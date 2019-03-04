@@ -15,7 +15,11 @@ export default class Image extends File {
         ];
     }
 
-    static getPublicName() {
+    static getClassName() {
+        return 'Image';
+    }
+
+    static getDataName() {
         return 'image';
     }
 }

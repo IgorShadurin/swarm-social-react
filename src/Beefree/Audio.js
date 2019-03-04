@@ -16,4 +16,12 @@ export default class Audio extends File {
             'updated_at'
         ];
     }
+
+    static getClassName() {
+        return 'Audio';
+    }
+
+    static getDataName() {
+        return 'audio';
+    }
 }

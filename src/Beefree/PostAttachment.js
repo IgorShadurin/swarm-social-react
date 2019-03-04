@@ -17,4 +17,12 @@ export default class PostAttachment extends BaseObject {
             'object'
         ];
     }
+
+    static getClassName() {
+        return 'PostAttachment';
+    }
+
+    static getDataName() {
+        return 'post_attachment';
+    }
 }

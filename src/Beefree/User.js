@@ -66,4 +66,12 @@ export default class User extends BaseObject {
     static getAvatar(user, size = 'preview') {
         return user && user.avatar && user.avatar.original ? user.avatar.original : defaultAvatar;
     }
+
+    static getClassName() {
+        return 'User';
+    }
+
+    static getDataName() {
+        return 'user';
+    }
 }
