@@ -13,10 +13,11 @@ class WallCreatePost extends Component {
         super();
 
         this.inputFile = React.createRef();
+        this.uploadingFileId = 1;
         this.state = {
             text: '',
             uploadList: [
-                <WallUploadStatus key={1}
+                /*<WallUploadStatus key={1}
                                   item={{
                                       id: 111,
                                       progressPercent: 0,
@@ -39,7 +40,7 @@ class WallCreatePost extends Component {
                                       name: '333 hello.jpg',
                                       preview: '',
                                       isComplete: false
-                                  }}/>,
+                                  }}/>,*/
             ]
         };
     }
@@ -74,10 +75,26 @@ class WallCreatePost extends Component {
 
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
-                uploadUserFile(file, fileType);
+                const currentFileId = this.uploadingFileId;
+                uploadUserFile(file, fileType, () => {
+                }, () => {
+                    const items = this.state.uploadList.filter((item) => {
+                        return Number(item.key) !== Number(currentFileId);
+                    });
+
+                    this.setState({
+                        uploadList: items
+                    });
+                });
                 this.setState(prevState => ({
-                    uploadList: [...prevState.uploadList, new UploadStatus('random', 0, file.name)]
+                    uploadList: [...prevState.uploadList, <WallUploadStatus key={this.uploadingFileId}
+                                                                            item={{
+                                                                                id: this.uploadingFileId,
+                                                                                progressPercent: 10,
+                                                                                name: file.name
+                                                                            }}/>]
                 }));
+                this.uploadingFileId++;
             }
         };
         input.accept = accept;
@@ -130,12 +147,12 @@ class WallCreatePost extends Component {
                         </div>
                     </div>
                 </div>
-                {/*<div className="row">
+                <div className="row">
                     <div className="col-md-2"/>
                     <div className="col-md-10">
                         {uploadList}
                     </div>
-                </div>*/}
+                </div>
             </Fragment>
         );
     }

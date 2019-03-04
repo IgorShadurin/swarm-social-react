@@ -15,17 +15,36 @@ import * as actions from "../../store/social/actions";
 }*/
 
 class WallUploadStatus extends Component {
+    onCancelUploading = (id) => {
+        console.log('cancel uploading: ' + id);
+    };
+
     render() {
         const {item} = this.props;
         console.log(item);
         console.log(this.props);
         console.log(this.props.item);
         let result = null;
+        const style = {
+            width: `${item.progressPercent}%`
+        };
         if (item.isComplete) {
             // show preview
             result = <div>Complete!</div>;
         } else {
-            result = <div>Progress bar here {item.progressPercent}. {item.name}</div>
+            result = <div>
+                <span className="WallUploadStatus-name">
+                    <i className="far fa-times-circle cursor-pointer"
+                       onClick={() => this.onCancelUploading(item.id)}/> {item.name}
+                </span>
+                <div className="progress">
+                    <div className="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                         style={style} aria-valuenow={item.progressPercent}
+                         aria-valuemin="0" aria-valuemax="100">
+                        {item.progressPercent}%
+                    </div>
+                </div>
+            </div>
         }
 
         return (

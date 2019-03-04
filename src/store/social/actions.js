@@ -184,7 +184,7 @@ export const doDislike = (contentType, contentId) => {
     });
 };
 
-export const uploadUserFile = (file, fileType) => {
+export const uploadUserFile = (file, fileType, onProgress, onComplete) => {
     return dispatch => {
         queue.add(() => {
             return bee.uploadUserFile(file, fileType)
@@ -193,6 +193,9 @@ export const uploadUserFile = (file, fileType) => {
                         type: types.SOCIAL_ON_UPLOADED_USER_FILE,
                         data
                     });
+                    if (onComplete) {
+                        onComplete();
+                    }
                 });
         });
     }
