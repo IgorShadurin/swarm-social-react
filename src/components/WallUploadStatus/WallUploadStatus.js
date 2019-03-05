@@ -4,16 +4,6 @@ import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import * as actions from "../../store/social/actions";
 
-/*export class UploadStatus {
-    constructor(id, progressPercent, name, preview = null, isComplete = false) {
-        this.id = id;
-        this.progressPercent = progressPercent;
-        this.name = name;
-        this.preview = preview;
-        this.isComplete = isComplete;
-    }
-}*/
-
 class WallUploadStatus extends Component {
     onCancelUploading = (id) => {
         console.log('cancel uploading: ' + id);
@@ -21,14 +11,12 @@ class WallUploadStatus extends Component {
 
     render() {
         const {item} = this.props;
-        console.log(item);
-        console.log(this.props);
-        console.log(this.props.item);
         let result = null;
         const style = {
             width: `${item.progressPercent}%`
         };
-        if (item.isComplete) {
+        const isComplete = item.isComplete;
+        if (isComplete) {
             // show preview
             result = <div>Complete!</div>;
         } else {
@@ -62,7 +50,8 @@ class WallUploadStatus extends Component {
 };*/
 
 const mapStateToProps = state => ({
-    user: state.social.user
+    user: state.social.user,
+
 });
 
 export default connect(mapStateToProps, actions)(WallUploadStatus);

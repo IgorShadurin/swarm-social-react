@@ -5,7 +5,6 @@ import * as actions from "../../store/social/actions";
 import User from "../../Beefree/User";
 import Image from "../../Beefree/Image";
 import Video from "../../Beefree/Video";
-import UploadStatus from '../WallUploadStatus'
 import WallUploadStatus from "../WallUploadStatus/WallUploadStatus";
 
 class WallCreatePost extends Component {
@@ -16,32 +15,6 @@ class WallCreatePost extends Component {
         this.uploadingFileId = 1;
         this.state = {
             text: '',
-            uploadList: [
-                /*<WallUploadStatus key={1}
-                                  item={{
-                                      id: 111,
-                                      progressPercent: 0,
-                                      name: 'hello.jpg',
-                                      preview: '',
-                                      isComplete: false
-                                  }}/>,
-                <WallUploadStatus key={2}
-                                  item={{
-                                      id: 222,
-                                      progressPercent: 10,
-                                      name: 'hello 2.jpg',
-                                      preview: '',
-                                      isComplete: false
-                                  }}/>,
-                <WallUploadStatus key={3}
-                                  item={{
-                                      id: 333,
-                                      progressPercent: 100,
-                                      name: '333 hello.jpg',
-                                      preview: '',
-                                      isComplete: false
-                                  }}/>,*/
-            ]
         };
     }
 
@@ -75,25 +48,7 @@ class WallCreatePost extends Component {
 
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
-                const currentFileId = this.uploadingFileId;
-                uploadUserFile(file, fileType, () => {
-                }, () => {
-                    const items = this.state.uploadList.filter((item) => {
-                        return Number(item.key) !== Number(currentFileId);
-                    });
-
-                    this.setState({
-                        uploadList: items
-                    });
-                });
-                this.setState(prevState => ({
-                    uploadList: [...prevState.uploadList, <WallUploadStatus key={this.uploadingFileId}
-                                                                            item={{
-                                                                                id: this.uploadingFileId,
-                                                                                progressPercent: 10,
-                                                                                name: file.name
-                                                                            }}/>]
-                }));
+                uploadUserFile(this.uploadingFileId, file, fileType);
                 this.uploadingFileId++;
             }
         };
@@ -110,9 +65,12 @@ class WallCreatePost extends Component {
     };
 
     render() {
-        const {isWallPosting, user} = this.props;
-        const {uploadList} = this.state;
+        const {isWallPosting, user, uploadStatus} = this.props;
         const avatar = User.getAvatar(user);
+        const uploadList = uploadStatus.map((item) => {
+            return <WallUploadStatus key={item.id}
+                                     item={item}/>;
+        });
 
         return (
             <Fragment>
@@ -160,7 +118,8 @@ class WallCreatePost extends Component {
 
 const mapStateToProps = state => ({
     isWallPosting: state.social.isWallPosting,
-    user: state.social.user
+    user: state.social.user,
+    uploadStatus: state.social.uploadStatus,
 });
 
 export default connect(mapStateToProps, actions)(WallCreatePost);

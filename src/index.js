@@ -17,7 +17,8 @@ const store = configureStore(Immutable({
     social: {
         user: null,
         wallPosts: Immutable([]),
-        isInit: false
+        isInit: false,
+        uploadStatus: Immutable([]),
     }
 }));
 

@@ -184,8 +184,17 @@ export const doDislike = (contentType, contentId) => {
     });
 };
 
-export const uploadUserFile = (file, fileType, onProgress, onComplete) => {
+export const uploadUserFile = (uploadId, file, fileType, onProgress, onComplete) => {
     return dispatch => {
+        dispatch({
+            type: types.SOCIAL_ON_ADDED_UPLOADING,
+            data: {
+                id: uploadId,
+                name: file.name,
+                isComplete: false,
+                progressPercent: 10
+            }
+        });
         queue.add(() => {
             return bee.uploadUserFile(file, fileType)
                 .then(data => {
