@@ -11,6 +11,7 @@
     "axios": "^0.18.0",
     "bootstrap": "^4.2.1",
     "connected-react-router": "^6.2.2",
+    "date-and-time": "^0.6.3",
     "free-core": "git+https://github.com/SwarmOrange/free-core.git",
     "history": "^4.7.2",
     "jquery": "^3.3.1",

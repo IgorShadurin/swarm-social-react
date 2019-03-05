@@ -1,4 +1,6 @@
 {
+  "id": 1,
   "description": "Welcome to SWARM social network!",
-  "id": 1
+  "created_at": 1551797061,
+  "updated_at": 1551797061
 }

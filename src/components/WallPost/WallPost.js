@@ -4,6 +4,7 @@ import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import User from "../../Beefree/User";
 import * as actions from "../../store/social/actions";
+import date from "date-and-time";
 
 class WallPost extends Component {
     onLike = (e, id) => {
@@ -52,6 +53,7 @@ class WallPost extends Component {
         const {user, item} = this.props;
         const fullName = User.getFullName(user);
         const avatar = User.getAvatar(user);
+        const itemDate = item.created_at ? new Date(item.created_at) : null;
 
         return (
             <div className="post">
@@ -68,7 +70,7 @@ class WallPost extends Component {
                                             {fullName}
                                         </p>
                                         <p className="date cursor-pointer" onClick={this.onPostClick}>
-                                            Yesterday - 13:55
+                                            {itemDate ? date.format(itemDate, 'ddd MMM DD YYYY') : ''}
                                         </p>
                                     </div>
                                 </div>

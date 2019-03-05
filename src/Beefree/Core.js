@@ -195,12 +195,6 @@ export default class Core {
      * @returns {Promise<{data: *, hash: string}>}
      */
     createPost(data) {
-        /*let id = 1;
-        let user = this.user && this.user._data ? this.user._data : {};
-        if (this.user && this.user.last_post_id) {
-            id = this.user.last_post_id + 1;
-        }*/
-
         let id = this._getProfileParam('last_post_id', 0) + 1;
         let user = this._getUserData();
         user = Object.assign({}, user, {
@@ -208,6 +202,9 @@ export default class Core {
         });
 
         data.id = id;
+        data.created_at = this.getUTCTimestamp();
+        data.updated_at = this.getUTCTimestamp();
+
         let result = {
             data,
             hash: ''
