@@ -17,8 +17,7 @@ class WallUploadStatus extends Component {
         };
         const isComplete = item.isComplete;
         if (isComplete) {
-            // show preview
-            result = <div>Complete!</div>;
+            result = item.preview ? <div><img src={item.preview} alt="Preview"/></div> : <div>Complete!</div>;
         } else {
             result = <div>
                 <span className="WallUploadStatus-name">

@@ -10,6 +10,7 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import {connect} from "react-redux";
 import * as actions from "../store/social/actions";
 import PropTypes from "prop-types";
+import ChatPage from "../components/page/ChatPage";
 
 library.add(faComment, faWallet, faCog);
 
@@ -33,7 +34,7 @@ class App extends Component {
                                            render={() => <h1>Config only</h1>}/>
 
                                     <Route path="/:swarm_protocol?/:swarm_hash?/dialog/:hash?"
-                                           render={() => <h1>Dialog only</h1>}/>
+                                           component={ChatPage}/>
 
                                     <Route path="/:swarm_protocol?/:swarm_hash?/wallet/:hash?"
                                            render={() => <h1>Wallet only</h1>}/>
