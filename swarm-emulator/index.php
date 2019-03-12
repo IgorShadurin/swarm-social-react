@@ -49,12 +49,16 @@ class SwarmEmulator
         ];
 
         if ($listHash) {
-            // todo check file not found with this hash and name
             $oldData = $this->getList($listHash);
-            foreach ($oldData as $item) {
+            foreach ($oldData as $k => $item) {
                 $item = json_decode($item, true);
-                if ($item['path'] === $filePath && $item['hash'] === $fileHash) {
-                    return $listHash;
+                if ($item['path'] === $filePath) {
+                    if ($item['hash'] === $fileHash) {
+                        return $listHash;
+                    } else {
+                        unset($oldData[$k]);
+                        break;
+                    }
                 }
             }
 
@@ -114,6 +118,10 @@ class SwarmEmulator
         return $result;
     }
 }
+
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, DELETE');
+header("Access-Control-Allow-Headers: X-Requested-With, Content-Type");
 
 $emulator = new SwarmEmulator();
 
