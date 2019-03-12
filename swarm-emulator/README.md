@@ -1,4 +1,4 @@
-#SWARM Emulator
+# SWARM Emulator
 
 To install dependencies:
 ### `composer install`
