@@ -105,7 +105,7 @@ class SwarmEmulator
         foreach ($list as $k => $item) {
             $item = json_decode($item, true);
             if ($item['path'] === $path) {
-                unlink($list[$k]);
+                unset($list[$k]);
                 $contentHash = $this->setList($list);
                 $result = $contentHash;
             }
@@ -116,15 +116,7 @@ class SwarmEmulator
 }
 
 $emulator = new SwarmEmulator();
-/*$hash = $emulator->addFileToList('my super content', '/social/profile.json');
-$hash = $emulator->addFileToList('my super content 1', '/social/profile-1.json', $hash);
-var_dump($emulator->getList($hash));
-var_dump($hash);*/
 
-/*$result = $emulator->getFile('/social/profile-1.json', 'bfa9ca67c178df1ce85edb2e9f74edf1c22cdb06299222275676f4e16738f074');
-var_dump($result);
-return;*/
-//var_dump($_SERVER);
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 $pathInfo = $_SERVER['PATH_INFO'];
 $explodedInfo = explode('/', $pathInfo);
