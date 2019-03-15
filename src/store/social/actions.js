@@ -1,5 +1,6 @@
 import * as types from './actionTypes';
 import Core from '../../Beefree/Core';
+import Utils from '../../Beefree/Utils';
 import Queue from 'promise-queue';
 
 const parts = window.location.href.split('/').filter(word => word.length === 64 || word.length === 128);
@@ -14,6 +15,7 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     // dev code
     //bee = new Core('https://swarm-gateways.net', currentHash);
     bee = new Core('http://prototype.beefree.me', currentHash);
+    //bee = new Core('https://testeron.pro/swarm-emulator/index.php/', currentHash);
     //bee = new Core('http://127.0.0.1:8500', currentHash);
 } else {
     // production code
@@ -26,7 +28,6 @@ bee.onChangeHash = (hash) => {
 };
 
 const queue = new Queue(1, Infinity);
-//const queue = new Queue(1, Infinity);
 
 export const init = () => {
     return (dispatch) => bee.getMyProfile()
@@ -184,7 +185,7 @@ export const doDislike = (contentType, contentId) => {
     });
 };
 
-export const uploadUserFile = (uploadId, file, fileType, onProgress, onComplete) => {
+export const uploadUserFile = (uploadId, file, fileType) => {
     return dispatch => {
         dispatch({
             type: types.SOCIAL_ON_ADDED_UPLOADING,
@@ -195,17 +196,45 @@ export const uploadUserFile = (uploadId, file, fileType, onProgress, onComplete)
                 progressPercent: 10
             }
         });
+
         queue.add(() => {
-            return bee.uploadUserFile(file, fileType)
+            return Utils.resizeImages(file, [
+                {
+                    width: 100,
+                    height: 100
+                },
+                {
+                    width: 300,
+                    height: 300
+                },
+                {
+                    width: 800,
+                    height: 800
+                },
+                {
+                    width: 1600,
+                    height: 1600
+                }
+            ])
+                .then(data => {
+                    dispatch({
+                        type: types.SOCIAL_WALL_POST_IMAGE_PREVIEW_COMPLETE,
+                        id: uploadId,
+                        data
+                    });
+
+                    return data;
+                })
+                .then(data => {
+                    return bee.uploadUserFile(file, fileType, data)
+                })
                 .then(data => {
                     dispatch({
                         type: types.SOCIAL_ON_UPLOADED_USER_FILE,
                         data
                     });
-                    if (onComplete) {
-                        onComplete();
-                    }
                 });
         });
+
     }
 };

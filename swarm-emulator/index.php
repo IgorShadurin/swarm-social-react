@@ -37,7 +37,7 @@ class SwarmEmulator
         }
     }
 
-    public function addFileToList($fileContent, $filePath, $listHash = null)
+    public function addFileToList($fileContent, $filePath, $contentType, $listHash = null)
     {
         $fileHash = $this->getContentHash($fileContent);
         $this->saveNewFile($fileHash, $fileContent);
@@ -45,6 +45,7 @@ class SwarmEmulator
             json_encode([
                 'path' => $filePath,
                 'hash' => $fileHash,
+                'contentType' => $contentType,
             ])
         ];
 
@@ -90,7 +91,7 @@ class SwarmEmulator
 
     public function getFile($path, $listHash)
     {
-        $result = 'File not found';
+        $result = null;
         $list = $this->getList($listHash);
         foreach ($list as $item) {
             $item = json_decode($item, true);
@@ -117,6 +118,42 @@ class SwarmEmulator
 
         return $result;
     }
+
+    public function addFromZip($content, $index = '/index.html')
+    {
+        $zipName = './' . rand() . '.zip';
+        file_put_contents($zipName, $content);
+        $hash = null;
+        $zip = new \ZipArchive();
+        $zip->open($zipName);
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $filename = $zip->getNameIndex($i);
+            if (mb_substr($filename, 0, 1) != '/') {
+                $filename = '/' . $filename;
+            }
+
+            $data = $zip->getFromIndex($i);
+            if (!$data) {
+                continue;
+            }
+
+            $finfo = new finfo(FILEINFO_MIME);
+            $mime = $finfo->buffer($data);
+            $mime = explode(';', $mime)[0];
+            if ($filename == $index) {
+                $hash = $this->addFileToList($data, '/', $mime, $hash);
+            }
+
+            $hash = $this->addFileToList($data, $filename, $mime, $hash);
+
+            //var_dump($filename);
+            //var_dump($mime);
+        }
+
+        unlink($zipName);
+
+        return $hash;
+    }
 }
 
 header('Access-Control-Allow-Origin: *');
@@ -132,6 +169,7 @@ $explodedInfo = explode('/', $pathInfo);
 $currentHashList = null;
 $fileName = null;
 $isList = mb_strpos($pathInfo, '/bzz-list:/') !== false;
+$isZip = mb_strpos($pathInfo, '/zip') !== false;
 if (count($explodedInfo) >= 3) {
     $currentHashList = $explodedInfo[2];
 }
@@ -157,7 +195,7 @@ if ($requestMethod === 'GET') {
         die('Empty filename or hash');
     }
 
-    $result = '';
+    $result = null;
     if ($isList) {
         $result = $emulator->getList($currentHashList, true);
         $result = json_encode($result, JSON_PRETTY_PRINT);
@@ -165,14 +203,25 @@ if ($requestMethod === 'GET') {
         $result = $emulator->getFile($fileName, $currentHashList);
     }
 
-    die($result);
+    // todo return file content type
+    if ($result) {
+        die($result);
+    } else {
+        http_response_code(404);
+        die();
+    }
 } else if ($requestMethod === 'POST') {
     $body = file_get_contents('php://input');
     if (empty($body)) {
-        die('Files not found');
+        http_response_code(500);
+        die('Empty request');
+    }
+    if ($isZip) {
+        $newHashList = $emulator->addFromZip($body);
+    } else {
+        $newHashList = $emulator->addFileToList($body, $fileName, $_SERVER['HTTP_CONTENT_TYPE'], $currentHashList);
     }
 
-    $newHashList = $emulator->addFileToList($body, $fileName, $currentHashList);
     die($newHashList);
 } else if ($requestMethod === 'DELETE') {
     $newHashList = $emulator->deleteFile($fileName, $currentHashList);

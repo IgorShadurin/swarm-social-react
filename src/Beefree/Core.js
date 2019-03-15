@@ -4,6 +4,7 @@ import Post from "./Post";
 import File from "./File";
 import ObjectConstructor from "./ObjectConstructor";
 import CoreResponse from "./CoreResponse";
+import Queue from 'promise-queue';
 
 export const FILE_TYPE_ANY_BINARY = 'any_binary';
 export const FILE_TYPE_IMAGE = 'image';
@@ -222,7 +223,8 @@ export default class Core {
             });
     }
 
-    uploadUserFile(file, type = File) {
+    uploadUserFile(file, type = File, previews = []) {
+        const queue = new Queue(1, Infinity);
         let id = this._getProfileParam('last_file_id', 0) + 1;
         let user = this._getUserData();
         user = Object.assign({}, user, {
@@ -231,32 +233,57 @@ export default class Core {
         // todo implement init for different file types
         const info = {
             id,
+            previews: [],
             type: type.getDataName(),
             content_type: file.type,
             created_at: this.getUTCTimestamp(),
             updated_at: this.getUTCTimestamp()
         };
 
-        return this.uploadFile(file, `${this.socialDirectory}/file/${id}/file`)
-            .then((data) => {
-                this.changeCurrentHash(data.newHash);
+        queue.add(() => {
+            return this.uploadFile(file, `${this.socialDirectory}/file/${id}/file`)
+                .then(data => this.changeCurrentHash(data.newHash));
+        });
 
-                return this.uploadFile(info, `${this.socialDirectory}/file/${id}/info.json`);
-            })
-            .then((data) => {
-                this.changeCurrentHash(data.newHash);
-
-                return this.saveProfile(user);
-            })
-            .then((data) => {
-                this.changeCurrentHash(data.newHash);
-
-                return {
-                    hash: data.newHash,
-                    info,
-                    lastResponse: data
-                };
+        previews.forEach((file) => {
+            const previewPath = `${this.socialDirectory}/file/${id}/preview/file_${file.width}x${file.height}`;
+            info.previews.push({
+                width: file.width,
+                height: file.height,
+                path: previewPath
             });
+            queue.add(() => {
+                return this.uploadFile(file.blob, previewPath)
+                    .then(data => this.changeCurrentHash(data.newHash));
+            });
+        });
+
+        let returnData = {};
+        queue.add(() => {
+            return this.uploadFile(info, `${this.socialDirectory}/file/${id}/info.json`)
+                .then((data) => {
+                    this.changeCurrentHash(data.newHash);
+
+                    return this.saveProfile(user);
+                })
+                .then((data) => {
+                    this.changeCurrentHash(data.newHash);
+
+                    returnData = {
+                        hash: data.newHash,
+                        info,
+                        lastResponse: data
+                    };
+
+                    return returnData;
+                });
+        });
+
+        return new Promise((resolve, reject) => {
+            queue.add(() => {
+                resolve(returnData);
+            });
+        });
     }
 
     /**

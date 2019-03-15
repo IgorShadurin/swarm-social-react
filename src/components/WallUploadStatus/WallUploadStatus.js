@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import './WallUploadStatus.css';
 import {connect} from "react-redux";
-import PropTypes from "prop-types";
 import * as actions from "../../store/social/actions";
+import Utils from "../../Beefree/Utils";
 
 class WallUploadStatus extends Component {
     onCancelUploading = (id) => {
@@ -17,7 +17,10 @@ class WallUploadStatus extends Component {
         };
         const isComplete = item.isComplete;
         if (isComplete) {
-            result = item.preview ? <div><img src={item.preview} alt="Preview"/></div> : <div>Complete!</div>;
+            console.log(item);
+            result = item.previews && item.previews.length >= 2 ?
+                <div><img src={Utils.getUrlForBlob(item.previews[1].blob)} alt="Preview"/></div> :
+                <div>Complete!</div>;
         } else {
             result = <div>
                 <span className="WallUploadStatus-name">

@@ -74,6 +74,22 @@ export default function reduce(state = initialState, action = {}) {
             return state.merge({
                 uploadStatus: Immutable(uploadStatus)
             });
+        case types.SOCIAL_WALL_POST_IMAGE_PREVIEW_COMPLETE:
+            uploadStatus = Immutable.asMutable(state.uploadStatus);
+            uploadStatus = uploadStatus.map(item => {
+                // todo optimize this section
+                if (item.id === action.id) {
+                    const test = Immutable.asMutable(item);
+                    test.previews = action.data;
+
+                    return test;
+                }
+
+                return item;
+            });
+            return state.merge({
+                uploadStatus: Immutable(uploadStatus)
+            });
         default:
             return state;
     }
