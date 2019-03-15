@@ -6,6 +6,8 @@ import User from "../../Beefree/User";
 import Image from "../../Beefree/Image";
 import Video from "../../Beefree/Video";
 import WallUploadStatus from "../WallUploadStatus/WallUploadStatus";
+import PostAttachment from "../../Beefree/PostAttachment";
+import ObjectConstructor from "../../Beefree/ObjectConstructor";
 
 class WallCreatePost extends Component {
     constructor() {
@@ -24,9 +26,23 @@ class WallCreatePost extends Component {
         });
     };
 
+    isPostButtonDisabled = () => {
+        const {isWallPosting, uploadStatus} = this.props;
+        const isAllUploaded = uploadStatus.filter(item => item.isComplete).length === uploadStatus.length;
+
+        return isWallPosting || (this.state.text.length === 0 || !isAllUploaded);
+    };
+
     onPost = (e) => {
-        const {createWallPost} = this.props;
-        createWallPost({description: this.state.text});
+        const {createWallPost, uploadStatus} = this.props;
+        const uploads = uploadStatus.filter(item => item.isComplete);
+        //console.log(uploads);
+        const attachments = uploads.forEach(item => {
+            // todo item.data - is data
+            // todo fill attachments with data
+            //return new PostAttachment(item,PostAttachment.getKeys()) ;
+        });
+        createWallPost(this.state.text);
         this.setState({
             text: ''
         });
@@ -65,10 +81,10 @@ class WallCreatePost extends Component {
     };
 
     render() {
-        const {isWallPosting, user, uploadStatus} = this.props;
+        const {user, uploadStatus} = this.props;
         const avatar = User.getAvatar(user);
         const uploadList = uploadStatus.map((item) => {
-            return <WallUploadStatus key={item.id}
+            return <WallUploadStatus key={item.internal_id}
                                      item={item}/>;
         });
 
@@ -94,7 +110,7 @@ class WallCreatePost extends Component {
                                        onClick={this.attachVideo}/>
                                     <button
                                         className="btn btn-primary"
-                                        disabled={isWallPosting || this.state.text.length === 0}
+                                        disabled={this.isPostButtonDisabled()}
                                         onClick={() => this.onPost()}>
                                         Post
                                     </button>

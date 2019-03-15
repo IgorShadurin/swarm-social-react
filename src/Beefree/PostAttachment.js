@@ -8,13 +8,13 @@ export default class PostAttachment extends BaseObject {
 
     getKeys() {
         return [
-            'id',
+            //'id',
             'post_id',
-            'previews',
+            //'previews',
             'type',
-            'url',
+            //'url',
             'order',
-            'object'
+            //'object'
         ];
     }
 

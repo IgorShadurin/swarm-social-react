@@ -61,10 +61,10 @@ export default function reduce(state = initialState, action = {}) {
         case types.SOCIAL_ON_UPLOADED_USER_FILE:
             uploadStatus = Immutable.asMutable(state.uploadStatus);
             uploadStatus = uploadStatus.map(item => {
-                // todo optimize this section
-                if (item.id === action.data.info.id) {
+                if (item.internal_id === action.internal_id) {
                     const test = Immutable.asMutable(item);
                     test.isComplete = true;
+                    test.data = action.data.info;
 
                     return test;
                 }
@@ -77,8 +77,7 @@ export default function reduce(state = initialState, action = {}) {
         case types.SOCIAL_WALL_POST_IMAGE_PREVIEW_COMPLETE:
             uploadStatus = Immutable.asMutable(state.uploadStatus);
             uploadStatus = uploadStatus.map(item => {
-                // todo optimize this section
-                if (item.id === action.id) {
+                if (item.internal_id === action.internal_id) {
                     const test = Immutable.asMutable(item);
                     test.previews = action.data;
 

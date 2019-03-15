@@ -25,7 +25,7 @@ class WallUploadStatus extends Component {
             result = <div>
                 <span className="WallUploadStatus-name">
                     <i className="far fa-times-circle cursor-pointer"
-                       onClick={() => this.onCancelUploading(item.id)}/> {item.name}
+                       onClick={() => this.onCancelUploading(item.internal_id)}/> {item.name}
                 </span>
                 <div className="progress">
                     <div className="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"

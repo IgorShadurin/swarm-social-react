@@ -109,7 +109,7 @@ export const saveMyProfile = (data) => {
     }
 };
 
-export const createWallPost = (data) => {
+export const createWallPost = (description, attachments) => {
     return (dispatch, getState) => {
         queue.add(() => {
             //console.log('run');
@@ -117,7 +117,7 @@ export const createWallPost = (data) => {
                 type: types.SOCIAL_WALL_POST_STARTED
             });
 
-            return bee.createPost(data)
+            return bee.createPost(description, attachments)
                 .then(result => {
                     const dispatchData = {
                         type: types.SOCIAL_WALL_POST_CREATED,
@@ -190,7 +190,7 @@ export const uploadUserFile = (uploadId, file, fileType) => {
         dispatch({
             type: types.SOCIAL_ON_ADDED_UPLOADING,
             data: {
-                id: uploadId,
+                internal_id: uploadId,
                 name: file.name,
                 isComplete: false,
                 progressPercent: 10
@@ -219,7 +219,7 @@ export const uploadUserFile = (uploadId, file, fileType) => {
                 .then(data => {
                     dispatch({
                         type: types.SOCIAL_WALL_POST_IMAGE_PREVIEW_COMPLETE,
-                        id: uploadId,
+                        internal_id: uploadId,
                         data
                     });
 
@@ -229,8 +229,10 @@ export const uploadUserFile = (uploadId, file, fileType) => {
                     return bee.uploadUserFile(file, fileType, data)
                 })
                 .then(data => {
+                    console.log(data);
                     dispatch({
                         type: types.SOCIAL_ON_UPLOADED_USER_FILE,
+                        internal_id: uploadId,
                         data
                     });
                 });

@@ -192,37 +192,47 @@ export default class Core {
 
     /**
      *
-     * @param data
-     * @returns {Promise<{data: *, hash: string}>}
+     * @param description
+     * @param attachments
+     * @returns {Promise<{data: {description: *, attachments: Array}, hash: *}>}
      */
-    createPost(data) {
+    createPost(description, attachments = []) {
         let id = this._getProfileParam('last_post_id', 0) + 1;
         let user = this._getUserData();
         user = Object.assign({}, user, {
             last_post_id: id
         });
 
+        let data = {
+            description,
+            attachments
+        };
         data.id = id;
         data.created_at = this.getUTCTimestamp();
         data.updated_at = this.getUTCTimestamp();
-
-        let result = {
-            data,
-            hash: ''
-        };
 
         // todo validate data
         return this.uploadFile(data, `${this.socialDirectory}/post/${id}/info.json`)
             .then(() => {
                 return this.saveProfile(user);
             })
-            .then((hash) => {
-                result.hash = hash;
+            .then((response) => {
+                //this.changeCurrentHash(response.newHash);
 
-                return result;
+                return {
+                    data,
+                    hash: response.newHash
+                };
             });
     }
 
+    /**
+     *
+     * @param file
+     * @param type
+     * @param previews
+     * @returns {Promise<any>}
+     */
     uploadUserFile(file, type = File, previews = []) {
         const queue = new Queue(1, Infinity);
         let id = this._getProfileParam('last_file_id', 0) + 1;
@@ -241,8 +251,7 @@ export default class Core {
         };
 
         queue.add(() => {
-            return this.uploadFile(file, `${this.socialDirectory}/file/${id}/file`)
-                .then(data => this.changeCurrentHash(data.newHash));
+            return this.uploadFile(file, `${this.socialDirectory}/file/${id}/file`);
         });
 
         previews.forEach((file) => {
@@ -253,22 +262,15 @@ export default class Core {
                 path: previewPath
             });
             queue.add(() => {
-                return this.uploadFile(file.blob, previewPath)
-                    .then(data => this.changeCurrentHash(data.newHash));
+                return this.uploadFile(file.blob, previewPath);
             });
         });
 
         let returnData = {};
         queue.add(() => {
             return this.uploadFile(info, `${this.socialDirectory}/file/${id}/info.json`)
+                .then(() => this.saveProfile(user))
                 .then((data) => {
-                    this.changeCurrentHash(data.newHash);
-
-                    return this.saveProfile(user);
-                })
-                .then((data) => {
-                    this.changeCurrentHash(data.newHash);
-
                     returnData = {
                         hash: data.newHash,
                         info,
