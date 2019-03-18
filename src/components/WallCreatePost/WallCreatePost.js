@@ -28,21 +28,29 @@ class WallCreatePost extends Component {
 
     isPostButtonDisabled = () => {
         const {isWallPosting, uploadStatus} = this.props;
-        const isAllUploaded = uploadStatus.filter(item => item.isComplete).length === uploadStatus.length;
 
-        return isWallPosting || (this.state.text.length === 0 || !isAllUploaded);
+        const isWallReady = !isWallPosting;
+        const isUploaded = uploadStatus.filter(item => item.isComplete).length === uploadStatus.length && uploadStatus.length > 0;
+        const isTextExists = this.state.text.length > 0;
+
+        return !(isWallReady && (isTextExists || isUploaded));
     };
 
     onPost = (e) => {
         const {createWallPost, uploadStatus} = this.props;
         const uploads = uploadStatus.filter(item => item.isComplete);
-        //console.log(uploads);
-        const attachments = uploads.forEach(item => {
-            // todo item.data - is data
-            // todo fill attachments with data
-            //return new PostAttachment(item,PostAttachment.getKeys()) ;
+        console.log(uploads);
+        const attachments = uploads.map((item, index) => {
+            // todo get type from item
+            //return new PostAttachment(item, PostAttachment.getKeys());
+            return {
+                file_id: item.data.id,
+                type: item.data.type,
+                order: index
+            };
         });
-        createWallPost(this.state.text);
+        console.log(attachments);
+        createWallPost(this.state.text, attachments);
         this.setState({
             text: ''
         });

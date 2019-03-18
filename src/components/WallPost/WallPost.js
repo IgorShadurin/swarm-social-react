@@ -6,6 +6,16 @@ import User from "../../Beefree/User";
 import * as actions from "../../store/social/actions";
 import date from "date-and-time";
 
+class WallAttachmentImage extends Component {
+    render() {
+        const {item, bee} = this.props;
+        console.log(this.props);
+
+        //return <div>file_id: {item.file_id} <img src={bee.getImagePreviewUrl(item.file_id)} alt="Preview"/></div>;
+        return <div>file_id: {item.file_id} </div>;
+    }
+}
+
 class WallPost extends Component {
     onLike = (e, id) => {
         e.preventDefault();
@@ -50,7 +60,7 @@ class WallPost extends Component {
 
     render() {
         //console.log(this.props);
-        const {user, item} = this.props;
+        const {user, item, bee} = this.props;
         const fullName = User.getFullName(user);
         const avatar = User.getAvatar(user);
         const itemDate = item.created_at ? new Date(item.created_at) : null;
@@ -89,6 +99,16 @@ class WallPost extends Component {
                                     return <p key={i}>{item}</p>;
                                 })}
                             </div>
+                            <div className="WallPost-attachments">
+                                {item.attachments && item.attachments.map((item, index) => {
+                                    let result = null;
+                                    if (item.type === 'image') {
+                                        result = <WallAttachmentImage key={index} item={item} bee={bee}/>
+                                    }
+
+                                    return result;
+                                })}
+                            </div>
                             <div className="post-end">
                                 <div className="likes-wrap">
                                     <span className="like cursor-pointer" onClick={(e) => this.onLike(e, item.id)}>
@@ -124,7 +144,8 @@ WallPost.propTypes = {
 };
 
 const mapStateToProps = state => ({
-    user: state.social.user
+    user: state.social.user,
+    bee: state.social.bee
 });
 
 export default connect(mapStateToProps, actions)(WallPost);

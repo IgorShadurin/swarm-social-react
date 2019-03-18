@@ -34,7 +34,8 @@ export const init = () => {
         .then(data => {
             dispatch({
                 type: types.SOCIAL_USER_FETCHED,
-                data
+                data,
+                bee
             });
 
             return data;
@@ -229,7 +230,7 @@ export const uploadUserFile = (uploadId, file, fileType) => {
                     return bee.uploadUserFile(file, fileType, data)
                 })
                 .then(data => {
-                    console.log(data);
+                    //console.log(data);
                     dispatch({
                         type: types.SOCIAL_ON_UPLOADED_USER_FILE,
                         internal_id: uploadId,

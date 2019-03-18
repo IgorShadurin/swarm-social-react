@@ -203,9 +203,12 @@ export default class Core {
             last_post_id: id
         });
 
+        const attachmentsPrepared = attachments.map(item => {
+            return {...item, post_id: id};
+        });
         let data = {
             description,
-            attachments
+            attachments: attachmentsPrepared
         };
         data.id = id;
         data.created_at = this.getUTCTimestamp();
@@ -224,6 +227,10 @@ export default class Core {
                     hash: response.newHash
                 };
             });
+    }
+
+    getImagePreviewUrl(fileId, width = 300, height = 300) {
+        return this.swarm.bzz.getDownloadURL(this.currentHash, {path: `${this.socialDirectory}/file/${fileId}/preview/file_${width}x${height}`});
     }
 
     /**

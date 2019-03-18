@@ -19,6 +19,7 @@ const store = configureStore(Immutable({
         wallPosts: Immutable([]),
         isInit: false,
         uploadStatus: Immutable([]),
+        isWallPosting: false
     }
 }));
 

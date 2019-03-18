@@ -18,11 +18,13 @@ export default function reduce(state = initialState, action = {}) {
             });
         case types.SOCIAL_USER_FETCHED:
             return state.merge({
-                user: action.data
+                user: action.data,
+                bee: action.bee
             });
         case types.SOCIAL_WALL_POST_STARTED:
             return state.merge({
-                isWallPosting: true
+                isWallPosting: true,
+                uploadStatus: []
             });
         case types.SOCIAL_WALL_POST_CREATED:
             posts = Immutable.asMutable(state.wallPosts);
