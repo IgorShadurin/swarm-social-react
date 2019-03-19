@@ -7,12 +7,26 @@ import * as actions from "../../store/social/actions";
 import date from "date-and-time";
 
 class WallAttachmentImage extends Component {
-    render() {
-        const {item, bee} = this.props;
-        console.log(this.props);
+    constructor(props) {
+        super(props);
+        const {item, getImagePreviewUrl, previews} = props;
+        const foundPreviews = previews.filter(preview => preview.file_id == item.file_id);
 
-        //return <div>file_id: {item.file_id} <img src={bee.getImagePreviewUrl(item.file_id)} alt="Preview"/></div>;
-        return <div>file_id: {item.file_id} </div>;
+        if (foundPreviews.length === 0) {
+            getImagePreviewUrl(item.file_id);
+        }
+    }
+
+    render() {
+        const {item, previews} = this.props;
+        console.log(this.props);
+        const foundPreviews = previews.filter(preview => preview.file_id == item.file_id);
+        if (foundPreviews.length > 0) {
+            return <div><img className="WallPost-attachment WallPost-attachment-image" src={foundPreviews[0].preview}
+                             alt="Preview"/></div>;
+        } else {
+            return <span/>;
+        }
     }
 }
 
@@ -59,8 +73,7 @@ class WallPost extends Component {
     };
 
     render() {
-        //console.log(this.props);
-        const {user, item, bee} = this.props;
+        const {user, item, getImagePreviewUrl, previews} = this.props;
         const fullName = User.getFullName(user);
         const avatar = User.getAvatar(user);
         const itemDate = item.created_at ? new Date(item.created_at) : null;
@@ -103,7 +116,9 @@ class WallPost extends Component {
                                 {item.attachments && item.attachments.map((item, index) => {
                                     let result = null;
                                     if (item.type === 'image') {
-                                        result = <WallAttachmentImage key={index} item={item} bee={bee}/>
+                                        result = <WallAttachmentImage key={index} item={item}
+                                                                      getImagePreviewUrl={getImagePreviewUrl}
+                                                                      previews={previews}/>
                                     }
 
                                     return result;
@@ -145,7 +160,7 @@ WallPost.propTypes = {
 
 const mapStateToProps = state => ({
     user: state.social.user,
-    bee: state.social.bee
+    previews: state.social.previews,
 });
 
 export default connect(mapStateToProps, actions)(WallPost);

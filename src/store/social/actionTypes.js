@@ -15,3 +15,4 @@ export const SOCIAL_ON_UPLOADED_USER_FILE = 'social.onUploadedUserFile';
 export const SOCIAL_WALL_POST_IMAGE_PREVIEW_COMPLETE = 'social.wallPostImagePreviewComplete';
 export const SOCIAL_WALL_POST_VIDEO_PREVIEW_COMPLETE = 'social.wallPostVideoPreviewComplete';
 export const SOCIAL_AVATAR_PREVIEW_COMPLETE = 'social.avatarPreviewComplete';
+export const SOCIAL_FILE_PREVIEW_RECEIVED = 'social.filePreviewReceived';

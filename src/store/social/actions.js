@@ -241,3 +241,17 @@ export const uploadUserFile = (uploadId, file, fileType) => {
 
     }
 };
+
+export const getImagePreviewUrl = (fileId, width = 300, height = 300) => {
+    return dispatch => {
+        dispatch({
+            type: types.SOCIAL_FILE_PREVIEW_RECEIVED,
+            data: {
+                file_id: fileId,
+                width,
+                height,
+                preview: bee.getImagePreviewUrl(fileId, width, height)
+            }
+        });
+    };
+};

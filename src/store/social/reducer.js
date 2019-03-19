@@ -10,6 +10,7 @@ const initialState = Immutable({
 
 export default function reduce(state = initialState, action = {}) {
     let posts = null;
+    let previews = [];
     let uploadStatus = null;
     switch (action.type) {
         case types.SOCIAL_INIT:
@@ -90,6 +91,12 @@ export default function reduce(state = initialState, action = {}) {
             });
             return state.merge({
                 uploadStatus: Immutable(uploadStatus)
+            });
+        case types.SOCIAL_FILE_PREVIEW_RECEIVED:
+            previews = Immutable.asMutable(state.previews);
+            previews.push(action.data);
+            return state.merge({
+                previews: Immutable(previews)
             });
         default:
             return state;
