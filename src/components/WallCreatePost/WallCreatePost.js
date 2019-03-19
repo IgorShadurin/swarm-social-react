@@ -6,8 +6,6 @@ import User from "../../Beefree/User";
 import Image from "../../Beefree/Image";
 import Video from "../../Beefree/Video";
 import WallUploadStatus from "../WallUploadStatus/WallUploadStatus";
-import PostAttachment from "../../Beefree/PostAttachment";
-import ObjectConstructor from "../../Beefree/ObjectConstructor";
 
 class WallCreatePost extends Component {
     constructor() {

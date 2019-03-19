@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import './WallPost.css';
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
@@ -10,7 +10,7 @@ class WallAttachmentImage extends Component {
     constructor(props) {
         super(props);
         const {item, getImagePreviewUrl, previews} = props;
-        const foundPreviews = previews.filter(preview => preview.file_id == item.file_id);
+        const foundPreviews = previews.filter(preview => Number(preview.file_id) === Number(item.file_id));
 
         if (foundPreviews.length === 0) {
             getImagePreviewUrl(item.file_id);
@@ -19,8 +19,7 @@ class WallAttachmentImage extends Component {
 
     render() {
         const {item, previews} = this.props;
-        console.log(this.props);
-        const foundPreviews = previews.filter(preview => preview.file_id == item.file_id);
+        const foundPreviews = previews.filter(preview => Number(preview.file_id) === Number(item.file_id));
         if (foundPreviews.length > 0) {
             return <div><img className="WallPost-attachment WallPost-attachment-image" src={foundPreviews[0].preview}
                              alt="Preview"/></div>;
@@ -31,6 +30,14 @@ class WallAttachmentImage extends Component {
 }
 
 class WallPost extends Component {
+    constructor() {
+        super();
+        this.state = {
+            isEdit: false,
+            editPost: {}
+        };
+    }
+
     onLike = (e, id) => {
         e.preventDefault();
         //console.log(id);
@@ -58,9 +65,12 @@ class WallPost extends Component {
         }
     };
 
-    onEditPost = (e, id) => {
+    onEditPost = (e, item) => {
         e.preventDefault();
-        console.log(id);
+        this.setState({
+            isEdit: !this.state.isEdit,
+            editPost: item
+        });
     };
 
     onPostClick = (e) => {
@@ -72,11 +82,32 @@ class WallPost extends Component {
         console.log('user click');
     };
 
+    onChangePostText = (e) => {
+        const editPost = {...this.state.editPost, description: e.target.value};
+        this.setState({
+            editPost
+        });
+    };
+
+    onSavePost = () => {
+        const {updateWallPost} = this.props;
+
+        this.setState({
+            isEdit: false
+        });
+
+        //console.log(this.state.editPost);
+        updateWallPost(this.state.editPost.id, this.state.editPost);
+    };
+
     render() {
         const {user, item, getImagePreviewUrl, previews} = this.props;
         const fullName = User.getFullName(user);
         const avatar = User.getAvatar(user);
         const itemDate = item.created_at ? new Date(item.created_at) : null;
+        const descriptionText = item.description.split('\n').map((item, i) => {
+            return <p key={i}>{item}</p>;
+        });
 
         return (
             <div className="post">
@@ -100,17 +131,27 @@ class WallPost extends Component {
                                 <div className="r-side">
                                     <div className="btns-wrap opacity-items">
                                         <i className="far fa-edit cursor-pointer"
-                                           onClick={(e) => this.onEditPost(e, item.id)}/>&nbsp;
+                                           onClick={(e) => this.onEditPost(e, item)}/>&nbsp;
                                         <i className="far fa-times-circle cursor-pointer"
                                            onClick={(e) => this.onDeletePost(e, item.id)}/>
 
                                     </div>
                                 </div>
                             </div>
-                            <div className="post-content">
-                                {item.description.split('\n').map((item, i) => {
-                                    return <p key={i}>{item}</p>;
-                                })}
+                            <div className="post-content WallPost-post-content">
+                                {!this.state.isEdit && descriptionText}
+                                {this.state.isEdit &&
+                                <Fragment>
+                                    <div className="form-group">
+                                    <textarea className="form-control WallPost-edit-area" rows="2"
+                                              value={this.state.editPost.description} onChange={this.onChangePostText}/>
+                                    </div>
+                                    <button
+                                        className="btn btn-primary"
+                                        onClick={this.onSavePost}>
+                                        Save
+                                    </button>
+                                </Fragment>}
                             </div>
                             <div className="WallPost-attachments">
                                 {item.attachments && item.attachments.map((item, index) => {

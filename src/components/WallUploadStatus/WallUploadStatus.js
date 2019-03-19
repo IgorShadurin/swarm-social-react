@@ -19,7 +19,7 @@ class WallUploadStatus extends Component {
         if (isComplete) {
             console.log(item);
             result = item.previews && item.previews.length >= 2 ?
-                <div><img src={Utils.getUrlForBlob(item.previews[1].blob)} alt="Preview"/></div> :
+                <div><img className="WallUploadStatus-preview" src={Utils.getUrlForBlob(item.previews[1].blob)} alt="Preview"/></div> :
                 <div>Complete!</div>;
         } else {
             result = <div>

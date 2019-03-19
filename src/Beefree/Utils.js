@@ -18,7 +18,7 @@ export default class Utils {
                     let dstH = v.height;
                     if (!v.format || v.format === "box") {
                         if (v.width !== v.height) {
-                            throw  "Method support only square preview";
+                            throw new Error("Method support only square preview");
                         }
 
                         if (img.width > img.height) {

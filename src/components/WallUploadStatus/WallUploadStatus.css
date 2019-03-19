@@ -6,3 +6,7 @@
 .WallUploadStatus-name {
     font-size: 12px;
 }
+
+.WallUploadStatus-preview {
+    width: 100%;
+}

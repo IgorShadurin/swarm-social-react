@@ -16,6 +16,7 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     //bee = new Core('https://swarm-gateways.net', currentHash);
     bee = new Core('http://prototype.beefree.me', currentHash);
     //bee = new Core('https://testeron.pro/swarm-emulator/index.php/', currentHash);
+    //bee = new Core('http://127.0.0.1:1111/index.php/', currentHash);
     //bee = new Core('http://127.0.0.1:8500', currentHash);
 } else {
     // production code
@@ -113,7 +114,6 @@ export const saveMyProfile = (data) => {
 export const createWallPost = (description, attachments) => {
     return (dispatch, getState) => {
         queue.add(() => {
-            //console.log('run');
             dispatch({
                 type: types.SOCIAL_WALL_POST_STARTED
             });
@@ -122,6 +122,27 @@ export const createWallPost = (description, attachments) => {
                 .then(result => {
                     const dispatchData = {
                         type: types.SOCIAL_WALL_POST_CREATED,
+                        data: result.data
+                    };
+
+                    return dispatch(dispatchData);
+                });
+        });
+    }
+};
+
+export const updateWallPost = (id, data) => {
+    return (dispatch, getState) => {
+        dispatch({
+            type: types.SOCIAL_WALL_POST_UPDATE_STARTED,
+            data
+        });
+
+        queue.add(() => {
+            return bee.updatePost(id, data)
+                .then(result => {
+                    const dispatchData = {
+                        type: types.SOCIAL_WALL_POST_UPDATED,
                         data: result.data
                     };
 

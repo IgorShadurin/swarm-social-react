@@ -220,12 +220,29 @@ export default class Core {
                 return this.saveProfile(user);
             })
             .then((response) => {
-                //this.changeCurrentHash(response.newHash);
-
                 return {
                     data,
                     hash: response.newHash
                 };
+            });
+    }
+
+    updatePost(id, data) {
+        return this.getPost(id)
+            .then(response => {
+                // todo filter _data rudiment from attachments too
+                if (data._data) {
+                    delete data._data;
+                }
+
+                if (response._data) {
+                    delete response._data;
+                }
+
+                return {...response, ...data, updated_at: this.getUTCTimestamp()};
+            })
+            .then(response => {
+                return this.uploadFile(response, `${this.socialDirectory}/post/${id}/info.json`);
             });
     }
 

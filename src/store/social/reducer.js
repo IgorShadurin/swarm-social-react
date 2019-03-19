@@ -34,6 +34,18 @@ export default function reduce(state = initialState, action = {}) {
                 wallPosts: Immutable(posts),
                 isWallPosting: false
             });
+        case types.SOCIAL_WALL_POST_UPDATE_STARTED:
+            posts = state.wallPosts.map(item => {
+                if (Number(item.id) === Number(action.data.id)) {
+                    return action.data;
+                } else {
+                    return item;
+                }
+            });
+
+            return state.merge({
+                wallPosts: Immutable(posts)
+            });
         case types.SOCIAL_WALL_POST_LOADED:
             posts = Immutable.asMutable(state.wallPosts);
             if (action.isAddReversed) {
@@ -101,12 +113,4 @@ export default function reduce(state = initialState, action = {}) {
         default:
             return state;
     }
-}
-
-export function getUser(state) {
-    return state.social.user;
-}
-
-export function getWallPosts(state) {
-    return state.social.wallPosts;
 }

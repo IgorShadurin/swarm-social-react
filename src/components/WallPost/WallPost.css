@@ -12,5 +12,10 @@
 
 .WallPost-attachment {
     width: 100%;
-    padding-bottom: 8px;
+    margin-bottom: 8px;
+}
+
+.WallPost-post-content {
+    margin-top: 8px;
+    margin-bottom: 8px;
 }
