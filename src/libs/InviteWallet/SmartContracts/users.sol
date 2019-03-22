@@ -32,54 +32,107 @@ contract mortal is owned {
 
 contract Users {
     constructor() public{
-
+        // todo move it to function
+        UsersInfo[userId] = Info({Username: 'admin', Wallet: msg.sender, SwarmType: 0, SwarmHash: ''});
+        Usernames['admin'] = userId;
+        Wallets[msg.sender] = userId;
+        userId++;
     }
 
     struct Info
     {
-    string SwarmHash;
-    string Username;
+        string SwarmHash;
+        uint32 SwarmType; // swarm - 0, emulator - 1
+        string Username;
+        address Wallet;
     }
 
-    mapping (address => Info) public UsersInfo;
-    mapping (string => address) Usernames;
+    mapping (uint256 => Info) public UsersInfo;
+    mapping (string => uint256) Usernames;
+    mapping (address => uint256) public Wallets;
+    mapping (string => address) Invites;
+    uint256 public userId = 1;
 
     function setHash(string memory hash) public {
-        UsersInfo[msg.sender].SwarmHash = hash;
+        UsersInfo[Wallets[msg.sender]].SwarmHash = hash;
     }
 
-    function getHash(address User) public view returns (string memory){
-        return UsersInfo[User].SwarmHash;
+    function getHashByWallet(address user) public view returns (string memory){
+        return UsersInfo[Wallets[user]].SwarmHash;
+    }
+
+    function getHashByUsername(string memory username) public view returns (string memory){
+        return UsersInfo[Usernames[username]].SwarmHash;
+    }
+
+    function getWalletByUsername(string memory username) public view returns (address ){
+        return UsersInfo[Usernames[username]].Wallet;
+    }
+
+    function register(string memory invite, string memory username) public returns (string memory) {
+        address inviteAddress = Invites[invite];
+        uint256 idByWallet = Wallets[msg.sender];
+        uint256 idByUsername = Usernames[username];
+
+        require(inviteAddress != address(0), 'invite_not_found');
+        require(inviteAddress == msg.sender, 'incorrect_invite_for_wallet');
+        require(idByWallet == 0, 'wallet_registered');
+        require(idByUsername == 0, 'username_registered');
+
+        Invites[invite] = address(0);
+        UsersInfo[userId] = Info({Username: username, Wallet: msg.sender, SwarmType: 0, SwarmHash: ''});
+        Usernames[username] = userId;
+        Wallets[msg.sender] = userId;
+        userId++;
     }
 
     function setUsername(string memory username) public returns (string memory){
         // todo release old user nickname if he set new one
         // todo filter chars that not supported in _toLower
         //username = _toLower(username);
-        address usernameOwner = Usernames[username];
-        if(usernameOwner != address(0) && usernameOwner != msg.sender){
-           return 'already registered';
-        } else if(usernameOwner != address(0) && usernameOwner == msg.sender){
-            return 'ok';
-        } else{
-            Usernames[username]=msg.sender;
-            UsersInfo[msg.sender].Username = username;
-            return 'ok';
+        uint256 currentUserId = Wallets[msg.sender];
+        if(currentUserId == 0){
+            return 'user_not_found';
         }
+
+        uint256 userIdFromUsername = Usernames[username];
+        if(userIdFromUsername > 0 && UsersInfo[userIdFromUsername].Wallet != msg.sender){
+            return 'username_already_exists';
+        }
+
+        Usernames[UsersInfo[currentUserId].Username] = 0;
+        UsersInfo[currentUserId].Username = username;
+        Usernames[username] = currentUserId;
     }
 
     function getUsername(address wallet) public view returns (string memory){
-       return UsersInfo[wallet].Username;
+       return UsersInfo[Wallets[wallet]].Username;
     }
 
     function getMyUsername() public view returns (string memory){
-       return UsersInfo[msg.sender].Username;
+       return UsersInfo[Wallets[msg.sender]].Username;
     }
 
     function getAddressByUsername(string memory username) public view returns (address){
         //username = _toLower(username);
 
-        return Usernames[username];
+        return UsersInfo[Usernames[username]].Wallet;
+    }
+
+    function resetWallet(address payable newWallet) public payable {
+        uint256 currentUserId = Wallets[msg.sender];
+        Wallets[msg.sender] = 0;
+        Wallets[newWallet] = currentUserId;
+        UsersInfo[currentUserId].Wallet = newWallet;
+        newWallet.transfer(msg.value);
+    }
+
+    function createInvite(string memory invite, address payable wallet) public payable {
+        require(Wallets[msg.sender] > 0);
+        require(Wallets[wallet] == 0);
+        require(Invites[invite] == address(0));
+        Invites[invite] = wallet;
+        wallet.transfer(msg.value);
     }
 
     /*function _toLower(string memory str) internal pure returns (string memory) {
