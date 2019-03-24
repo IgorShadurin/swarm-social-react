@@ -2,6 +2,7 @@ import * as types from './actionTypes';
 import Core from '../../Beefree/Core';
 import Utils from '../../Beefree/Utils';
 import Queue from 'promise-queue';
+import InviteWallet from "../../libs/InviteWallet/InviteWallet";
 
 const parts = window.location.href.split('/').filter(word => word.length === 64 || word.length === 128);
 let currentHash = null;
@@ -10,6 +11,17 @@ if (parts.length > 0) {
 }
 
 console.log('currentHash', currentHash);
+const inviteWallet = new InviteWallet();
+
+/*inviteWallet.createWallet()
+    .then((data) => {
+        inviteWallet.validate(data.data, data.password)
+            .then(privateKey => console.log(privateKey))
+            .catch(() => console.log('Incorrect password'));
+        return data;
+    })
+    .then((wallet) => console.log(JSON.stringify(wallet)));*/
+
 let bee = null;
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     // dev code

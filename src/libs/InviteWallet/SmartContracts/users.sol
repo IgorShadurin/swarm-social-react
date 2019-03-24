@@ -31,9 +31,9 @@ contract mortal is owned {
 }
 
 contract Users {
-    constructor() public{
+    constructor() public {
         // todo move it to function
-        UsersInfo[userId] = Info({Username: 'admin', Wallet: msg.sender, SwarmType: 0, SwarmHash: ''});
+        UsersInfo[userId] = Info({Username: 'admin', Wallet: msg.sender, SwarmType: 0, SwarmHash: '', WalletFileHash: ''});
         Usernames['admin'] = userId;
         Wallets[msg.sender] = userId;
         userId++;
@@ -45,6 +45,7 @@ contract Users {
         uint32 SwarmType; // swarm - 0, emulator - 1
         string Username;
         address Wallet;
+        string WalletFileHash;
     }
 
     mapping (uint256 => Info) public UsersInfo;
@@ -71,19 +72,17 @@ contract Users {
 
     function register(string memory invite, string memory username) public returns (string memory) {
         address inviteAddress = Invites[invite];
-        uint256 idByWallet = Wallets[msg.sender];
         uint256 idByUsername = Usernames[username];
 
         require(inviteAddress != address(0), 'invite_not_found');
         require(inviteAddress == msg.sender, 'incorrect_invite_for_wallet');
-        require(idByWallet == 0, 'wallet_registered');
         require(idByUsername == 0, 'username_registered');
 
         Invites[invite] = address(0);
-        UsersInfo[userId] = Info({Username: username, Wallet: msg.sender, SwarmType: 0, SwarmHash: ''});
-        Usernames[username] = userId;
-        Wallets[msg.sender] = userId;
-        userId++;
+        uint256 id = Wallets[msg.sender];
+        UsersInfo[id].Username = username;
+        Usernames[username] = id;
+        Wallets[msg.sender] = id;
     }
 
     function setUsername(string memory username) public returns (string memory){
@@ -127,12 +126,16 @@ contract Users {
         newWallet.transfer(msg.value);
     }
 
-    function createInvite(string memory invite, address payable wallet) public payable {
+    function createInvite(string memory invite, address payable wallet, string memory walletFileHash) public payable {
         require(Wallets[msg.sender] > 0);
         require(Wallets[wallet] == 0);
         require(Invites[invite] == address(0));
         Invites[invite] = wallet;
         wallet.transfer(msg.value);
+        UsersInfo[userId].Wallet = wallet;
+        UsersInfo[userId].WalletFileHash = walletFileHash;
+        Wallets[wallet] = userId;
+        userId++;
     }
 
     /*function _toLower(string memory str) internal pure returns (string memory) {
