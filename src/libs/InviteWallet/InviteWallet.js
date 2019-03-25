@@ -1,8 +1,10 @@
 import keythereum from 'keythereum';
 import crypto from 'crypto';
+import EthereumTx from 'ethereumjs-tx';
+import Web3 from 'web3';
 
 export default class InviteWallet {
-    constructor() {
+    constructor(fromAddress, rpcUrl = 'https://rinkeby.infura.io/v3/357ce0ddb3ef426ba0bc727a3c64c873') {
         this.contractAddressRinkeby = '0x920d5ab09f78085d9be70b4cfa5f9c83aabb56f2';
         this.ABI = [
             {
@@ -281,6 +283,8 @@ export default class InviteWallet {
                 "type": "function"
             }
         ];
+        this.web3 = new Web3(rpcUrl);
+        this.fromAddress = fromAddress;
     }
 
     createWallet(password = null) {
@@ -334,6 +338,43 @@ export default class InviteWallet {
     }
 
     createInvite() {
+        const contract = this.web3.eth.Contract(this.ABI, this.contractAddressRinkeby, {from: this.fromAddress});
 
+        const data = contract.methods.setUsername('shoshsos').encodeABI();
+        //const data = contract.methods.setHash('MIMIMI').encodeABI();
+        //const data = contract.methods.register('invite111', 'superuser').encodeABI();
+
+        /*contract.methods.getMyUsername()
+            .call()
+            .then((data, error) => console.log(data, error));*/
+        /*contract.methods.setUsername('wowowo')
+            .send()
+            .then(console.log);*/
+
+        const privateKey = new Buffer('', 'hex');
+        //console.log(serializedTx.toString('hex'));
+
+        return this.web3.eth.getTransactionCount(this.fromAddress)
+            .then(nonce => {
+                const rawTx = {
+                    nonce: this.web3.utils.toHex(nonce),
+                    gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('1', 'gwei')),
+                    gasLimit: this.web3.utils.toHex(100000),
+                    to: this.contractAddressRinkeby,
+                    value: this.web3.utils.toHex(0),
+                    data: data
+                };
+                const tx = new EthereumTx(rawTx);
+                tx.sign(privateKey);
+                const serializedTx = tx.serialize();
+                console.log(this.web3.utils.toHex(serializedTx));
+                //return this.web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
+                return this.web3.eth.sendSignedTransaction(this.web3.utils.toHex(serializedTx))
+                    .then(data => {
+                        console.log(data);
+
+                        return data;
+                    });
+            });
     }
 }

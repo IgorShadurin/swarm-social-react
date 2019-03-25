@@ -12,7 +12,15 @@ if (parts.length > 0) {
 
 console.log('currentHash', currentHash);
 const inviteWallet = new InviteWallet();
-
+inviteWallet.createInvite()
+    .catch(error => {
+        console.log(error);
+        if (error.status) {
+            console.log('ok');
+        } else {
+            console.log('not ok');
+        }
+    });
 /*inviteWallet.createWallet()
     .then((data) => {
         inviteWallet.validate(data.data, data.password)
