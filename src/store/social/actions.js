@@ -11,15 +11,16 @@ if (parts.length > 0) {
 }
 
 console.log('currentHash', currentHash);
-const inviteWallet = new InviteWallet();
-inviteWallet.createInvite()
+/*const inviteWallet = new InviteWallet();
+const invite = InviteWallet.randomString(10);
+inviteWallet.setAccount('0x9a9065b97198c06da2699cba2f2fd8cd5ad71a04', '');
+inviteWallet.createInvite(invite, '0x9a9065b97198c06da2699cba2f2fd8cd5ad71a79', 'somehash_ONETWO')
+//inviteWallet.setUsername('lolprikol')
+    .then(hash => {
+        console.log('ok', hash);
+    })
     .catch(error => {
         console.log(error);
-        if (error.status) {
-            console.log('ok');
-        } else {
-            console.log('not ok');
-        }
     });
 /*inviteWallet.createWallet()
     .then((data) => {
