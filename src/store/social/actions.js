@@ -11,17 +11,12 @@ if (parts.length > 0) {
 }
 
 console.log('currentHash', currentHash);
-/*const inviteWallet = new InviteWallet();
+const inviteWallet = new InviteWallet();
 const invite = InviteWallet.randomString(10);
 inviteWallet.setAccount('0x9a9065b97198c06da2699cba2f2fd8cd5ad71a04', '');
-inviteWallet.createInvite(invite, '0x9a9065b97198c06da2699cba2f2fd8cd5ad71a79', 'somehash_ONETWO')
-//inviteWallet.setUsername('lolprikol')
-    .then(hash => {
-        console.log('ok', hash);
-    })
-    .catch(error => {
-        console.log(error);
-    });
+inviteWallet.resetWallet('0xE1a257c02eFECa4375Adeb445d66a8613d006eE8').then(data => console.log(data));
+//inviteWallet.createInvite(invite, '0x9a9065b97198c06da2699cba2f2fd8cd5ad71a90', 'somehash_ONET11WO')
+//inviteWallet.setUsername('lolprikol111000').then(data => console.log(data));
 /*inviteWallet.createWallet()
     .then((data) => {
         inviteWallet.validate(data.data, data.password)

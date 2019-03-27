@@ -120,6 +120,10 @@ contract Users {
 
     function resetWallet(address payable newWallet) public payable {
         uint256 currentUserId = Wallets[msg.sender];
+
+        require(currentUserId > 0);
+        require(Wallets[newWallet] == 0);
+
         Wallets[msg.sender] = 0;
         Wallets[newWallet] = currentUserId;
         UsersInfo[currentUserId].Wallet = newWallet;

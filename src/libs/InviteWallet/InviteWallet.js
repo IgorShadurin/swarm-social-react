@@ -284,8 +284,8 @@ export default class InviteWallet {
             }
         ];
         this.web3 = new Web3(rpcUrl);
-        this.fromAddress = null;
-        this.privateKey = null;
+        this.fromAddress = '';
+        this.privateKey = '';
     }
 
     setAccount(fromAddress, privateKey) {
@@ -335,62 +335,125 @@ export default class InviteWallet {
         return crypto.randomBytes(length).toString('hex');
     }
 
-    getContract(fromAddress) {
+    getContract(fromAddress = this.fromAddress) {
+        if (!fromAddress) {
+            throw new Error('Incorrect address');
+        }
+
         return this.web3.eth.Contract(this.ABI, this.contractAddressRinkeby, {from: fromAddress});
     }
 
-    sendTransaction(method, ...params) {
-        const f = this.getContract(this.fromAddress).methods[method](...params);
-        const dataF = this.getContract(this.fromAddress).methods[method](...params).encodeABI();
-
+    getTransactionData(balance, data) {
+        let result = {
+            balance,
+            data,
+            nonce: 0,
+            gasPrice: 0
+        };
         return this.web3.eth.getTransactionCount(this.fromAddress)
             .then(nonce => {
-                return f.estimateGas()
-                    .then(gas => {
-                        return {
-                            nonce,
-                            gas
-                        }
-                    });
+                result.nonce = nonce;
+
+                return this.web3.eth.getGasPrice();
             })
-            .then(data => {
-                const rawTx = {
-                    nonce: this.web3.utils.toHex(data.nonce),
-                    gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('1', 'gwei')),
-                    gasLimit: this.web3.utils.toHex(data.gas),
-                    to: this.contractAddressRinkeby,
-                    value: this.web3.utils.toHex(0),
-                    data: dataF
+            .then(gasPrice => {
+                result.gasPrice = gasPrice;
+
+                return null;
+            })
+            .then(() => result);
+    }
+
+    prepareTransactionData() {
+
+    }
+
+    sendTransaction(method, value = 0, ...params) {
+        const f = this.getContract().methods[method](...params);
+        const dataF = f.encodeABI();
+
+        return this.web3.eth.getTransactionCount(this.fromAddress)
+            .then(nonce => ({nonce}))
+            .then(data => this.web3.eth.getGasPrice().then(price => {
+                gasPrice = price;
+                return {...data, gasPrice};
+            }))
+            .then(data => ({
+                nonce: this.web3.utils.toHex(data.nonce),
+                gasPrice: this.web3.utils.toHex(data.gasPrice),
+                to: this.contractAddressRinkeby,
+                value: this.web3.utils.toHex(this.web3.utils.toWei(value === 'all' ? 1 : value, 'ether')),
+                data: dataF
+            }))
+            .then(data => value === 'all' ? data : this.web3.eth.getBalance(this.fromAddress).then(balance => {
+                value = this.web3.utils.fromWei(balance, 'ether');
+                console.log('balance: ' + value);
+
+                return data;
+            }))
+            .then(rawTx => this.web3.eth.estimateGas(rawTx).then(gasLimit => {
+                console.log(gasLimit, rawTx.gasPrice);
+                //console.log(this.web3.utils.fromWei(gasLimit * rawTx.gasPrice, 'ether'));
+                console.log(this.web3.utils.fromWei(gasLimit.toString(), 'ether'));
+                //const resultValue = value > 0 ? value * this.web3.utils.fromWei(gasLimit * rawTx.gasPrice, 'ether') : 0;
+                //console.log(resultValue);
+                return {
+                    ...rawTx,
+                    gasLimit,
+                    //value: this.web3.utils.toHex(this.web3.utils.toWei(resultValue, 'ether'))
                 };
+            }))
+            .then(rawTx => {
+
+                console.log(rawTx);
+                return;
                 const tx = new EthereumTx(rawTx);
                 tx.sign(this.privateKey);
                 const serializedTx = tx.serialize();
 
-                // promise hack because default promise return incorrect data (error). recheck later
                 return new Promise((resolve, reject) => {
-                    this.web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), (error, hash) => {
-                        if (error) {
-                            reject(error);
-                        } else {
-                            resolve(hash);
-                        }
-                    })
+                    this.web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
+                        .once('transactionHash', function (hash) {
+                            //console.log(hash);
+                        })
+                        .on('receipt', function (receipt) {
+                            console.log(receipt);
+                        })
+                        .on('confirmation', function (confNumber, receipt) {
+                            console.log(confNumber, receipt);
+                        })
+                        .on('error', function (error, receipt) {
+                            if (receipt) {
+                                resolve(receipt);
+                            } else {
+                                reject(error);
+                            }
+                        });
                 });
             });
     }
 
-    resetAccount() {
-        // todo create new account
-        // write new account to smart contract (as new reset account)
-        // transfer all funds to new account
-        // unlink old account from new account
+    createInvite(invite, toAddress, fileHash) {
+        return this.sendTransaction('createInvite', '0', invite, toAddress, fileHash);
     }
 
-    createInvite(invite, toAddress, fileHash) {
-        return this.sendTransaction('createInvite', invite, toAddress, fileHash);
+    register(invite, username) {
+        return this.sendTransaction('register', '0', invite, username);
+    }
+
+    resetWallet(newWallet) {
+        /*this.web3.eth.getBalance(this.fromAddress)
+            .then(balance => console.log(this.web3.utils.fromWei(balance, 'ether')));*/
+        // todo get max transact value
+        return this.sendTransaction('resetWallet', '0', newWallet);
+        //return this.sendTransaction('resetWallet', '0', newWallet);
+    }
+
+    setHash(hash) {
+        return this.sendTransaction('setHash', '0', hash);
     }
 
     setUsername(username) {
-        return this.sendTransaction('setUsername', username);
+        return this.sendTransaction('setUsername', '0', username);
     }
 }
