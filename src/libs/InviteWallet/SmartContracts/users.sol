@@ -1,7 +1,7 @@
 pragma solidity ^0.5.1;
 
 contract owned {
-    constructor() public { owner = msg.sender; }
+    constructor() public {owner = msg.sender;}
     address payable owner;
 
     // This contract only defines a modifier but does not use
@@ -33,7 +33,7 @@ contract mortal is owned {
 contract Users {
     constructor() public {
         // todo move it to function
-        UsersInfo[userId] = Info({Username: 'admin', Wallet: msg.sender, SwarmType: 0, SwarmHash: '', WalletFileHash: ''});
+        UsersInfo[userId] = Info({Username : 'admin', Wallet : msg.sender, SwarmType : 0, SwarmHash : '', WalletFileHash : ''});
         Usernames['admin'] = userId;
         Wallets[msg.sender] = userId;
         userId++;
@@ -48,15 +48,11 @@ contract Users {
         string WalletFileHash;
     }
 
-    mapping (uint256 => Info) public UsersInfo;
-    mapping (string => uint256) Usernames;
-    mapping (address => uint256) public Wallets;
-    mapping (string => address) Invites;
+    mapping(uint256 => Info) public UsersInfo;
+    mapping(string => uint256) Usernames;
+    mapping(address => uint256) public Wallets;
+    mapping(string => address) Invites;
     uint256 public userId = 1;
-
-    function setHash(string memory hash) public {
-        UsersInfo[Wallets[msg.sender]].SwarmHash = hash;
-    }
 
     function getHashByWallet(address user) public view returns (string memory){
         return UsersInfo[Wallets[user]].SwarmHash;
@@ -66,8 +62,26 @@ contract Users {
         return UsersInfo[Usernames[username]].SwarmHash;
     }
 
-    function getWalletByUsername(string memory username) public view returns (address ){
+    function getWalletByUsername(string memory username) public view returns (address){
         return UsersInfo[Usernames[username]].Wallet;
+    }
+
+    function getUsername(address wallet) public view returns (string memory){
+        return UsersInfo[Wallets[wallet]].Username;
+    }
+
+    function getMyUsername() public view returns (string memory){
+        return UsersInfo[Wallets[msg.sender]].Username;
+    }
+
+    function getAddressByUsername(string memory username) public view returns (address){
+        //username = _toLower(username);
+
+        return UsersInfo[Usernames[username]].Wallet;
+    }
+
+    function setHash(string memory hash) public {
+        UsersInfo[Wallets[msg.sender]].SwarmHash = hash;
     }
 
     function register(string memory invite, string memory username) public returns (string memory) {
@@ -83,6 +97,8 @@ contract Users {
         UsersInfo[id].Username = username;
         Usernames[username] = id;
         Wallets[msg.sender] = id;
+
+        return 'ok';
     }
 
     function setUsername(string memory username) public returns (string memory){
@@ -90,32 +106,20 @@ contract Users {
         // todo filter chars that not supported in _toLower
         //username = _toLower(username);
         uint256 currentUserId = Wallets[msg.sender];
-        if(currentUserId == 0){
-            return 'user_not_found';
-        }
-
         uint256 userIdFromUsername = Usernames[username];
-        if(userIdFromUsername > 0 && UsersInfo[userIdFromUsername].Wallet != msg.sender){
+
+        require(currentUserId > 0, 'user_not_found');
+        require(userIdFromUsername == 0, 'username_already_exists');
+
+        /*if(userIdFromUsername > 0 && UsersInfo[userIdFromUsername].Wallet != msg.sender){
             return 'username_already_exists';
-        }
+        }*/
 
         Usernames[UsersInfo[currentUserId].Username] = 0;
         UsersInfo[currentUserId].Username = username;
         Usernames[username] = currentUserId;
-    }
 
-    function getUsername(address wallet) public view returns (string memory){
-       return UsersInfo[Wallets[wallet]].Username;
-    }
-
-    function getMyUsername() public view returns (string memory){
-       return UsersInfo[Wallets[msg.sender]].Username;
-    }
-
-    function getAddressByUsername(string memory username) public view returns (address){
-        //username = _toLower(username);
-
-        return UsersInfo[Usernames[username]].Wallet;
+        return username;
     }
 
     function resetWallet(address payable newWallet) public payable {
@@ -134,6 +138,7 @@ contract Users {
         require(Wallets[msg.sender] > 0);
         require(Wallets[wallet] == 0);
         require(Invites[invite] == address(0));
+
         Invites[invite] = wallet;
         wallet.transfer(msg.value);
         UsersInfo[userId].Wallet = wallet;
@@ -141,20 +146,4 @@ contract Users {
         Wallets[wallet] = userId;
         userId++;
     }
-
-    /*function _toLower(string memory str) internal pure returns (string memory) {
-		bytes memory bStr = bytes(str);
-		bytes memory bLower = new bytes(bStr.length);
-		for (uint i = 0; i < bStr.length; i++) {
-			// Uppercase character...
-			if ((bStr[i] >= 65) && (bStr[i] <= 90)) {
-				// So we add 32 to make it lowercase
-				bLower[i] = bytes1(int(bStr[i]) + 32);
-			} else {
-				bLower[i] = bStr[i];
-			}
-		}
-
-		return string(bLower);
-	}*/
 }

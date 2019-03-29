@@ -321,4 +321,12 @@ export default class Core {
         // todo check for posts with content. how to remove full dir?
         return this.delete(`${this.socialDirectory}/post/${id}/info.json`);
     }
+
+    uploadWallet(data) {
+        let options = {
+            contentType: 'application/json'
+        };
+
+        return this.swarm.bzz.uploadFile(data, options);
+    }
 }

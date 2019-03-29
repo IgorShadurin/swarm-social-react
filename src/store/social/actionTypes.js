@@ -18,3 +18,10 @@ export const SOCIAL_WALL_POST_IMAGE_PREVIEW_COMPLETE = 'social.wallPostImagePrev
 export const SOCIAL_WALL_POST_VIDEO_PREVIEW_COMPLETE = 'social.wallPostVideoPreviewComplete';
 export const SOCIAL_AVATAR_PREVIEW_COMPLETE = 'social.avatarPreviewComplete';
 export const SOCIAL_FILE_PREVIEW_RECEIVED = 'social.filePreviewReceived';
+
+export const INVITE_START_CREATION = 'invite.startCreation';
+export const INVITE_WALLET_CREATED = 'invite.walletCreated';
+export const INVITE_WALLET_UPLOADING_TO_SWARM = 'invite.walletUploadingToSwarm';
+export const INVITE_WALLET_UPLOADED_TO_SWARM = 'invite.walletUploadedToSwarm';
+export const INVITE_START_INVITE_TRANSACTION = 'invite.startInviteTransaction';
+export const INVITE_INVITE_CREATED = 'invite.inviteCreated';

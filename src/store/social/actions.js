@@ -12,11 +12,27 @@ if (parts.length > 0) {
 
 console.log('currentHash', currentHash);
 const inviteWallet = new InviteWallet();
-const invite = InviteWallet.randomString(10);
-inviteWallet.setAccount('0x9a9065b97198c06da2699cba2f2fd8cd5ad71a04', '');
-inviteWallet.resetWallet('0xE1a257c02eFECa4375Adeb445d66a8613d006eE8').then(data => console.log(data));
-//inviteWallet.createInvite(invite, '0x9a9065b97198c06da2699cba2f2fd8cd5ad71a90', 'somehash_ONET11WO')
-//inviteWallet.setUsername('lolprikol111000').then(data => console.log(data));
+//const invite = InviteWallet.randomString(10);
+inviteWallet.setAccount('0x9a9065b97198c06da2699cba2f2fd8cd5ad71a04', '9de6181ae32e97fa4b14e8572e29f406b08c056e18934746efc8459274118f9b');
+//inviteWallet.setAccount('0xE1a257c02eFECa4375Adeb445d66a8613d006eE8', '9769E601699A29AC99574EB0A21A52E5B7295E195D2BEDD4B7781FB6D1846EA6');
+//inviteWallet.register()
+/*inviteWallet.ttt().then(data=>{
+    console.log(data);
+});*/
+//inviteWallet.resetWallet('0x9a9065b97198c06da2699cba2f2fd8cd5ad71a04').then(data => console.log(data));
+//inviteWallet.createInvite(invite, '0x9a9065b97198c06da2699cba2f2fd8cd5ad71a91', 'wegerg3egge4gw')
+/*inviteWallet.createInvite(invite, '0xE1a257c02eFECa4375Adeb445d66a8613d006eE8', 'SWARM_HASH_WITH_KEY_HERE')
+    .then(data => console.log(data));*/
+
+/*inviteWallet.setUsername('newadmin')
+    .then(data => {
+        console.log(data);
+        return inviteWallet.createInvite(invite, '0xE1a257c02eFECa4375Adeb445d66a8613d006eE8', 'SWARM_HASH_WITH_KEY_HERE');
+    })
+    .then(data => {
+        console.log(data);
+    });*/
+//inviteWallet.ttt('etnwtnwrthjjjj').then(data => console.log(data));
 /*inviteWallet.createWallet()
     .then((data) => {
         inviteWallet.validate(data.data, data.password)
@@ -291,4 +307,65 @@ export const getImagePreviewUrl = (fileId, width = 300, height = 300) => {
             }
         });
     };
+};
+
+export const createInvite = () => {
+    return dispatch => {
+        const invite = InviteWallet.randomString(10);
+        let walletData = null;
+        dispatch({
+            type: types.INVITE_START_CREATION,
+            data: {invite}
+        });
+
+        return inviteWallet.createWallet()
+            .then(data => {
+                walletData = data;
+                dispatch({
+                    type: types.INVITE_WALLET_CREATED,
+                    data
+                });
+
+                return data;
+            })
+            .then(data => {
+                dispatch({
+                    type: types.INVITE_WALLET_UPLOADING_TO_SWARM
+                });
+
+                return bee.uploadWallet(JSON.stringify(data.data))
+                    .then(hash => {
+                        console.log(hash);
+                        dispatch({
+                            type: types.INVITE_WALLET_UPLOADED_TO_SWARM,
+                            data: hash
+                        });
+
+                        return hash;
+                    });
+            })
+            .then(hash => {
+                if (walletData && walletData.data && walletData.data.address) {
+
+                } else {
+                    console.error('Empty wallet data');
+                    return;
+                }
+
+                dispatch({
+                    type: types.INVITE_START_INVITE_TRANSACTION,
+                    data: hash
+                });
+
+                return inviteWallet.createInvite(invite, walletData.data.address, hash);
+            })
+            .then(data => {
+                dispatch({
+                    type: types.INVITE_INVITE_CREATED,
+                    data
+                });
+
+                return true;
+            });
+    }
 };

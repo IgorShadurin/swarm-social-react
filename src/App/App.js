@@ -11,6 +11,7 @@ import {connect} from "react-redux";
 import * as actions from "../store/social/actions";
 import PropTypes from "prop-types";
 import ChatPage from "../components/page/ChatPage";
+import WalletPage from "../components/page/WalletPage";
 
 library.add(faComment, faWallet, faCog);
 
@@ -37,7 +38,7 @@ class App extends Component {
                                            component={ChatPage}/>
 
                                     <Route path="/:swarm_protocol?/:swarm_hash?/wallet/:hash?"
-                                           render={() => <h1>Wallet only</h1>}/>
+                                           component={WalletPage}/>
 
                                     <Route exact
                                            path="/:swarm_protocol?/:swarm_hash?/:hash?"

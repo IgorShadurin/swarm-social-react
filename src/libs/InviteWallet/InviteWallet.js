@@ -5,28 +5,55 @@ import Web3 from 'web3';
 
 export default class InviteWallet {
     constructor(rpcUrl = 'https://rinkeby.infura.io/v3/357ce0ddb3ef426ba0bc727a3c64c873') {
-        this.contractAddressRinkeby = '0x920d5ab09f78085d9be70b4cfa5f9c83aabb56f2';
+        this.contractAddressRinkeby = '0xecfe6466c90c276ea740677c647146b4e99a2de1';
         this.ABI = [
             {
                 "constant": false,
                 "inputs": [
                     {
-                        "name": "invite",
-                        "type": "string"
-                    },
-                    {
-                        "name": "wallet",
-                        "type": "address"
-                    },
-                    {
-                        "name": "walletFileHash",
+                        "name": "hash",
                         "type": "string"
                     }
                 ],
-                "name": "createInvite",
+                "name": "setHash",
                 "outputs": [],
-                "payable": true,
-                "stateMutability": "payable",
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "constant": true,
+                "inputs": [
+                    {
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "UsersInfo",
+                "outputs": [
+                    {
+                        "name": "SwarmHash",
+                        "type": "string"
+                    },
+                    {
+                        "name": "SwarmType",
+                        "type": "uint32"
+                    },
+                    {
+                        "name": "Username",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Wallet",
+                        "type": "address"
+                    },
+                    {
+                        "name": "WalletFileHash",
+                        "type": "string"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "view",
                 "type": "function"
             },
             {
@@ -53,57 +80,18 @@ export default class InviteWallet {
                 "type": "function"
             },
             {
-                "constant": false,
-                "inputs": [
-                    {
-                        "name": "newWallet",
-                        "type": "address"
-                    }
-                ],
-                "name": "resetWallet",
-                "outputs": [],
-                "payable": true,
-                "stateMutability": "payable",
-                "type": "function"
-            },
-            {
-                "constant": false,
-                "inputs": [
-                    {
-                        "name": "hash",
-                        "type": "string"
-                    }
-                ],
-                "name": "setHash",
-                "outputs": [],
-                "payable": false,
-                "stateMutability": "nonpayable",
-                "type": "function"
-            },
-            {
-                "constant": false,
-                "inputs": [
-                    {
-                        "name": "username",
-                        "type": "string"
-                    }
-                ],
-                "name": "setUsername",
+                "constant": true,
+                "inputs": [],
+                "name": "userId",
                 "outputs": [
                     {
                         "name": "",
-                        "type": "string"
+                        "type": "uint256"
                     }
                 ],
                 "payable": false,
-                "stateMutability": "nonpayable",
+                "stateMutability": "view",
                 "type": "function"
-            },
-            {
-                "inputs": [],
-                "payable": false,
-                "stateMutability": "nonpayable",
-                "type": "constructor"
             },
             {
                 "constant": true,
@@ -113,7 +101,7 @@ export default class InviteWallet {
                         "type": "string"
                     }
                 ],
-                "name": "getAddressByUsername",
+                "name": "getWalletByUsername",
                 "outputs": [
                     {
                         "name": "",
@@ -132,11 +120,11 @@ export default class InviteWallet {
                         "type": "string"
                     }
                 ],
-                "name": "getHashByUsername",
+                "name": "getAddressByUsername",
                 "outputs": [
                     {
                         "name": "",
-                        "type": "string"
+                        "type": "address"
                     }
                 ],
                 "payable": false,
@@ -180,82 +168,14 @@ export default class InviteWallet {
                 "constant": true,
                 "inputs": [
                     {
-                        "name": "wallet",
-                        "type": "address"
-                    }
-                ],
-                "name": "getUsername",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "string"
-                    }
-                ],
-                "payable": false,
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "constant": true,
-                "inputs": [
-                    {
                         "name": "username",
                         "type": "string"
                     }
                 ],
-                "name": "getWalletByUsername",
+                "name": "getHashByUsername",
                 "outputs": [
                     {
                         "name": "",
-                        "type": "address"
-                    }
-                ],
-                "payable": false,
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "constant": true,
-                "inputs": [],
-                "name": "userId",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "uint256"
-                    }
-                ],
-                "payable": false,
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "constant": true,
-                "inputs": [
-                    {
-                        "name": "",
-                        "type": "uint256"
-                    }
-                ],
-                "name": "UsersInfo",
-                "outputs": [
-                    {
-                        "name": "SwarmHash",
-                        "type": "string"
-                    },
-                    {
-                        "name": "SwarmType",
-                        "type": "uint32"
-                    },
-                    {
-                        "name": "Username",
-                        "type": "string"
-                    },
-                    {
-                        "name": "Wallet",
-                        "type": "address"
-                    },
-                    {
-                        "name": "WalletFileHash",
                         "type": "string"
                     }
                 ],
@@ -281,6 +201,86 @@ export default class InviteWallet {
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
+            },
+            {
+                "constant": true,
+                "inputs": [
+                    {
+                        "name": "wallet",
+                        "type": "address"
+                    }
+                ],
+                "name": "getUsername",
+                "outputs": [
+                    {
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "constant": false,
+                "inputs": [
+                    {
+                        "name": "newWallet",
+                        "type": "address"
+                    }
+                ],
+                "name": "resetWallet",
+                "outputs": [],
+                "payable": true,
+                "stateMutability": "payable",
+                "type": "function"
+            },
+            {
+                "constant": false,
+                "inputs": [
+                    {
+                        "name": "invite",
+                        "type": "string"
+                    },
+                    {
+                        "name": "wallet",
+                        "type": "address"
+                    },
+                    {
+                        "name": "walletFileHash",
+                        "type": "string"
+                    }
+                ],
+                "name": "createInvite",
+                "outputs": [],
+                "payable": true,
+                "stateMutability": "payable",
+                "type": "function"
+            },
+            {
+                "constant": false,
+                "inputs": [
+                    {
+                        "name": "username",
+                        "type": "string"
+                    }
+                ],
+                "name": "setUsername",
+                "outputs": [
+                    {
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "constructor"
             }
         ];
         this.web3 = new Web3(rpcUrl);
@@ -343,12 +343,20 @@ export default class InviteWallet {
         return this.web3.eth.Contract(this.ABI, this.contractAddressRinkeby, {from: fromAddress});
     }
 
-    getTransactionData(balance, data) {
+    /**
+     * Generate transaction with 0 or (value - estimateGas) Ether
+     * @param to
+     * @param balanceEther
+     * @param data
+     * @returns {Promise<number>}
+     */
+    getTransactionData(to, balanceEther, data) {
         let result = {
-            balance,
-            data,
-            nonce: 0,
-            gasPrice: 0
+            from: this.fromAddress,
+            to: this.contractAddressRinkeby,
+            value: this.web3.utils.toWei(balanceEther, 'ether'),
+            chainId: 4,
+            data
         };
         return this.web3.eth.getTransactionCount(this.fromAddress)
             .then(nonce => {
@@ -359,54 +367,35 @@ export default class InviteWallet {
             .then(gasPrice => {
                 result.gasPrice = gasPrice;
 
-                return null;
+                return this.web3.eth.estimateGas(result);
             })
-            .then(() => result);
+            .then(estimateGas => {
+                // estimateGas is just a number, not wei
+                // add +10%
+                estimateGas = Math.round(estimateGas + estimateGas * 0.1);
+                const estimateGasBN = this.web3.utils.toBN(estimateGas);
+                const gasPriceBN = this.web3.utils.toBN(result.gasPrice);
+                const valueBN = this.web3.utils.toBN(result.value);
+                const totalGasBN = gasPriceBN.mul(estimateGasBN);
+                let resultValue = Number(balanceEther) === 0 ? 0 : valueBN.sub(totalGasBN);
+                result.value = this.web3.utils.toHex(resultValue);
+                result.nonce = this.web3.utils.toHex(result.nonce);
+                result.gasPrice = this.web3.utils.toHex(gasPriceBN);
+                result.gasLimit = this.web3.utils.toHex(estimateGasBN);
+
+                return result;
+            });
     }
 
-    prepareTransactionData() {
-
+    getTransactionABI(method, value = 0, ...params) {
+        return this.getContract().methods[method](...params).encodeABI();
     }
 
     sendTransaction(method, value = 0, ...params) {
-        const f = this.getContract().methods[method](...params);
-        const dataF = f.encodeABI();
+        const dataF = this.getTransactionABI(method, value, ...params);
 
-        return this.web3.eth.getTransactionCount(this.fromAddress)
-            .then(nonce => ({nonce}))
-            .then(data => this.web3.eth.getGasPrice().then(price => {
-                gasPrice = price;
-                return {...data, gasPrice};
-            }))
-            .then(data => ({
-                nonce: this.web3.utils.toHex(data.nonce),
-                gasPrice: this.web3.utils.toHex(data.gasPrice),
-                to: this.contractAddressRinkeby,
-                value: this.web3.utils.toHex(this.web3.utils.toWei(value === 'all' ? 1 : value, 'ether')),
-                data: dataF
-            }))
-            .then(data => value === 'all' ? data : this.web3.eth.getBalance(this.fromAddress).then(balance => {
-                value = this.web3.utils.fromWei(balance, 'ether');
-                console.log('balance: ' + value);
-
-                return data;
-            }))
-            .then(rawTx => this.web3.eth.estimateGas(rawTx).then(gasLimit => {
-                console.log(gasLimit, rawTx.gasPrice);
-                //console.log(this.web3.utils.fromWei(gasLimit * rawTx.gasPrice, 'ether'));
-                console.log(this.web3.utils.fromWei(gasLimit.toString(), 'ether'));
-                //const resultValue = value > 0 ? value * this.web3.utils.fromWei(gasLimit * rawTx.gasPrice, 'ether') : 0;
-                //console.log(resultValue);
-                return {
-                    ...rawTx,
-                    gasLimit,
-                    //value: this.web3.utils.toHex(this.web3.utils.toWei(resultValue, 'ether'))
-                };
-            }))
+        return this.getTransactionData(this.contractAddressRinkeby, value, dataF)
             .then(rawTx => {
-
-                console.log(rawTx);
-                return;
                 const tx = new EthereumTx(rawTx);
                 tx.sign(this.privateKey);
                 const serializedTx = tx.serialize();
@@ -433,8 +422,8 @@ export default class InviteWallet {
             });
     }
 
-    createInvite(invite, toAddress, fileHash) {
-        return this.sendTransaction('createInvite', '0', invite, toAddress, fileHash);
+    createInvite(invite, toAddress, fileHash, balance = '0.0001') {
+        return this.sendTransaction('createInvite', balance, invite, toAddress, fileHash);
     }
 
     register(invite, username) {
@@ -442,11 +431,9 @@ export default class InviteWallet {
     }
 
     resetWallet(newWallet) {
-        /*this.web3.eth.getBalance(this.fromAddress)
-            .then(balance => console.log(this.web3.utils.fromWei(balance, 'ether')));*/
-        // todo get max transact value
-        return this.sendTransaction('resetWallet', '0', newWallet);
-        //return this.sendTransaction('resetWallet', '0', newWallet);
+        return this.web3.eth.getBalance(this.fromAddress)
+            .then(balance => this.web3.utils.fromWei(balance, 'ether'))
+            .then(balance => this.sendTransaction('resetWallet', balance, newWallet));
     }
 
     setHash(hash) {
