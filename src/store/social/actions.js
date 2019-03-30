@@ -11,37 +11,7 @@ if (parts.length > 0) {
 }
 
 console.log('currentHash', currentHash);
-const inviteWallet = new InviteWallet();
-//const invite = InviteWallet.randomString(10);
-inviteWallet.setAccount('0x9a9065b97198c06da2699cba2f2fd8cd5ad71a04', '9de6181ae32e97fa4b14e8572e29f406b08c056e18934746efc8459274118f9b');
-//inviteWallet.setAccount('0xE1a257c02eFECa4375Adeb445d66a8613d006eE8', '9769E601699A29AC99574EB0A21A52E5B7295E195D2BEDD4B7781FB6D1846EA6');
-//inviteWallet.register()
-/*inviteWallet.ttt().then(data=>{
-    console.log(data);
-});*/
-//inviteWallet.resetWallet('0x9a9065b97198c06da2699cba2f2fd8cd5ad71a04').then(data => console.log(data));
-//inviteWallet.createInvite(invite, '0x9a9065b97198c06da2699cba2f2fd8cd5ad71a91', 'wegerg3egge4gw')
-/*inviteWallet.createInvite(invite, '0xE1a257c02eFECa4375Adeb445d66a8613d006eE8', 'SWARM_HASH_WITH_KEY_HERE')
-    .then(data => console.log(data));*/
-
-/*inviteWallet.setUsername('newadmin')
-    .then(data => {
-        console.log(data);
-        return inviteWallet.createInvite(invite, '0xE1a257c02eFECa4375Adeb445d66a8613d006eE8', 'SWARM_HASH_WITH_KEY_HERE');
-    })
-    .then(data => {
-        console.log(data);
-    });*/
-//inviteWallet.ttt('etnwtnwrthjjjj').then(data => console.log(data));
-/*inviteWallet.createWallet()
-    .then((data) => {
-        inviteWallet.validate(data.data, data.password)
-            .then(privateKey => console.log(privateKey))
-            .catch(() => console.log('Incorrect password'));
-        return data;
-    })
-    .then((wallet) => console.log(JSON.stringify(wallet)));*/
-
+const inviteWallet = new InviteWallet('https://rinkeby.infura.io/v3/357ce0ddb3ef426ba0bc727a3c64c873');
 let bee = null;
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     // dev code
@@ -309,6 +279,17 @@ export const getImagePreviewUrl = (fileId, width = 300, height = 300) => {
     };
 };
 
+export const inviteSetAccount = (wallet, privateKey) => {
+    return dispatch => {
+        inviteWallet.setAccount(wallet, privateKey);
+        dispatch({
+            type: types.INVITE_SET_ACCOUNT,
+            data: {}
+        });
+
+    }
+};
+
 export const createInvite = () => {
     return dispatch => {
         const invite = InviteWallet.randomString(10);
@@ -357,7 +338,7 @@ export const createInvite = () => {
                     data: hash
                 });
 
-                return inviteWallet.createInvite(invite, walletData.data.address, hash);
+                return inviteWallet.createInvite(invite, '0x' + walletData.data.address, hash);
             })
             .then(data => {
                 dispatch({
@@ -368,4 +349,35 @@ export const createInvite = () => {
                 return true;
             });
     }
+};
+
+export const inviteCheckSwarmWallet = (swarmHash, password) => {
+    return dispatch => {
+        dispatch({
+            type: types.INVITE_CHECK_WALLET_START
+        });
+        let address = '';
+        bee.downloadWallet(swarmHash)
+            .then(data => data.json())
+            .then(data => {
+                address = '0x' + data.address;
+                return data;
+            })
+            .then(data => inviteWallet.validate(data, password))
+            .then(data => {
+                dispatch({
+                    type: types.INVITE_CHECK_WALLET_OK,
+                    data: {
+                        address,
+                        privateKey: data
+                    }
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: types.INVITE_CHECK_WALLET_INCORRECT,
+                    data: error
+                });
+            });
+    };
 };

@@ -19,9 +19,13 @@ export const SOCIAL_WALL_POST_VIDEO_PREVIEW_COMPLETE = 'social.wallPostVideoPrev
 export const SOCIAL_AVATAR_PREVIEW_COMPLETE = 'social.avatarPreviewComplete';
 export const SOCIAL_FILE_PREVIEW_RECEIVED = 'social.filePreviewReceived';
 
+export const INVITE_SET_ACCOUNT = 'invite.setAccount';
 export const INVITE_START_CREATION = 'invite.startCreation';
 export const INVITE_WALLET_CREATED = 'invite.walletCreated';
 export const INVITE_WALLET_UPLOADING_TO_SWARM = 'invite.walletUploadingToSwarm';
 export const INVITE_WALLET_UPLOADED_TO_SWARM = 'invite.walletUploadedToSwarm';
 export const INVITE_START_INVITE_TRANSACTION = 'invite.startInviteTransaction';
 export const INVITE_INVITE_CREATED = 'invite.inviteCreated';
+export const INVITE_CHECK_WALLET_START = 'invite.checkWalletStart';
+export const INVITE_CHECK_WALLET_OK = 'invite.checkWalletOk';
+export const INVITE_CHECK_WALLET_INCORRECT = 'invite.checkWalletIncorrect';

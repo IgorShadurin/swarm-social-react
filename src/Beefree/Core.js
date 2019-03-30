@@ -329,4 +329,8 @@ export default class Core {
 
         return this.swarm.bzz.uploadFile(data, options);
     }
+
+    downloadWallet(hash) {
+        return this.swarm.bzz.download(hash);
+    }
 }

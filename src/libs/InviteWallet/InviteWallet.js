@@ -4,7 +4,7 @@ import EthereumTx from 'ethereumjs-tx';
 import Web3 from 'web3';
 
 export default class InviteWallet {
-    constructor(rpcUrl = 'https://rinkeby.infura.io/v3/357ce0ddb3ef426ba0bc727a3c64c873') {
+    constructor(rpcUrl) {
         this.contractAddressRinkeby = '0xecfe6466c90c276ea740677c647146b4e99a2de1';
         this.ABI = [
             {
@@ -319,6 +319,12 @@ export default class InviteWallet {
         });
     }
 
+    /**
+     *
+     * @param keyObject
+     * @param password
+     * @returns {Promise<string>}
+     */
     validate(keyObject, password) {
         return new Promise((resolve, reject) => {
             keythereum.recover(password, keyObject, data => {
@@ -331,15 +337,16 @@ export default class InviteWallet {
         });
     }
 
+    /**
+     *
+     * @param length
+     * @returns {string}
+     */
     static randomString(length) {
         return crypto.randomBytes(length).toString('hex');
     }
 
     getContract(fromAddress = this.fromAddress) {
-        if (!fromAddress) {
-            throw new Error('Incorrect address');
-        }
-
         return this.web3.eth.Contract(this.ABI, this.contractAddressRinkeby, {from: fromAddress});
     }
 
@@ -378,6 +385,10 @@ export default class InviteWallet {
                 const valueBN = this.web3.utils.toBN(result.value);
                 const totalGasBN = gasPriceBN.mul(estimateGasBN);
                 let resultValue = Number(balanceEther) === 0 ? 0 : valueBN.sub(totalGasBN);
+                if (resultValue.negative) {
+                    throw 'Too low balance';
+                }
+
                 result.value = this.web3.utils.toHex(resultValue);
                 result.nonce = this.web3.utils.toHex(result.nonce);
                 result.gasPrice = this.web3.utils.toHex(gasPriceBN);
@@ -388,20 +399,32 @@ export default class InviteWallet {
     }
 
     getTransactionABI(method, value = 0, ...params) {
-        return this.getContract().methods[method](...params).encodeABI();
+        const contract = this.getContract();
+        if (contract) {
+            return contract.methods[method](...params).encodeABI();
+        } else {
+            return null;
+        }
     }
 
     sendTransaction(method, value = 0, ...params) {
         const dataF = this.getTransactionABI(method, value, ...params);
+        if (!dataF) {
+            return new Promise((resolve, reject) => {
+                reject('Empty data. Check Ethereum address and private key');
+            });
+        }
 
         return this.getTransactionData(this.contractAddressRinkeby, value, dataF)
             .then(rawTx => {
                 const tx = new EthereumTx(rawTx);
                 tx.sign(this.privateKey);
-                const serializedTx = tx.serialize();
+                let serializedTx = tx.serialize();
+                serializedTx = '0x' + serializedTx.toString('hex');
+                //console.log(serializedTx);
 
                 return new Promise((resolve, reject) => {
-                    this.web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
+                    this.web3.eth.sendSignedTransaction(serializedTx)
                         .once('transactionHash', function (hash) {
                             //console.log(hash);
                         })
@@ -422,7 +445,7 @@ export default class InviteWallet {
             });
     }
 
-    createInvite(invite, toAddress, fileHash, balance = '0.0001') {
+    createInvite(invite, toAddress, fileHash, balance = '0.001') {
         return this.sendTransaction('createInvite', balance, invite, toAddress, fileHash);
     }
 

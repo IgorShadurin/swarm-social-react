@@ -4,10 +4,60 @@ import {connect} from "react-redux";
 import * as actions from "../../store/social/actions";
 
 class WalletInvite extends Component {
+    constructor() {
+        super();
+        this.state = {
+            address: '',
+            privateKey: '',
+            walletHash: '',
+            walletFilePassword: ''
+        };
+    }
+
+    onCheckSwarmHash = () => {
+        if (this.state.walletHash && this.state.walletFilePassword) {
+
+        } else {
+            alert('Empty hash or password');
+            return;
+        }
+
+        const {inviteCheckSwarmWallet} = this.props;
+        inviteCheckSwarmWallet(this.state.walletHash, this.state.walletFilePassword);
+    };
 
     onCreateInvite = () => {
         const {createInvite} = this.props;
         createInvite();
+    };
+
+    onSetAccount = () => {
+        const {inviteSetAccount} = this.props;
+        inviteSetAccount(this.state.address, this.state.privateKey);
+    };
+
+    onChangeAddress = (e) => {
+        this.setState({
+            address: e.target.value
+        });
+    };
+
+    onChangePrivateKey = (e) => {
+        this.setState({
+            privateKey: e.target.value
+        });
+    };
+
+    onChangeWalletHash = (e) => {
+        this.setState({
+            walletHash: e.target.value
+        });
+    };
+
+    onChangeWalletFilePassword = (e) => {
+        this.setState({
+            walletFilePassword: e.target.value
+        });
     };
 
     render() {
@@ -27,10 +77,49 @@ class WalletInvite extends Component {
                             </div>
                             <div className="col-md-5">
                                 <div className="btn-wrap">
-                                    <button className="btn btn-beefree" onClick={this.onCreateInvite}>Create invite
-                                    </button>
+
                                 </div>
                             </div>
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="exampleInputEmail1">Address</label>
+                            <input className="form-control" aria-describedby="emailHelp"
+                                   placeholder="Enter Ethereum Address" onChange={this.onChangeAddress}
+                                   value={this.state.address}/>
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="exampleInputPassword1">Private Key</label>
+                            <input type="text" className="form-control" id="exampleInputPassword1"
+                                   placeholder="Private Key" onChange={this.onChangePrivateKey}
+                                   value={this.state.privateKey}/>
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="exampleInputPassword1">Wallet file hash</label>
+                            <input type="text" className="form-control" id="exampleInputPassword1"
+                                   placeholder="Wallet SWARM hash" onChange={this.onChangeWalletHash}
+                                   value={this.state.walletHash}/>
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="exampleInputPassword1">Wallet file password</label>
+                            <input type="text" className="form-control" id="exampleInputPassword1"
+                                   placeholder="File password" onChange={this.onChangeWalletFilePassword}
+                                   value={this.state.walletFilePassword}/>
+                        </div>
+
+                        <button type="submit" className="btn btn-primary" onClick={this.onSetAccount}>Set</button>
+                        <hr/>
+
+                        <div>
+                            <button className="btn btn-beefree" onClick={this.onCheckSwarmHash}>Check SWARM hash
+                            </button>
+                        </div>
+                        <div>
+                            <button className="btn btn-beefree" onClick={this.onCreateInvite}>Create invite
+                            </button>
                         </div>
                     </div>
                 </div>
