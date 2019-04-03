@@ -14,7 +14,19 @@ class WalletInvite extends Component {
         };
     }
 
-    onCheckSwarmHash = () => {
+    inCheckInvite = () => {
+        if (this.state.address && this.state.walletFilePassword) {
+
+        } else {
+            alert('Empty address or password');
+            return;
+        }
+
+        const {getSwarmWallet} = this.props;
+        getSwarmWallet(this.state.address, this.state.walletFilePassword);
+    };
+
+    /*onCheckSwarmHash = () => {
         if (this.state.walletHash && this.state.walletFilePassword) {
 
         } else {
@@ -24,9 +36,16 @@ class WalletInvite extends Component {
 
         const {inviteCheckSwarmWallet} = this.props;
         inviteCheckSwarmWallet(this.state.walletHash, this.state.walletFilePassword);
-    };
+    };*/
 
     onCreateInvite = () => {
+        if (this.state.address && this.state.privateKey) {
+            this.onSetAccount();
+        } else {
+            alert('Empty address or private key');
+            return;
+        }
+
         const {createInvite} = this.props;
         createInvite();
     };
@@ -61,6 +80,22 @@ class WalletInvite extends Component {
     };
 
     render() {
+        const {invites} = this.props;
+        const invitesData = invites.map((item, index) => <div key={index}>
+            <p>
+                Address: {item.address}
+            </p>
+            <p>
+                Password: {item.password}
+            </p>
+            <p>
+                Private key: {item.privateKey}
+            </p>
+            <p>
+                Swarm hash: {item.walletSwarmHash}
+            </p>
+            <hr/>
+        </div>);
 
         return (
             <div className="follows-block _block">
@@ -113,14 +148,25 @@ class WalletInvite extends Component {
                         <button type="submit" className="btn btn-primary" onClick={this.onSetAccount}>Set</button>
                         <hr/>
 
+                        {/*<div>
+                            <button className="btn btn-beefree" onClick={this.onCheckSwarmHash}>
+                                Check SWARM hash
+                            </button>
+                        </div>*/}
+
                         <div>
-                            <button className="btn btn-beefree" onClick={this.onCheckSwarmHash}>Check SWARM hash
+                            <button className="btn btn-beefree" onClick={this.inCheckInvite}>
+                                Check Invite
                             </button>
                         </div>
+
                         <div>
-                            <button className="btn btn-beefree" onClick={this.onCreateInvite}>Create invite
+                            <button className="btn btn-beefree" onClick={this.onCreateInvite}>
+                                Create invite
                             </button>
                         </div>
+                        <hr/>
+                        {invitesData}
                     </div>
                 </div>
                 <div className="content-wrap">
@@ -140,6 +186,7 @@ class WalletInvite extends Component {
 
 const mapStateToProps = state => ({
     user: state.social.user,
+    invites: state.social.invites,
 });
 
 export default connect(mapStateToProps, actions)(WalletInvite);

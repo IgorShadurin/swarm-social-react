@@ -313,6 +313,7 @@ export default class InviteWallet {
             keythereum.dump(password, dk.privateKey, dk.salt, dk.iv, options, keyObject => {
                 resolve({
                     data: keyObject,
+                    privateKey: dk.privateKey.toString('hex'),
                     password
                 });
             });
@@ -398,10 +399,19 @@ export default class InviteWallet {
             });
     }
 
-    getTransactionABI(method, value = 0, ...params) {
+    getTransaction(method, value = 0, ...params) {
         const contract = this.getContract();
         if (contract) {
-            return contract.methods[method](...params).encodeABI();
+            return contract.methods[method](...params);
+        } else {
+            return null;
+        }
+    }
+
+    getTransactionABI(method, value = 0, ...params) {
+        const transaction = this.getTransaction(method, value, ...params);
+        if (transaction) {
+            return transaction.encodeABI();
         } else {
             return null;
         }
@@ -465,5 +475,11 @@ export default class InviteWallet {
 
     setUsername(username) {
         return this.sendTransaction('setUsername', '0', username);
+    }
+
+    getWalletHashByAddress(address) {
+        return this.getTransaction('Wallets', 0, address).call()
+            .then(userId => this.getTransaction('UsersInfo', 0, userId).call())
+            .then(data => data.WalletFileHash);
     }
 }

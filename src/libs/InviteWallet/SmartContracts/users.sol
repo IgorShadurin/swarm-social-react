@@ -49,8 +49,9 @@ contract Users {
     }
 
     mapping(uint256 => Info) public UsersInfo;
-    mapping(string => uint256) Usernames;
     mapping(address => uint256) public Wallets;
+    mapping(string => uint256) Usernames;
+    // todo is really required?
     mapping(string => address) Invites;
     uint256 public userId = 1;
 

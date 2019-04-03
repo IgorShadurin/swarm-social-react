@@ -294,6 +294,8 @@ export const createInvite = () => {
     return dispatch => {
         const invite = InviteWallet.randomString(10);
         let walletData = null;
+        let address = null;
+        let walletSwarmHash = null;
         dispatch({
             type: types.INVITE_START_CREATION,
             data: {invite}
@@ -302,6 +304,8 @@ export const createInvite = () => {
         return inviteWallet.createWallet()
             .then(data => {
                 walletData = data;
+                address = '0x' + walletData.data.address;
+
                 dispatch({
                     type: types.INVITE_WALLET_CREATED,
                     data
@@ -316,6 +320,7 @@ export const createInvite = () => {
 
                 return bee.uploadWallet(JSON.stringify(data.data))
                     .then(hash => {
+                        walletSwarmHash = hash;
                         console.log(hash);
                         dispatch({
                             type: types.INVITE_WALLET_UPLOADED_TO_SWARM,
@@ -329,6 +334,7 @@ export const createInvite = () => {
                 if (walletData && walletData.data && walletData.data.address) {
 
                 } else {
+                    // todo catch error
                     console.error('Empty wallet data');
                     return;
                 }
@@ -338,12 +344,18 @@ export const createInvite = () => {
                     data: hash
                 });
 
-                return inviteWallet.createInvite(invite, '0x' + walletData.data.address, hash);
+                return inviteWallet.createInvite(invite, address, hash);
             })
             .then(data => {
                 dispatch({
                     type: types.INVITE_INVITE_CREATED,
-                    data
+                    data: {
+                        password: walletData.password,
+                        privateKey: walletData.privateKey,
+                        response: data,
+                        address,
+                        walletSwarmHash,
+                    }
                 });
 
                 return true;
@@ -351,18 +363,31 @@ export const createInvite = () => {
     }
 };
 
-export const inviteCheckSwarmWallet = (swarmHash, password) => {
+export const getSwarmWallet = (address, password) => {
     return dispatch => {
         dispatch({
-            type: types.INVITE_CHECK_WALLET_START
+            type: types.INVITE_SWARM_WALLET_BY_ADDRESS_START
         });
-        let address = '';
-        bee.downloadWallet(swarmHash)
+        return inviteWallet.getWalletHashByAddress(address)
+            .then(swarmHash => {
+                dispatch({
+                    type: types.INVITE_SWARM_WALLET_BY_ADDRESS_HASH_RECEIVED,
+                    data: swarmHash
+                });
+
+                return swarmHash;
+            })
+            .then(swarmHash => bee.downloadWallet(swarmHash))
             .then(data => data.json())
             .then(data => {
-                address = '0x' + data.address;
-                return data;
-            })
+                    dispatch({
+                        type: types.INVITE_SWARM_WALLET_BY_ADDRESS_RECEIVED,
+                        data
+                    });
+
+                    return data;
+                }
+            )
             .then(data => inviteWallet.validate(data, password))
             .then(data => {
                 dispatch({
@@ -373,11 +398,11 @@ export const inviteCheckSwarmWallet = (swarmHash, password) => {
                     }
                 });
             })
-            .catch(error => {
+            .catch(error =>
                 dispatch({
-                    type: types.INVITE_CHECK_WALLET_INCORRECT,
+                    type: types.INVITE_SWARM_WALLET_BY_ADDRESS_FAILED,
                     data: error
-                });
-            });
+                })
+            );
     };
 };
