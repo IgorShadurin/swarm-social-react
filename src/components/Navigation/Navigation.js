@@ -6,13 +6,13 @@ import User from "../../Beefree/User";
 
 class Navigation extends Component {
     render() {
-        const {user} = this.props;
+        const {user, isAuth} = this.props;
         const fullName = User.getFullName(user);
         const avatar = User.getAvatar(user);
 
         return (
             <nav>
-                <div className="container">
+                {isAuth && <div className="container">
                     <div className="row">
                         <div className="col-md-6">
                             <Link className="nav-link" to="./">
@@ -24,11 +24,11 @@ class Navigation extends Component {
                         <div className="col-md-6">
                             <div className="r-bar-wrap">
                                 <div className="settings-wrap">
-                                    <div className="msg _item new">
+                                    {/*<div className="msg _item new">
                                         <Link className="nav-link" to="./dialog">
                                             <i className="fas fa-comment"/>
                                         </Link>
-                                    </div>
+                                    </div>*/}
                                     <div className="wallet _item">
                                         <Link className="nav-link" to="./wallet">
                                             <i className="fas fa-wallet"/>
@@ -40,7 +40,7 @@ class Navigation extends Component {
                                         </Link>
                                     </div>
                                 </div>
-                                <div className="ac-info-wrap">
+                                 <div className="ac-info-wrap">
                                     <div className="info-wrap">
                                         <div className="name">
                                             <p>
@@ -64,7 +64,7 @@ class Navigation extends Component {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>}
             </nav>
         );
     }

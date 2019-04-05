@@ -3,9 +3,17 @@ import crypto from 'crypto';
 import EthereumTx from 'ethereumjs-tx';
 import Web3 from 'web3';
 
+export const NETWORK_MAIN = 1;
+export const NETWORK_ROPSTEN = 3;
+export const NETWORK_RINKEBY = 4;
+
 export default class InviteWallet {
-    constructor(rpcUrl) {
-        this.contractAddressRinkeby = '0xecfe6466c90c276ea740677c647146b4e99a2de1';
+    constructor(rpcUrl, networkId = 4) {
+        this.networkContracts = {
+            // rinkeby
+            4: '0xecfe6466c90c276ea740677c647146b4e99a2de1',
+        };
+        this.contractAddress = this.networkContracts[networkId];
         this.ABI = [
             {
                 "constant": false,
@@ -347,8 +355,26 @@ export default class InviteWallet {
         return crypto.randomBytes(length).toString('hex');
     }
 
+    static parseInvite(invite) {
+        if (invite.length <= 42) {
+            throw 'Incorrect invite size';
+        }
+
+        const address = invite.slice(0, 42);
+        const password = invite.slice(42);
+
+        return {
+            address,
+            password
+        };
+    }
+
+    static createInviteFromData(address, password) {
+        return 'http://prototype.beefree.me/#' + address + password;
+    }
+
     getContract(fromAddress = this.fromAddress) {
-        return this.web3.eth.Contract(this.ABI, this.contractAddressRinkeby, {from: fromAddress});
+        return this.web3.eth.Contract(this.ABI, this.contractAddress, {from: fromAddress});
     }
 
     /**
@@ -361,7 +387,7 @@ export default class InviteWallet {
     getTransactionData(to, balanceEther, data) {
         let result = {
             from: this.fromAddress,
-            to: this.contractAddressRinkeby,
+            to: this.contractAddress,
             value: this.web3.utils.toWei(balanceEther, 'ether'),
             chainId: 4,
             data
@@ -425,7 +451,7 @@ export default class InviteWallet {
             });
         }
 
-        return this.getTransactionData(this.contractAddressRinkeby, value, dataF)
+        return this.getTransactionData(this.contractAddress, value, dataF)
             .then(rawTx => {
                 const tx = new EthereumTx(rawTx);
                 tx.sign(this.privateKey);

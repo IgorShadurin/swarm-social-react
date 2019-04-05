@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import './WalletInvite.css';
 import {connect} from "react-redux";
 import * as actions from "../../store/social/actions";
+import InviteWallet from "../../libs/InviteWallet/InviteWallet";
 
 class WalletInvite extends Component {
     constructor() {
@@ -81,21 +82,27 @@ class WalletInvite extends Component {
 
     render() {
         const {invites} = this.props;
-        const invitesData = invites.map((item, index) => <div key={index}>
-            <p>
-                Address: {item.address}
-            </p>
-            <p>
-                Password: {item.password}
-            </p>
-            <p>
-                Private key: {item.privateKey}
-            </p>
-            <p>
-                Swarm hash: {item.walletSwarmHash}
-            </p>
-            <hr/>
-        </div>);
+        const invitesData = invites.map((item, index) => {
+            const url = InviteWallet.createInviteFromData(item.address, item.password);
+            return <div key={index}>
+                <p>
+                    Address: {item.address}
+                </p>
+                <p>
+                    Password: {item.password}
+                </p>
+                <p>
+                    Private key: {item.privateKey}
+                </p>
+                <p>
+                    Swarm hash: {item.walletSwarmHash}
+                </p>
+                <p>
+                    URL: <a href={url}>{url}</a>
+                </p>
+                <hr/>
+            </div>
+        });
 
         return (
             <div className="follows-block _block">
