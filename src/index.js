@@ -15,6 +15,7 @@ const store = configureStore(Immutable({
         isInit: false,
         uploadStatus: Immutable([]),
         isWallPosting: false,
+        isRegistration: false,
         previews: [],
         invites: []
     }

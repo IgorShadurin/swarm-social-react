@@ -116,6 +116,18 @@ export default function reduce(state = initialState, action = {}) {
             return state.merge({
                 invites: Immutable(items)
             });
+        case types.INVITE_REGISTRATION_STARTED:
+            return state.merge({
+                isRegistration: true
+            });
+        case types.INVITE_REGISTRATION_COMPLETE:
+            return state.merge({
+                isRegistration: false
+            });
+        case types.INVITE_REGISTRATION_FAILED:
+            return state.merge({
+                isRegistration: false
+            });
         default:
             return state;
     }

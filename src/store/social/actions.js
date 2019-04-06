@@ -406,3 +406,68 @@ export const getSwarmWallet = (address, password) => {
             );
     };
 };
+export const registerUser = (invite, username) => {
+    return dispatch => {
+        dispatch({
+            type: types.INVITE_REGISTRATION_STARTED
+        });
+        let parsedInvite = {};
+        try {
+            parsedInvite = InviteWallet.parseInvite(invite);
+        } catch (error) {
+            dispatch({
+                type: types.INVITE_REGISTRATION_FAILED,
+                data: error
+            });
+            return;
+        }
+
+        return inviteWallet.getWalletHashByAddress(parsedInvite.address)
+            .then(swarmHash => {
+                /*dispatch({
+                    type: types.INVITE_SWARM_WALLET_BY_ADDRESS_HASH_RECEIVED,
+                    data: swarmHash
+                });*/
+
+                return swarmHash;
+            })
+            .then(swarmHash => bee.downloadWallet(swarmHash))
+            .then(data => data.json())
+            .then(data => {
+                    /*dispatch({
+                        type: types.INVITE_SWARM_WALLET_BY_ADDRESS_RECEIVED,
+                        data
+                    });*/
+
+                    return data;
+                }
+            )
+            .then(data => inviteWallet.validate(data, parsedInvite.password))
+            /*.then(data => {
+                dispatch({
+                    type: types.INVITE_CHECK_WALLET_OK,
+                    data: {
+                        address,
+                        privateKey: data
+                    }
+                });
+            })*/
+            .then(privateKey => inviteWallet.setAccount(parsedInvite.address, privateKey))
+            .then(() => inviteWallet.setUsername(username))
+            .then(result => {
+                dispatch({
+                    type: types.INVITE_REGISTRATION_COMPLETE,
+                    data: result
+                });
+
+                return result;
+            })
+            .catch(error =>
+                dispatch({
+                    type: types.INVITE_REGISTRATION_FAILED,
+                    data: error
+                })
+            );
+    };
+};
+

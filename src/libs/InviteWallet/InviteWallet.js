@@ -299,6 +299,8 @@ export default class InviteWallet {
     setAccount(fromAddress, privateKey) {
         this.fromAddress = fromAddress;
         this.privateKey = new Buffer(privateKey, 'hex');
+
+        return true;
     }
 
     createWallet(password = null) {
