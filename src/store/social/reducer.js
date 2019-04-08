@@ -12,6 +12,7 @@ export default function reduce(state = initialState, action = {}) {
     let posts = null;
     let uploadStatus = null;
     let items = [];
+    console.log(state);
     switch (action.type) {
         case types.SOCIAL_INIT:
             return state.merge({
@@ -128,6 +129,8 @@ export default function reduce(state = initialState, action = {}) {
             return state.merge({
                 isRegistration: false
             });
+        case types.INVITE_RECEIVED_STORED_AUTH:
+            return state.merge({auth: action.data});
         default:
             return state;
     }

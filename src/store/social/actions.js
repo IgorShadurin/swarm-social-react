@@ -406,11 +406,13 @@ export const getSwarmWallet = (address, password) => {
             );
     };
 };
+
 export const registerUser = (invite, username) => {
     return dispatch => {
         dispatch({
             type: types.INVITE_REGISTRATION_STARTED
         });
+        let walletSwarmHash = '';
         let parsedInvite = {};
         try {
             parsedInvite = InviteWallet.parseInvite(invite);
@@ -424,6 +426,7 @@ export const registerUser = (invite, username) => {
 
         return inviteWallet.getWalletHashByAddress(parsedInvite.address)
             .then(swarmHash => {
+                walletSwarmHash = swarmHash;
                 /*dispatch({
                     type: types.INVITE_SWARM_WALLET_BY_ADDRESS_HASH_RECEIVED,
                     data: swarmHash
@@ -453,6 +456,14 @@ export const registerUser = (invite, username) => {
                 });
             })*/
             .then(privateKey => inviteWallet.setAccount(parsedInvite.address, privateKey))
+            .then(() => {
+                localStorage.setItem('social_address', parsedInvite.address.toLowerCase());
+                localStorage.setItem('social_wallet_hash', walletSwarmHash.toLowerCase());
+
+                dispatch({
+                    type: types.INVITE_STORE_AUTH
+                });
+            })
             .then(() => inviteWallet.setUsername(username))
             .then(result => {
                 dispatch({
@@ -468,6 +479,35 @@ export const registerUser = (invite, username) => {
                     data: error
                 })
             );
+    };
+};
+
+/*export const storeAuth = (address, walletHash) => {
+    return dispatch => {
+        console.log(address, walletHash);
+        localStorage.setItem('social_address', address.toLowerCase());
+        localStorage.setItem('social_wallet_hash', walletHash.toLowerCase());
+
+        dispatch({
+            type: types.INVITE_STORE_AUTH
+        });
+    };
+};*/
+
+export const getAuthData = () => {
+    return dispatch => {
+        const address = localStorage.getItem('social_address').toLowerCase();
+        const walletHash = localStorage.getItem('social_wallet_hash').toLowerCase();
+        const isValid = address.length === 42 && (walletHash.length === 64 || walletHash.length === 128);
+
+        dispatch({
+            type: types.INVITE_RECEIVED_STORED_AUTH,
+            data: {
+                isValid,
+                address,
+                walletHash
+            }
+        });
     };
 };
 

@@ -14,11 +14,22 @@ import ChatPage from "../components/page/ChatPage";
 import WalletPage from "../components/page/WalletPage";
 import LoginRegisterPage from "../components/page/LoginRegisterPage";
 import ConfigPage from "../components/page/ConfigPage/ConfigPage";
+import InviteWallet from "../libs/InviteWallet/InviteWallet";
 
 library.add(faComment, faWallet, faCog);
 
 const auth = {
-    isAuthenticated: false,
+    isAuthenticated: localStorage.getItem('social_address').length > 0 && localStorage.getItem('social_wallet_hash').length > 0,
+    //isAuthenticated: true,
+    hash: '',
+    check() {
+        const address = localStorage.getItem('social_address');
+        const walletHash = localStorage.getItem('social_wallet_hash');
+        console.log(address, walletHash);
+        this.isAuthenticated = address && walletHash;
+
+        return address && walletHash;
+    },
     authenticate() {
         this.isAuthenticated = true;
 
@@ -37,6 +48,16 @@ const auth = {
 const PrivateRoute = ({component: Component, ...rest}) => (
     <Route {...rest} render={(props) => {
         console.log(props);
+        if (props.location.hash) {
+            let invite = props.location.hash.replace('#', '');
+            try {
+                InviteWallet.parseInvite(invite);
+                auth.hash = invite;
+            } catch (error) {
+
+            }
+        }
+
         return (
             auth.isAuthenticated === true
                 ? <Component {...props} />
@@ -54,15 +75,17 @@ class App extends Component {
     }
 
     componentDidMount() {
+        this.props.getAuthData();
         this.props.init();
     }
 
     // todo wtf: pages started from 'set' (SETtings,SETup) not open
     render() {
+        // todo check: after implemented PrivateRoute - back button in browser do not work
         return (
             <Router>
                 <Fragment>
-                    <Navigation isAuth={this.state.isAuth}/>
+                    <Navigation isAuth={auth.isAuthenticated}/>
 
                     <section id="main-body">
                         <div className="container">
@@ -76,7 +99,7 @@ class App extends Component {
                                 <PrivateRoute path="/:swarm_protocol?/:swarm_hash?/wallet/:hash?"
                                               component={WalletPage}/>
 
-                                <Route path="/:swarm_protocol?/:swarm_hash?/login/:hash?"
+                                <Route path="/:swarm_protocol?/:swarm_hash?/login/"
                                        render={(props) => <LoginRegisterPage {...props}
                                                                              auth={auth}
                                                                              onAuth={() => this.setState({isAuth: true})}
@@ -100,6 +123,7 @@ class App extends Component {
 
 App.propTypes = {
     init: PropTypes.func.isRequired,
+    getAuthData: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({

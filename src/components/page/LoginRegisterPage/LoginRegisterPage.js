@@ -4,13 +4,13 @@ import * as actions from "../../../store/social/actions";
 import './LoginRegisterPage.css';
 
 class LoginRegisterPage extends Component {
-    constructor() {
+    constructor(props) {
         super();
         this.state = {
             onAuth: false,
             page: 'registration',
             password: '',
-            invite: '',
+            invite: props.auth.hash,
             username: ''
         };
     }

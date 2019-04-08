@@ -17,7 +17,12 @@ const store = configureStore(Immutable({
         isWallPosting: false,
         isRegistration: false,
         previews: [],
-        invites: []
+        invites: [],
+        auth: {
+            isValid: false,
+            address: '',
+            walletHash: '',
+        }
     }
 }));
 
