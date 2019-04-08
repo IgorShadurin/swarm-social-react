@@ -22,7 +22,8 @@ const store = configureStore(Immutable({
             isValid: false,
             address: '',
             walletHash: '',
-        }
+        },
+        balance: null
     }
 }));
 

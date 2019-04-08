@@ -510,4 +510,9 @@ export default class InviteWallet {
             .then(userId => this.getTransaction('UsersInfo', 0, userId).call())
             .then(data => data.WalletFileHash);
     }
+
+    getBalance(address = this.fromAddress) {
+        return this.web3.eth.getBalance(address)
+            .then(balance => this.web3.utils.fromWei(balance, 'ether'));
+    }
 }

@@ -131,6 +131,8 @@ export default function reduce(state = initialState, action = {}) {
             });
         case types.INVITE_RECEIVED_STORED_AUTH:
             return state.merge({auth: action.data});
+        case types.RECEIVED_BALANCE:
+            return state.merge({balance: action.data});
         default:
             return state;
     }

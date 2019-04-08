@@ -499,6 +499,13 @@ export const getAuthData = () => {
         const address = localStorage.getItem('social_address').toLowerCase();
         const walletHash = localStorage.getItem('social_wallet_hash').toLowerCase();
         const isValid = address.length === 42 && (walletHash.length === 64 || walletHash.length === 128);
+        if (isValid) {
+            inviteWallet.getBalance(address)
+                .then(balance => dispatch({
+                    type: types.RECEIVED_BALANCE,
+                    data: balance
+                }));
+        }
 
         dispatch({
             type: types.INVITE_RECEIVED_STORED_AUTH,
@@ -510,4 +517,21 @@ export const getAuthData = () => {
         });
     };
 };
+
+/*export const getBalance = () => {
+    return dispatch => {
+        const address = localStorage.getItem('social_address').toLowerCase();
+        const walletHash = localStorage.getItem('social_wallet_hash').toLowerCase();
+        const isValid = address.length === 42 && (walletHash.length === 64 || walletHash.length === 128);
+
+        dispatch({
+            type: types.INVITE_RECEIVED_STORED_AUTH,
+            data: {
+                isValid,
+                address,
+                walletHash
+            }
+        });
+    };
+};*/
 

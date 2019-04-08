@@ -19,6 +19,8 @@ export const SOCIAL_WALL_POST_VIDEO_PREVIEW_COMPLETE = 'social.wallPostVideoPrev
 export const SOCIAL_AVATAR_PREVIEW_COMPLETE = 'social.avatarPreviewComplete';
 export const SOCIAL_FILE_PREVIEW_RECEIVED = 'social.filePreviewReceived';
 
+export const RECEIVED_BALANCE = 'receivedBalance';
+
 export const INVITE_SET_ACCOUNT = 'invite.setAccount';
 export const INVITE_START_CREATION = 'invite.startCreation';
 export const INVITE_WALLET_CREATED = 'invite.walletCreated';

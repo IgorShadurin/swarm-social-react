@@ -6,7 +6,7 @@ import User from "../../Beefree/User";
 
 class Navigation extends Component {
     render() {
-        const {user, isAuth} = this.props;
+        const {user, isAuth, balance} = this.props;
         const fullName = User.getFullName(user);
         const avatar = User.getAvatar(user);
 
@@ -40,7 +40,7 @@ class Navigation extends Component {
                                         </Link>
                                     </div>
                                 </div>
-                                 <div className="ac-info-wrap">
+                                <div className="ac-info-wrap">
                                     <div className="info-wrap">
                                         <div className="name">
                                             <p>
@@ -49,7 +49,7 @@ class Navigation extends Component {
                                         </div>
                                         <div className="balance">
                                             <p>
-                                                ETH 2.6423
+                                                {balance ? `ETH ${balance}` : '...'}
                                             </p>
                                         </div>
                                     </div>
@@ -71,7 +71,8 @@ class Navigation extends Component {
 }
 
 const mapStateToProps = state => ({
-    user: state.social.user
+    user: state.social.user,
+    balance: state.social.balance,
 });
 
 export default connect(mapStateToProps)(Navigation);

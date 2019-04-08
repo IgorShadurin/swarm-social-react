@@ -16,9 +16,9 @@ class UserWallet extends Component {
     };
 
     render() {
-        const {user} = this.props;
+        const {user, balance} = this.props;
         const userAvatar = User.getAvatar(user);
-        const balance = '2.89756431';
+        //const balance = '2.89756431';
         const balanceUsd = '560.86';
         //const dailyIncome = '1.4352426';
         const recentTransactions = [
@@ -172,7 +172,7 @@ class UserWallet extends Component {
                                         <div className="item-content">
                                             <div className="cur-bal">
                                                 <p>
-                                                    ETH&nbsp;<span>{balance}</span>
+                                                    ETH <span>{balance ? balance : '...'}</span>
                                                 </p>
                                             </div>
                                             <div className="cur-bal-usd">
@@ -224,6 +224,7 @@ class UserWallet extends Component {
 
 const mapStateToProps = state => ({
     user: state.social.user,
+    balance: state.social.balance,
 });
 
 export default connect(mapStateToProps, actions)(UserWallet);

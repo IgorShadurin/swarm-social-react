@@ -5,8 +5,8 @@ import WalletInvite from "../../WalletInvite/WalletInvite";
 
 class WalletPage extends Component {
     render() {
-        const {auth} = this.props;
-        console.log(auth);
+        const {auth, balance} = this.props;
+
         return (
             <Fragment>
                 {/*<WalletInvite/>*/}
@@ -17,6 +17,14 @@ class WalletPage extends Component {
                            className="form-control"
                            placeholder="Address"
                            value={auth.address}/>
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="exampleInputPassword1">My Balance (ETH)</label>
+                    <input type="text"
+                           className="form-control"
+                           placeholder="Balance"
+                           value={balance ? balance : '...'}/>
                 </div>
                 {auth.walletHash && <a className="btn btn-link" target="_blank"
                                        href={`http://beefree.me/bzz:/${auth.walletHash}`}>My wallet file</a>}
@@ -35,6 +43,7 @@ class WalletPage extends Component {
 const mapStateToProps = state => ({
     user: state.social.user,
     auth: state.social.auth,
+    balance: state.social.balance,
 });
 
 //export default connect(mapStateToProps, mapDispatchToProps)(UserPage)
