@@ -47,7 +47,8 @@ const auth = {
 
 const PrivateRoute = ({component: Component, ...rest}) => (
     <Route {...rest} render={(props) => {
-        console.log(props);
+        const {auth} = rest;
+        console.log(rest);
         if (props.location.hash) {
             let invite = props.location.hash.replace('#', '');
             try {
@@ -59,7 +60,7 @@ const PrivateRoute = ({component: Component, ...rest}) => (
         }
 
         return (
-            auth.isAuthenticated === true
+            auth.isValid === true
                 ? <Component {...props} />
                 : <Redirect to={`/${props.match.params.swarm_protocol}/${props.match.params.swarm_hash}/login`}/>
         );
@@ -82,31 +83,33 @@ class App extends Component {
     // todo wtf: pages started from 'set' (SETtings,SETup) not open
     render() {
         // todo check: after implemented PrivateRoute - back button in browser do not work
+        const {auth} = this.props;
+
         return (
             <Router>
                 <Fragment>
-                    <Navigation isAuth={auth.isAuthenticated}/>
+                    <Navigation isAuth={auth.isValid}/>
 
                     <section id="main-body">
                         <div className="container">
                             <Switch>
-                                <PrivateRoute path="/:swarm_protocol?/:swarm_hash?/config/:hash?"
+                                <PrivateRoute auth={auth} path="/:swarm_protocol?/:swarm_hash?/config/:hash?"
                                               component={ConfigPage}/>
 
-                                {/*<PrivateRoute path="/:swarm_protocol?/:swarm_hash?/dialog/:hash?"
+                                {/*<PrivateRoute auth={auth} path="/:swarm_protocol?/:swarm_hash?/dialog/:hash?"
                                               component={ChatPage}/>*/}
 
-                                <PrivateRoute path="/:swarm_protocol?/:swarm_hash?/wallet/:hash?"
+                                <PrivateRoute auth={auth} path="/:swarm_protocol?/:swarm_hash?/wallet/:hash?"
                                               component={WalletPage}/>
 
                                 <Route path="/:swarm_protocol?/:swarm_hash?/login/"
                                        render={(props) => <LoginRegisterPage {...props}
-                                                                             auth={auth}
-                                                                             onAuth={() => this.setState({isAuth: true})}
+                                           //auth={auth}
+                                           //onAuth={() => this.setState({isAuth: true})}
                                                                              redirect={<Redirect
                                                                                  to={`/${props.match.params.swarm_protocol}/${props.match.params.swarm_hash}/`}/>}/>}/>
 
-                                <PrivateRoute exact
+                                <PrivateRoute auth={auth} exact
                                               path="/:swarm_protocol?/:swarm_hash?/:hash?"
                                               component={UserPage}/>
                             </Switch>
@@ -127,7 +130,7 @@ App.propTypes = {
 };
 
 const mapStateToProps = state => ({
-    //wallPosts: state.social.wallPosts
+    auth: state.social.auth
 });
 
 /*const mapDispatchToProps = dispatch => ({

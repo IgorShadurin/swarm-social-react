@@ -15,6 +15,25 @@ class LoginRegisterPage extends Component {
         };
     }
 
+    onLogin = (e) => {
+        e.preventDefault();
+        const {login} = this.props;
+        login(this.state.username, this.state.page);
+    };
+
+    onChangeUsername = (e) => {
+        let username = e.target.value.trim().toLowerCase();
+        let allowedChars = [...'zaqxswcdevfrbgtnhymjukliop0987654321.-'];
+        username = [...username].filter(item => allowedChars.filter(allowed => allowed === item).length > 0).join('');
+        if (username.length > 20) {
+            username = username.substring(0, 20);
+        }
+
+        this.setState({
+            username
+        });
+    };
+
     onChange = (e) => {
         this.setState({
             [e.target.dataset.field]: e.target.value
@@ -25,13 +44,18 @@ class LoginRegisterPage extends Component {
         e.preventDefault();
         const {registerUser, isRegistration} = this.props;
 
+        if (!this.state.invite || !this.state.username || !this.state.password) {
+            alert('Please, enter invite, username and password');
+            return;
+        }
+
         if (isRegistration) {
             alert('Registration in progress. Please, wait.');
 
             return;
         }
 
-        registerUser(this.state.invite, this.state.username);
+        registerUser(this.state.invite, this.state.username, this.state.password);
     };
 
     getNavClasses = (isActive) => {
@@ -44,8 +68,8 @@ class LoginRegisterPage extends Component {
     }
 
     render() {
-        const {auth, redirect, onAuth, isRegistration} = this.props;
-        if (auth.isAuthenticated) {
+        const {auth, redirect, /*onAuth,*/ isRegistration} = this.props;
+        if (auth.isValid) {
             return redirect;
         }
 
@@ -56,7 +80,7 @@ class LoginRegisterPage extends Component {
                        className="form-control"
                        aria-describedby="emailHelp"
                        placeholder="Username"
-                       onChange={this.onChange}
+                       onChange={this.onChangeUsername}
                        data-field="username"
                        value={this.state.username}
                 />
@@ -64,7 +88,7 @@ class LoginRegisterPage extends Component {
             </div>
             <div className="form-group">
                 <label htmlFor="exampleInputPassword1">Password</label>
-                <input type="text"
+                <input type="password"
                        className="form-control"
                        placeholder="Password"
                        onChange={this.onChange}
@@ -72,11 +96,11 @@ class LoginRegisterPage extends Component {
                        value={this.state.password}/>
             </div>
 
-            <button type="submit" className="btn btn-primary">Login</button>
-            <button className="btn btn-link"
+            <button type="submit" className="btn btn-primary" onClick={this.onLogin}>Login</button>
+            {/*<button className="btn btn-link"
                     onClick={() => auth.authenticate().then(onAuth)}>
                 Skip (go to Demo)
-            </button>
+            </button>*/}
         </Fragment>;
         if (this.state.page === 'registration') {
             page = <Fragment>
@@ -94,6 +118,7 @@ class LoginRegisterPage extends Component {
                     />
 
                 </div>
+
                 <div className="form-group">
                     <label>Your username</label>
                     <input
@@ -102,10 +127,19 @@ class LoginRegisterPage extends Component {
                         className="form-control"
                         aria-describedby="emailHelp"
                         placeholder="Your username"
-                        onChange={this.onChange}
+                        onChange={this.onChangeUsername}
                         data-field="username"
                         value={this.state.username}/>
+                </div>
 
+                <div className="form-group">
+                    <label htmlFor="exampleInputPassword1">Password</label>
+                    <input type="password"
+                           className="form-control"
+                           placeholder="Password"
+                           onChange={this.onChange}
+                           data-field="password"
+                           value={this.state.password}/>
                 </div>
 
                 {isRegistration ? (<button className="btn btn-primary" type="button" disabled>
@@ -121,7 +155,7 @@ class LoginRegisterPage extends Component {
         return (
             <Fragment>
                 <div className="d-flex justify-content-center">
-                    <form>
+                    <form className="col-sm-4">
                         <nav className="nav nav-pills nav-justified">
                             <button
                                 disabled={isRegistration}
@@ -154,7 +188,8 @@ class LoginRegisterPage extends Component {
 
 const mapStateToProps = state => ({
     user: state.social.user,
-    isRegistration: state.social.isRegistration
+    isRegistration: state.social.isRegistration,
+    auth: state.social.auth
 });
 
 export default connect(mapStateToProps, actions)(LoginRegisterPage);

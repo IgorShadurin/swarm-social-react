@@ -12,6 +12,7 @@ if (parts.length > 0) {
 
 console.log('currentHash', currentHash);
 const inviteWallet = new InviteWallet('https://rinkeby.infura.io/v3/357ce0ddb3ef426ba0bc727a3c64c873');
+
 let bee = null;
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     // dev code
@@ -180,7 +181,7 @@ export const deleteWallPost = (id) => {
 export const getPost = (id, addReversed = false) => {
     return dispatch => bee.getPost(id)
         .then(data => {
-            console.log(data);
+            //console.log(data);
             return dispatch({
                 type: types.SOCIAL_WALL_POST_LOADED,
                 isAddReversed: addReversed,
@@ -407,12 +408,13 @@ export const getSwarmWallet = (address, password) => {
     };
 };
 
-export const registerUser = (invite, username) => {
+export const registerUser = (invite, username, password) => {
     return dispatch => {
         dispatch({
             type: types.INVITE_REGISTRATION_STARTED
         });
         let walletSwarmHash = '';
+        let newWalletSwarmHash = '';
         let parsedInvite = {};
         try {
             parsedInvite = InviteWallet.parseInvite(invite);
@@ -445,7 +447,10 @@ export const registerUser = (invite, username) => {
                     return data;
                 }
             )
-            .then(data => inviteWallet.validate(data, parsedInvite.password))
+            .then(data => {
+                return inviteWallet.validate(data, parsedInvite.password)
+                    .then(() => data);
+            })
             /*.then(data => {
                 dispatch({
                     type: types.INVITE_CHECK_WALLET_OK,
@@ -455,10 +460,23 @@ export const registerUser = (invite, username) => {
                     }
                 });
             })*/
+            .then(data => {
+                return inviteWallet.changeWalletPassword(data, parsedInvite.password, password)
+                //.then(data => console.log(data));
+            })
+            .then(data => {
+                return bee.uploadWallet(data.data)
+                    .then(hash => {
+                        newWalletSwarmHash = hash;
+
+                        return data.privateKey;
+                    });
+            })
             .then(privateKey => inviteWallet.setAccount(parsedInvite.address, privateKey))
+            .then(() => inviteWallet.setHash(newWalletSwarmHash))
             .then(() => {
                 localStorage.setItem('social_address', parsedInvite.address.toLowerCase());
-                localStorage.setItem('social_wallet_hash', walletSwarmHash.toLowerCase());
+                localStorage.setItem('social_wallet_hash', newWalletSwarmHash.toLowerCase());
 
                 dispatch({
                     type: types.INVITE_STORE_AUTH
@@ -535,3 +553,70 @@ export const getAuthData = () => {
     };
 };*/
 
+export const login = (username, password) => {
+    return dispatch => {
+        dispatch({
+            type: types.AUTH_START
+        });
+        let address = '';
+        let walletSwarmHash = '';
+
+        return inviteWallet.getAddressByUsername(username)
+            .then(address => address === '0x0000000000000000000000000000000000000000' ? null : address)
+            .then(adr => {
+                console.log('address is ' + adr);
+                address = adr;
+
+                return adr;
+            })
+            .then(address => inviteWallet.getWalletHashByAddress(address))
+            .then(swarmHash => {
+                console.log('hash is ' + swarmHash);
+
+                if (swarmHash) {
+                    walletSwarmHash = swarmHash;
+
+                    return swarmHash;
+                } else {
+                    dispatch({
+                        type: types.AUTH_INCORRECT_DATA,
+                        data: 'Incorrect hash'
+                    });
+                }
+
+            })
+            .then(swarmHash => bee.downloadWallet(swarmHash))
+            .then(data => data.json())
+            .then(data => inviteWallet.validate(data, password).catch(() => null))
+            .then(privateKey => {
+                console.log('pk is ' + privateKey);
+                if (privateKey) {
+                    inviteWallet.setAccount(address, privateKey);
+                } else {
+                    dispatch({
+                        type: types.AUTH_INCORRECT_DATA,
+                        data: 'Incorrect password'
+                    });
+                }
+            })
+            .then(() => {
+                localStorage.setItem('social_address', address.toLowerCase());
+                localStorage.setItem('social_wallet_hash', walletSwarmHash.toLowerCase());
+
+                dispatch({
+                    type: types.AUTH_COMPLETE,
+                    data: {
+                        isValid: true,
+                        address,
+                        walletHash: walletSwarmHash
+                    }
+                });
+            })
+            .catch(error =>
+                dispatch({
+                    type: types.AUTH_FAILED,
+                    data: error
+                })
+            );
+    };
+};

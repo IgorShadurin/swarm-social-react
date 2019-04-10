@@ -330,6 +330,31 @@ export default class InviteWallet {
         });
     }
 
+    changeWalletPassword(keyObject, oldPassword, newPassword) {
+        return new Promise((resolve, reject) => {
+            this.validate(keyObject, oldPassword)
+                .then(privateKey => {
+                    const options = {
+                        kdf: "pbkdf2",
+                        cipher: "aes-128-ctr",
+                        kdfparams: {
+                            c: 262144,
+                            dklen: 32,
+                            prf: "hmac-sha256"
+                        }
+                    };
+
+                    //console.log(newPassword, privateKey, keyObject.crypto.kdfparams.salt, keyObject.crypto.cipherparams.iv);
+                    keythereum.dump(newPassword, privateKey, keyObject.crypto.kdfparams.salt, keyObject.crypto.cipherparams.iv, options, keyObject => {
+                        resolve({
+                            data: keyObject,
+                            privateKey: privateKey.toString('hex'),
+                        });
+                    });
+                });
+        });
+    }
+
     /**
      *
      * @param keyObject
@@ -514,5 +539,9 @@ export default class InviteWallet {
     getBalance(address = this.fromAddress) {
         return this.web3.eth.getBalance(address)
             .then(balance => this.web3.utils.fromWei(balance, 'ether'));
+    }
+
+    getAddressByUsername(username) {
+        return this.getTransaction('getAddressByUsername', 0, username).call();
     }
 }

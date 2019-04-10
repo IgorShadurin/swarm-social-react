@@ -175,11 +175,11 @@ class UserWallet extends Component {
                                                     ETH <span>{balance ? balance : '...'}</span>
                                                 </p>
                                             </div>
-                                            <div className="cur-bal-usd">
+                                            {/*<div className="cur-bal-usd">
                                                 <p>
                                                     (${balanceUsd})
                                                 </p>
-                                            </div>
+                                            </div>*/}
                                         </div>
                                     </div>
 

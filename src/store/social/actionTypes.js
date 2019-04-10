@@ -20,6 +20,10 @@ export const SOCIAL_AVATAR_PREVIEW_COMPLETE = 'social.avatarPreviewComplete';
 export const SOCIAL_FILE_PREVIEW_RECEIVED = 'social.filePreviewReceived';
 
 export const RECEIVED_BALANCE = 'receivedBalance';
+export const AUTH_START = 'authStart';
+export const AUTH_COMPLETE = 'authComplete';
+export const AUTH_INCORRECT_DATA = 'authIncorrectDara';
+export const AUTH_FAILED = 'authFailed';
 
 export const INVITE_SET_ACCOUNT = 'invite.setAccount';
 export const INVITE_START_CREATION = 'invite.startCreation';
