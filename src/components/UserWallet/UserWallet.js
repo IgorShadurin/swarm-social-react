@@ -19,7 +19,7 @@ class UserWallet extends Component {
         const {user, balance} = this.props;
         const userAvatar = User.getAvatar(user);
         //const balance = '2.89756431';
-        const balanceUsd = '560.86';
+        //const balanceUsd = '560.86';
         //const dailyIncome = '1.4352426';
         const recentTransactions = [
             {

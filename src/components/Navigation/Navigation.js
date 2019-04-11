@@ -3,10 +3,11 @@ import './Navigation.css';
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import User from "../../Beefree/User";
+import * as actions from "../../store/social/actions";
 
 class Navigation extends Component {
     render() {
-        const {user, isAuth, balance} = this.props;
+        const {user, isAuth, balance, userLogout} = this.props;
         const fullName = User.getFullName(user);
         const avatar = User.getAvatar(user);
 
@@ -56,7 +57,7 @@ class Navigation extends Component {
                                     <div className="avatar-wrap">
                                         <div className="img-wrap">
                                             <Link className="nav-link" to="./">
-                                                <img src={avatar} alt="Profile"/>
+                                                <img onClick={userLogout} src={avatar} alt="Profile"/>
                                             </Link>
                                         </div>
                                     </div>
@@ -75,4 +76,4 @@ const mapStateToProps = state => ({
     balance: state.social.balance,
 });
 
-export default connect(mapStateToProps)(Navigation);
+export default connect(mapStateToProps, actions)(Navigation);

@@ -1,7 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux'
 import './WalletPage.css';
-import WalletInvite from "../../WalletInvite/WalletInvite";
 
 class WalletPage extends Component {
     render() {
@@ -26,7 +25,9 @@ class WalletPage extends Component {
                            placeholder="Balance"
                            value={balance ? balance : '...'}/>
                 </div>
-                {auth.walletHash && <a className="btn btn-link" target="_blank"
+                {auth.walletHash && <a className="btn btn-link"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
                                        href={`http://beefree.me/bzz:/${auth.walletHash}`}>My wallet file</a>}
             </Fragment>
         );

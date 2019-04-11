@@ -413,7 +413,7 @@ export const registerUser = (invite, username, password) => {
         dispatch({
             type: types.INVITE_REGISTRATION_STARTED
         });
-        let walletSwarmHash = '';
+        //let walletSwarmHash = '';
         let newWalletSwarmHash = '';
         let parsedInvite = {};
         try {
@@ -427,46 +427,24 @@ export const registerUser = (invite, username, password) => {
         }
 
         return inviteWallet.getWalletHashByAddress(parsedInvite.address)
-            .then(swarmHash => {
-                walletSwarmHash = swarmHash;
-                /*dispatch({
-                    type: types.INVITE_SWARM_WALLET_BY_ADDRESS_HASH_RECEIVED,
-                    data: swarmHash
-                });*/
-
-                return swarmHash;
-            })
             .then(swarmHash => bee.downloadWallet(swarmHash))
             .then(data => data.json())
             .then(data => {
-                    /*dispatch({
-                        type: types.INVITE_SWARM_WALLET_BY_ADDRESS_RECEIVED,
-                        data
-                    });*/
-
-                    return data;
-                }
-            )
-            .then(data => {
                 return inviteWallet.validate(data, parsedInvite.password)
-                    .then(() => data);
+                    .then(() => data)
+                    .catch(() => null);
             })
-            /*.then(data => {
-                dispatch({
-                    type: types.INVITE_CHECK_WALLET_OK,
-                    data: {
-                        address,
-                        privateKey: data
-                    }
-                });
-            })*/
             .then(data => {
+                if (!data) {
+                    throw new Error('Incorrect password for wallet');
+                }
+
                 return inviteWallet.changeWalletPassword(data, parsedInvite.password, password)
-                //.then(data => console.log(data));
             })
             .then(data => {
-                return bee.uploadWallet(data.data)
+                return bee.uploadWallet(JSON.stringify(data.data))
                     .then(hash => {
+                        console.log('New wallet swarm hash', hash);
                         newWalletSwarmHash = hash;
 
                         return data.privateKey;
@@ -486,15 +464,24 @@ export const registerUser = (invite, username, password) => {
             .then(result => {
                 dispatch({
                     type: types.INVITE_REGISTRATION_COMPLETE,
-                    data: result
+                    data: {
+                        isValid: true,
+                        address: parsedInvite.address,
+                        walletHash: newWalletSwarmHash
+                    }
                 });
 
                 return result;
             })
+            .then(() => inviteWallet.getBalance(parsedInvite.address)
+                .then(balance => dispatch({
+                    type: types.RECEIVED_BALANCE,
+                    data: balance
+                })))
             .catch(error =>
                 dispatch({
                     type: types.INVITE_REGISTRATION_FAILED,
-                    data: error
+                    data: error.message
                 })
             );
     };
@@ -565,6 +552,10 @@ export const login = (username, password) => {
             .then(address => address === '0x0000000000000000000000000000000000000000' ? null : address)
             .then(adr => {
                 console.log('address is ' + adr);
+                if (!adr) {
+                    throw new Error('Incorrect login');
+                }
+
                 address = adr;
 
                 return adr;
@@ -593,10 +584,11 @@ export const login = (username, password) => {
                 if (privateKey) {
                     inviteWallet.setAccount(address, privateKey);
                 } else {
-                    dispatch({
+                    /*dispatch({
                         type: types.AUTH_INCORRECT_DATA,
                         data: 'Incorrect password'
-                    });
+                    });*/
+                    throw new Error("Incorrect password");
                 }
             })
             .then(() => {
@@ -611,12 +603,34 @@ export const login = (username, password) => {
                         walletHash: walletSwarmHash
                     }
                 });
+
+                return inviteWallet.getBalance(address)
+                    .then(balance => dispatch({
+                        type: types.RECEIVED_BALANCE,
+                        data: balance
+                    }));
             })
             .catch(error =>
                 dispatch({
                     type: types.AUTH_FAILED,
-                    data: error
+                    data: error.message
                 })
             );
+    };
+};
+
+export const userLogout = () => {
+    return dispatch => {
+        localStorage.setItem('social_address', '');
+        localStorage.setItem('social_wallet_hash', '');
+
+        dispatch({
+            type: types.AUTH_COMPLETE,
+            data: {
+                isValid: false,
+                address: '',
+                walletHash: ''
+            }
+        });
     };
 };

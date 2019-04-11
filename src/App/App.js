@@ -2,7 +2,7 @@ import React, {Component, Fragment} from 'react';
 import './App.css';
 
 import {library} from '@fortawesome/fontawesome-svg-core';
-import {faWallet, faComment, faCog} from '@fortawesome/free-solid-svg-icons';
+import {faCog, faComment, faWallet} from '@fortawesome/free-solid-svg-icons';
 
 import Navigation from "../components/Navigation";
 import UserPage from "../components/page/UserPage";
@@ -10,7 +10,6 @@ import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom
 import {connect} from "react-redux";
 import * as actions from "../store/social/actions";
 import PropTypes from "prop-types";
-import ChatPage from "../components/page/ChatPage";
 import WalletPage from "../components/page/WalletPage";
 import LoginRegisterPage from "../components/page/LoginRegisterPage";
 import ConfigPage from "../components/page/ConfigPage/ConfigPage";
@@ -18,7 +17,7 @@ import InviteWallet from "../libs/InviteWallet/InviteWallet";
 
 library.add(faComment, faWallet, faCog);
 
-const auth = {
+/*const auth = {
     isAuthenticated: localStorage.getItem('social_address').length > 0 && localStorage.getItem('social_wallet_hash').length > 0,
     //isAuthenticated: true,
     hash: '',
@@ -43,7 +42,7 @@ const auth = {
             resolve();
         });
     }
-};
+};*/
 
 const PrivateRoute = ({component: Component, ...rest}) => (
     <Route {...rest} render={(props) => {

@@ -123,16 +123,32 @@ export default function reduce(state = initialState, action = {}) {
             });
         case types.INVITE_REGISTRATION_COMPLETE:
             return state.merge({
-                isRegistration: false
+                isRegistration: false,
+                auth: action.data
             });
         case types.INVITE_REGISTRATION_FAILED:
             return state.merge({
-                isRegistration: false
+                isRegistration: false,
+                registrationError: action.data
+
             });
         case types.INVITE_RECEIVED_STORED_AUTH:
             return state.merge({auth: action.data});
+        case types.AUTH_START:
+            return state.merge({
+                isLogin: true,
+                loginError: ''
+            });
         case types.AUTH_COMPLETE:
-            return state.merge({auth: action.data});
+            return state.merge({
+                auth: action.data,
+                isLogin: false
+            });
+        case types.AUTH_FAILED:
+            return state.merge({
+                isLogin: false,
+                loginError: action.data
+            });
         case types.RECEIVED_BALANCE:
             return state.merge({balance: action.data});
         default:

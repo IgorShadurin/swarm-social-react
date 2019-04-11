@@ -384,7 +384,7 @@ export default class InviteWallet {
 
     static parseInvite(invite) {
         if (invite.length <= 42) {
-            throw 'Incorrect invite size';
+            throw new Error('Incorrect invite size');
         }
 
         const address = invite.slice(0, 42);
@@ -440,7 +440,7 @@ export default class InviteWallet {
                 const totalGasBN = gasPriceBN.mul(estimateGasBN);
                 let resultValue = Number(balanceEther) === 0 ? 0 : valueBN.sub(totalGasBN);
                 if (resultValue.negative) {
-                    throw 'Too low balance';
+                    throw new Error('Too low balance');
                 }
 
                 result.value = this.web3.utils.toHex(resultValue);
