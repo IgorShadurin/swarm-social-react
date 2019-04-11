@@ -85,6 +85,10 @@ contract Users {
         UsersInfo[Wallets[msg.sender]].SwarmHash = hash;
     }
 
+    function setWalletFileHash(string memory hash) public {
+        UsersInfo[Wallets[msg.sender]].WalletFileHash = hash;
+    }
+
     function register(string memory invite, string memory username) public returns (string memory) {
         address inviteAddress = Invites[invite];
         uint256 idByUsername = Usernames[username];

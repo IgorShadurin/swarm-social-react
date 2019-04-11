@@ -12,7 +12,7 @@ export default function reduce(state = initialState, action = {}) {
     let posts = null;
     let uploadStatus = null;
     let items = [];
-    console.log(state);
+    //console.log(state);
     switch (action.type) {
         case types.SOCIAL_INIT:
             return state.merge({
@@ -150,7 +150,7 @@ export default function reduce(state = initialState, action = {}) {
                 loginError: action.data
             });
         case types.RECEIVED_BALANCE:
-            return state.merge({balance: action.data});
+            return state.merge({balance: Number(action.data).toFixed(8)});
         default:
             return state;
     }

@@ -1,6 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux'
 import './WalletPage.css';
+import WalletInvite from "../../WalletInvite";
 
 class WalletPage extends Component {
     render() {
@@ -8,8 +9,6 @@ class WalletPage extends Component {
 
         return (
             <Fragment>
-                {/*<WalletInvite/>*/}
-
                 <div className="form-group">
                     <label htmlFor="exampleInputPassword1">My Address</label>
                     <input type="text"
@@ -29,6 +28,8 @@ class WalletPage extends Component {
                                        target="_blank"
                                        rel="noopener noreferrer"
                                        href={`http://beefree.me/bzz:/${auth.walletHash}`}>My wallet file</a>}
+
+                <WalletInvite/>
             </Fragment>
         );
     }

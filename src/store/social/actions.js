@@ -293,6 +293,15 @@ export const inviteSetAccount = (wallet, privateKey) => {
 
 export const createInvite = () => {
     return dispatch => {
+        const socialAddress = localStorage.getItem('social_address');
+        const socialPrivateKey = localStorage.getItem('social_private_key');
+        if (!socialAddress || !socialPrivateKey) {
+            // todo send error
+            alert('Empty address or private key');
+        }
+
+        inviteWallet.setAccount(socialAddress, socialPrivateKey);
+
         const invite = InviteWallet.randomString(10);
         let walletData = null;
         let address = null;
@@ -415,6 +424,7 @@ export const registerUser = (invite, username, password) => {
         });
         //let walletSwarmHash = '';
         let newWalletSwarmHash = '';
+        let privateKey = '';
         let parsedInvite = {};
         try {
             parsedInvite = InviteWallet.parseInvite(invite);
@@ -429,9 +439,9 @@ export const registerUser = (invite, username, password) => {
         return inviteWallet.getWalletHashByAddress(parsedInvite.address)
             .then(swarmHash => bee.downloadWallet(swarmHash))
             .then(data => data.json())
-            .then(data => {
-                return inviteWallet.validate(data, parsedInvite.password)
-                    .then(() => data)
+            .then(dataKeyObject => {
+                return inviteWallet.validate(dataKeyObject, parsedInvite.password)
+                    .then(() => dataKeyObject)
                     .catch(() => null);
             })
             .then(data => {
@@ -446,6 +456,7 @@ export const registerUser = (invite, username, password) => {
                     .then(hash => {
                         console.log('New wallet swarm hash', hash);
                         newWalletSwarmHash = hash;
+                        privateKey = data.privateKey;
 
                         return data.privateKey;
                     });
@@ -455,6 +466,7 @@ export const registerUser = (invite, username, password) => {
             .then(() => {
                 localStorage.setItem('social_address', parsedInvite.address.toLowerCase());
                 localStorage.setItem('social_wallet_hash', newWalletSwarmHash.toLowerCase());
+                localStorage.setItem('social_private_key', privateKey);
 
                 dispatch({
                     type: types.INVITE_STORE_AUTH
@@ -467,7 +479,8 @@ export const registerUser = (invite, username, password) => {
                     data: {
                         isValid: true,
                         address: parsedInvite.address,
-                        walletHash: newWalletSwarmHash
+                        walletHash: newWalletSwarmHash,
+                        privateKey
                     }
                 });
 
@@ -547,6 +560,7 @@ export const login = (username, password) => {
         });
         let address = '';
         let walletSwarmHash = '';
+        let privateKey = '';
 
         return inviteWallet.getAddressByUsername(username)
             .then(address => address === '0x0000000000000000000000000000000000000000' ? null : address)
@@ -579,10 +593,11 @@ export const login = (username, password) => {
             .then(swarmHash => bee.downloadWallet(swarmHash))
             .then(data => data.json())
             .then(data => inviteWallet.validate(data, password).catch(() => null))
-            .then(privateKey => {
-                console.log('pk is ' + privateKey);
-                if (privateKey) {
-                    inviteWallet.setAccount(address, privateKey);
+            .then(pKey => {
+                console.log('pk is ' + pKey);
+                if (pKey) {
+                    privateKey = pKey;
+                    inviteWallet.setAccount(address, pKey);
                 } else {
                     /*dispatch({
                         type: types.AUTH_INCORRECT_DATA,
@@ -594,13 +609,15 @@ export const login = (username, password) => {
             .then(() => {
                 localStorage.setItem('social_address', address.toLowerCase());
                 localStorage.setItem('social_wallet_hash', walletSwarmHash.toLowerCase());
+                localStorage.setItem('social_private_key', privateKey);
 
                 dispatch({
                     type: types.AUTH_COMPLETE,
                     data: {
                         isValid: true,
                         address,
-                        walletHash: walletSwarmHash
+                        walletHash: walletSwarmHash,
+                        privateKey
                     }
                 });
 
@@ -623,6 +640,7 @@ export const userLogout = () => {
     return dispatch => {
         localStorage.setItem('social_address', '');
         localStorage.setItem('social_wallet_hash', '');
+        localStorage.setItem('social_private_key', '');
 
         dispatch({
             type: types.AUTH_COMPLETE,

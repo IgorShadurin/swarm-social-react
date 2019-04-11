@@ -40,21 +40,21 @@ class WalletInvite extends Component {
     };*/
 
     onCreateInvite = () => {
-        if (this.state.address && this.state.privateKey) {
+        /*if (this.state.address && this.state.privateKey) {
             this.onSetAccount();
         } else {
             alert('Empty address or private key');
             return;
-        }
+        }*/
 
         const {createInvite} = this.props;
         createInvite();
     };
 
-    onSetAccount = () => {
+    /*onSetAccount = () => {
         const {inviteSetAccount} = this.props;
         inviteSetAccount(this.state.address, this.state.privateKey);
-    };
+    };*/
 
     onChangeAddress = (e) => {
         this.setState({
@@ -107,8 +107,8 @@ class WalletInvite extends Component {
         return (
             <div className="follows-block _block">
                 <div className="header-wrap">
-                    <div className="container">
-                        <div className="row">
+                    {/*<div className="container">*/}
+                    {/*<div className="row">
                             <div className="col-md-7">
                                 <div className="block-name">
                                     <p>
@@ -161,20 +161,22 @@ class WalletInvite extends Component {
                             </button>
                         </div>*/}
 
-                        <div>
+                    {/*<div>
                             <button className="btn btn-beefree" onClick={this.inCheckInvite}>
                                 Check Invite
                             </button>
-                        </div>
+                        </div>*/}
 
-                        <div>
-                            <button className="btn btn-beefree" onClick={this.onCreateInvite}>
-                                Create invite
-                            </button>
-                        </div>
-                        <hr/>
-                        {invitesData}
+                    <hr/>
+
+                    <div>
+                        <button className="btn btn-beefree" onClick={this.onCreateInvite}>
+                            Create invite
+                        </button>
                     </div>
+                    <hr/>
+                    {invitesData}
+                    {/*</div>*/}
                 </div>
                 <div className="content-wrap">
                     <div className="row">
