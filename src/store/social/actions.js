@@ -462,7 +462,7 @@ export const registerUser = (invite, username, password) => {
                     });
             })
             .then(privateKey => inviteWallet.setAccount(parsedInvite.address, privateKey))
-            .then(() => inviteWallet.setHash(newWalletSwarmHash))
+            .then(() => inviteWallet.setWalletFileHash(newWalletSwarmHash))
             .then(() => {
                 localStorage.setItem('social_address', parsedInvite.address.toLowerCase());
                 localStorage.setItem('social_wallet_hash', newWalletSwarmHash.toLowerCase());
