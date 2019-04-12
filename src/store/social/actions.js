@@ -527,15 +527,15 @@ export const getBalance = (address) => {
 
 export const getAuthData = () => {
     return dispatch => {
-        const address = localStorage.getItem('social_address').toLowerCase();
-        const walletHash = localStorage.getItem('social_wallet_hash').toLowerCase();
+        const address = localStorage.getItem('social_address');
+        const walletHash = localStorage.getItem('social_wallet_hash');
         const privateKey = localStorage.getItem('social_private_key');
-        const isValid = address.length === 42 && (walletHash.length === 64 || walletHash.length === 128) && privateKey.length > 0;
+        const isValid = (address && walletHash && privateKey) && address.length === 42 && (walletHash.length === 64 || walletHash.length === 128) && privateKey.length > 0;
         if (isValid) {
             getBalance(address)(dispatch);
+            inviteWallet.setAccount(address, privateKey);
         }
 
-        inviteWallet.setAccount(address, privateKey);
         dispatch({
             type: types.INVITE_RECEIVED_STORED_AUTH,
             data: {
