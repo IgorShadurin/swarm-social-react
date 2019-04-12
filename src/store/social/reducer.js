@@ -163,7 +163,7 @@ export default function reduce(state = initialState, action = {}) {
         case types.CHANGES_SAVE_COMPLETE:
             return state.merge({
                 isSaveChanges: false,
-                pageChanged: true,
+                pageChanged: false,
             });
         case types.CHANGES_SAVE_FAILED:
             return state.merge({

@@ -32,7 +32,7 @@ class Wall extends Component {
                                 {posts}
                             </div>
                             {isInit && user && user.last_post_id > 10 && <div className="more-btn">
-                                <button className="btn btn-beefree" onClick={this.onShowMore}>Show more</button>
+                                <button disabled={true} className="btn btn-beefree" onClick={this.onShowMore}>Show more</button>
                             </div>}
                         </div>
                     </div>

@@ -638,7 +638,7 @@ export const login = (username, password) => {
                     }
                 });
 
-                init();
+                init()(dispatch);
 
                 return inviteWallet.getBalance(address)
                     .then(balance => dispatch({

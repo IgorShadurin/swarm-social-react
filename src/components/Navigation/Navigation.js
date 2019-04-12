@@ -35,11 +35,17 @@ class Navigation extends Component {
 
                         <div className="col-md-3">
                             <div className="r-bar-wrap">
-                                <button className="btn btn-primary"
-                                        disabled={isDisableSaveButton}
-                                        onClick={this.onSaveToBlockchain}>
+                                {isSaveChanges &&  <button className="btn btn-beefree" type="button" disabled>
+                                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"/>
+                                    &nbsp;Saving to blockchain...
+                                </button>}
+
+                                {!isSaveChanges && <button className="btn btn-beefree"
+                                                           disabled={isDisableSaveButton}
+                                                           onClick={this.onSaveToBlockchain}>
                                     Save to blockchain
-                                </button>
+                                </button>}
+
                             </div>
                         </div>
 
