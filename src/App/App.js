@@ -67,8 +67,8 @@ const PrivateRoute = ({component: Component, ...rest}) => (
 );
 
 class App extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             isAuth: false
         };

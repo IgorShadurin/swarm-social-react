@@ -11,7 +11,8 @@ class WalletInvite extends Component {
             address: '',
             privateKey: '',
             walletHash: '',
-            walletFilePassword: ''
+            walletFilePassword: '',
+            inviteBalance: '0.01'
         };
     }
 
@@ -48,7 +49,7 @@ class WalletInvite extends Component {
         }*/
 
         const {createInvite} = this.props;
-        createInvite();
+        createInvite(this.state.inviteBalance);
     };
 
     /*onSetAccount = () => {
@@ -80,8 +81,14 @@ class WalletInvite extends Component {
         });
     };
 
+    onChange = (e) => {
+        this.setState({
+            [e.target.dataset.field]: e.target.value
+        });
+    };
+
     render() {
-        const {invites} = this.props;
+        const {invites, isCreateInvite} = this.props;
         const invitesData = invites.map((item, index) => {
             const url = InviteWallet.createInviteFromData(item.address, item.password);
             return <div key={index}>
@@ -169,8 +176,21 @@ class WalletInvite extends Component {
 
                     <hr/>
 
+                    <div className="form-group">
+                        <label>Invite balance (ETH)</label>
+                        <input type="text"
+                               disabled={isCreateInvite}
+                               className="form-control"
+                               placeholder="Invite balance"
+                               onChange={this.onChange}
+                               data-field="inviteBalance"
+                               value={this.state.inviteBalance}/>
+                    </div>
+
                     <div>
-                        <button className="btn btn-beefree" onClick={this.onCreateInvite}>
+                        <button className="btn btn-primary"
+                                disabled={isCreateInvite}
+                                onClick={this.onCreateInvite}>
                             Create invite
                         </button>
                     </div>
@@ -196,6 +216,7 @@ class WalletInvite extends Component {
 const mapStateToProps = state => ({
     user: state.social.user,
     invites: state.social.invites,
+    isCreateInvite: state.social.isCreateInvite,
 });
 
 export default connect(mapStateToProps, actions)(WalletInvite);

@@ -151,6 +151,25 @@ export default function reduce(state = initialState, action = {}) {
             });
         case types.RECEIVED_BALANCE:
             return state.merge({balance: Number(action.data).toFixed(8)});
+        case types.SOCIAL_ON_CHANGE_HASH:
+            return state.merge({
+                pageChanged: true,
+                hash: action.data
+            });
+        case types.CHANGES_SAVE_START:
+            return state.merge({
+                isSaveChanges: true
+            });
+        case types.CHANGES_SAVE_COMPLETE:
+            return state.merge({
+                isSaveChanges: false,
+                pageChanged: true,
+            });
+        case types.CHANGES_SAVE_FAILED:
+            return state.merge({
+                isSaveChanges: false,
+                pageChanged: true,
+            });
         default:
             return state;
     }

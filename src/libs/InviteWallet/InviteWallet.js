@@ -317,6 +317,10 @@ export default class InviteWallet {
         return true;
     }
 
+    isAccountExists() {
+        return this.fromAddress.length > 0 && this.privateKey.length > 0;
+    }
+
     createWallet(password = null) {
         return new Promise((resolve, reject) => {
             const dk = keythereum.create();
@@ -522,7 +526,7 @@ export default class InviteWallet {
             });
     }
 
-    createInvite(invite, toAddress, fileHash, balance = '0.001') {
+    createInvite(invite, toAddress, fileHash, balance = '0.01') {
         return this.sendTransaction('createInvite', balance, invite, toAddress, fileHash);
     }
 
@@ -552,6 +556,12 @@ export default class InviteWallet {
         return this.getTransaction('Wallets', 0, address).call()
             .then(userId => this.getTransaction('UsersInfo', 0, userId).call())
             .then(data => data.WalletFileHash);
+    }
+
+    getHashByAddress(address) {
+        return this.getTransaction('Wallets', 0, address).call()
+            .then(userId => this.getTransaction('UsersInfo', 0, userId).call())
+            .then(data => data.SwarmHash);
     }
 
     getBalance(address = this.fromAddress) {

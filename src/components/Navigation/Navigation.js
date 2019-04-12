@@ -6,22 +6,43 @@ import User from "../../Beefree/User";
 import * as actions from "../../store/social/actions";
 
 class Navigation extends Component {
+    onSaveToBlockchain = () => {
+        const {saveChanges} = this.props;
+        saveChanges();
+    };
+
     render() {
-        const {user, isAuth, balance, userLogout} = this.props;
+        const {user, isAuth, balance, userLogout, isSaveChanges, pageChanged} = this.props;
         const fullName = User.getFullName(user);
         const avatar = User.getAvatar(user);
+        let isDisableSaveButton = true;
+
+        if (!isSaveChanges) {
+            isDisableSaveButton = !pageChanged;
+        }
 
         return (
             <nav>
                 {isAuth && <div className="container">
                     <div className="row">
-                        <div className="col-md-6">
+                        <div className="col-md-3">
                             <Link className="nav-link" to="./">
                                 <div className="logo-wrap">
                                     beefree
                                 </div>
                             </Link>
                         </div>
+
+                        <div className="col-md-3">
+                            <div className="r-bar-wrap">
+                                <button className="btn btn-primary"
+                                        disabled={isDisableSaveButton}
+                                        onClick={this.onSaveToBlockchain}>
+                                    Save to blockchain
+                                </button>
+                            </div>
+                        </div>
+
                         <div className="col-md-6">
                             <div className="r-bar-wrap">
                                 <div className="settings-wrap">
@@ -74,6 +95,8 @@ class Navigation extends Component {
 const mapStateToProps = state => ({
     user: state.social.user,
     balance: state.social.balance,
+    isSaveChanges: state.social.isSaveChanges,
+    pageChanged: state.social.pageChanged,
 });
 
 export default connect(mapStateToProps, actions)(Navigation);

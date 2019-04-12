@@ -83,7 +83,7 @@ class LoginRegisterPage extends Component {
             <div className="form-group">
                 <label>Username</label>
                 <input type="text"
-                       disabled={isRegistration}
+                       disabled={isLogin}
                        className="form-control"
                        placeholder="Username"
                        onChange={this.onChangeUsername}
@@ -94,6 +94,7 @@ class LoginRegisterPage extends Component {
             <div className="form-group">
                 <label>Password</label>
                 <input type="password"
+                       disabled={isLogin}
                        className="form-control"
                        placeholder="Password"
                        onChange={this.onChange}
@@ -175,13 +176,13 @@ class LoginRegisterPage extends Component {
                     <form className="col-sm-4">
                         <nav className="nav nav-pills nav-justified">
                             <button
-                                disabled={isRegistration}
+                                disabled={isRegistration || isLogin}
                                 className={this.getNavClasses(this.state.page === 'login')}
                                 onClick={(e) => this.setPage(e, 'login')}>
                                 Login
                             </button>
                             <button
-                                disabled={isRegistration}
+                                disabled={isRegistration || isLogin}
                                 className={this.getNavClasses(this.state.page === 'registration')}
                                 onClick={(e) => this.setPage(e, 'registration')}>
                                 Registration

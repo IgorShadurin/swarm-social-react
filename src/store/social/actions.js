@@ -3,6 +3,7 @@ import Core from '../../Beefree/Core';
 import Utils from '../../Beefree/Utils';
 import Queue from 'promise-queue';
 import InviteWallet from "../../libs/InviteWallet/InviteWallet";
+import React from "react";
 
 const parts = window.location.href.split('/').filter(word => word.length === 64 || word.length === 128);
 let currentHash = null;
@@ -28,45 +29,59 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
 
 bee.onChangeHash = (hash) => {
     console.log('new hash is: ' + hash);
-    //onChangeHash(hash);
+    bee.dispatch({
+        type: types.SOCIAL_ON_CHANGE_HASH,
+        data: hash
+    });
 };
 
 const queue = new Queue(1, Infinity);
 
 export const init = () => {
-    return (dispatch) => bee.getMyProfile()
-        .then(data => {
-            dispatch({
-                type: types.SOCIAL_USER_FETCHED,
-                data,
-                bee
-            });
+    return (dispatch) => {
+        bee.setDispatch(dispatch);
 
-            return data;
-        })
-        .then(data => {
-            if (data.last_post_id) {
-                const lastPostId = data.last_post_id;
-                for (let i = 0; i < 10; i++) {
-                    const id = lastPostId - i;
+        if (!inviteWallet.isAccountExists()) {
+            console.error('Account not set');
+            return;
+        }
 
-                    //console.log('ID: ' + id);
-                    if (id <= 0) {
-                        break;
+        inviteWallet.getHashByAddress(inviteWallet.fromAddress)
+            .then((hash) => bee.setHash(hash))
+            .then(() => bee.getMyProfile())
+            .then(data => {
+                dispatch({
+                    type: types.SOCIAL_USER_FETCHED,
+                    data,
+                    bee
+                });
+
+                return data;
+            })
+            .then(data => {
+                if (data.last_post_id) {
+                    const lastPostId = data.last_post_id;
+                    for (let i = 0; i < 10; i++) {
+                        const id = lastPostId - i;
+
+                        //console.log('ID: ' + id);
+                        if (id <= 0) {
+                            break;
+                        }
+
+                        queue.add(() => {
+                            return getPost(id, true)(dispatch);
+                        });
                     }
 
                     queue.add(() => {
-                        return getPost(id, true)(dispatch);
+                        dispatch({
+                            type: types.SOCIAL_INIT
+                        });
                     });
                 }
-
-                queue.add(() => {
-                    dispatch({
-                        type: types.SOCIAL_INIT
-                    });
-                });
-            }
-        });
+            });
+    };
 };
 
 export const onChangeHash = (data) => {
@@ -516,7 +531,8 @@ export const getAuthData = () => {
     return dispatch => {
         const address = localStorage.getItem('social_address').toLowerCase();
         const walletHash = localStorage.getItem('social_wallet_hash').toLowerCase();
-        const isValid = address.length === 42 && (walletHash.length === 64 || walletHash.length === 128);
+        const privateKey = localStorage.getItem('social_private_key');
+        const isValid = address.length === 42 && (walletHash.length === 64 || walletHash.length === 128) && privateKey.length > 0;
         if (isValid) {
             inviteWallet.getBalance(address)
                 .then(balance => dispatch({
@@ -525,6 +541,7 @@ export const getAuthData = () => {
                 }));
         }
 
+        inviteWallet.setAccount(address, privateKey);
         dispatch({
             type: types.INVITE_RECEIVED_STORED_AUTH,
             data: {
@@ -621,6 +638,8 @@ export const login = (username, password) => {
                     }
                 });
 
+                init();
+
                 return inviteWallet.getBalance(address)
                     .then(balance => dispatch({
                         type: types.RECEIVED_BALANCE,
@@ -650,5 +669,30 @@ export const userLogout = () => {
                 walletHash: ''
             }
         });
+    };
+};
+
+export const saveChanges = () => {
+    return dispatch => {
+        console.log(bee.currentHash);
+        dispatch({
+            type: types.CHANGES_SAVE_START,
+            data: bee.currentHash
+        });
+
+        inviteWallet.setHash(bee.currentHash)
+            .then(data => dispatch({
+                type: types.CHANGES_SAVE_COMPLETE,
+                data
+            }))
+            .then(() => inviteWallet.getBalance(inviteWallet.fromAddress)
+                .then(balance => dispatch({
+                    type: types.RECEIVED_BALANCE,
+                    data: balance
+                })))
+            .catch(error => dispatch({
+                type: types.CHANGES_SAVE_FAILED,
+                data: error.message
+            }));
     };
 };

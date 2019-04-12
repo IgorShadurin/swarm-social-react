@@ -37,7 +37,7 @@ class WallCreatePost extends Component {
     onPost = (e) => {
         const {createWallPost, uploadStatus} = this.props;
         const uploads = uploadStatus.filter(item => item.isComplete);
-        console.log(uploads);
+        //console.log(uploads);
         const attachments = uploads.map((item, index) => {
             // todo get type from item
             //return new PostAttachment(item, PostAttachment.getKeys());
@@ -47,7 +47,7 @@ class WallCreatePost extends Component {
                 order: index
             };
         });
-        console.log(attachments);
+        //console.log(attachments);
         createWallPost(this.state.text, attachments);
         this.setState({
             text: ''

@@ -18,6 +18,15 @@ export default class Core {
         this.currentHash = initHash;
         this.socialDirectory = socialDirectory;
         this.user = {};
+        this.dispatch = null;
+    }
+
+    setDispatch(dispatch) {
+        this.dispatch = dispatch;
+    }
+
+    setHash(hash) {
+        this.currentHash = hash;
     }
 
     prepareObject(data, dataClass) {

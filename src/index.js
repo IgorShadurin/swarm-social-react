@@ -17,6 +17,8 @@ const store = configureStore(Immutable({
         isWallPosting: false,
         isRegistration: false,
         isLogin: false,
+        isCreateInvite: false,
+        isSaveChanges: false,
         loginError: '',
         registrationError: '',
         previews: [],
@@ -26,6 +28,10 @@ const store = configureStore(Immutable({
             address: '',
             walletHash: '',
             privateKey: ''
+        },
+        pageChanges: {
+            isChanged: false,
+            hash: ''
         },
         balance: null
     }

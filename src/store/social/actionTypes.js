@@ -42,3 +42,7 @@ export const INVITE_REGISTRATION_COMPLETE = 'invite.registrationComplete';
 export const INVITE_REGISTRATION_FAILED = 'invite.registrationFailed';
 export const INVITE_STORE_AUTH = 'invite.storeAuth';
 export const INVITE_RECEIVED_STORED_AUTH = 'invite.receivedStoredAuth';
+
+export const CHANGES_SAVE_START = 'invite.changesSaveStart';
+export const CHANGES_SAVE_COMPLETE = 'invite.changesSaveComplete';
+export const CHANGES_SAVE_FAILED = 'invite.changesSaveFailed';
