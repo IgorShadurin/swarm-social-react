@@ -32,6 +32,7 @@ export const INVITE_WALLET_UPLOADING_TO_SWARM = 'invite.walletUploadingToSwarm';
 export const INVITE_WALLET_UPLOADED_TO_SWARM = 'invite.walletUploadedToSwarm';
 export const INVITE_START_INVITE_TRANSACTION = 'invite.startInviteTransaction';
 export const INVITE_INVITE_CREATED = 'invite.inviteCreated';
+export const INVITE_INVITE_FAILED = 'invite.inviteFailed';
 export const INVITE_CHECK_WALLET_OK = 'invite.checkWalletOk';
 export const INVITE_SWARM_WALLET_BY_ADDRESS_START = 'invite.swarmWalletByAddressStart';
 export const INVITE_SWARM_WALLET_BY_ADDRESS_HASH_RECEIVED = 'invite.swarmWalletByAddressHashReceived';

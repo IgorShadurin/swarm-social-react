@@ -111,12 +111,6 @@ export default function reduce(state = initialState, action = {}) {
             return state.merge({
                 previews: Immutable(items)
             });
-        case types.INVITE_INVITE_CREATED:
-            items = Immutable.asMutable(state.invites);
-            items.push(action.data);
-            return state.merge({
-                invites: Immutable(items)
-            });
         case types.INVITE_REGISTRATION_STARTED:
             return state.merge({
                 isRegistration: true
@@ -169,6 +163,21 @@ export default function reduce(state = initialState, action = {}) {
             return state.merge({
                 isSaveChanges: false,
                 pageChanged: true,
+            });
+        case types.INVITE_START_CREATION:
+            return state.merge({
+                isCreateInvite: true,
+            });
+        case types.INVITE_INVITE_FAILED:
+            return state.merge({
+                isCreateInvite: false,
+            });
+        case types.INVITE_INVITE_CREATED:
+            items = Immutable.asMutable(state.invites);
+            items.push(action.data);
+            return state.merge({
+                invites: Immutable(items),
+                isCreateInvite: false,
             });
         default:
             return state;

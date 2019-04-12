@@ -92,7 +92,7 @@ class WalletInvite extends Component {
         const invitesData = invites.map((item, index) => {
             const url = InviteWallet.createInviteFromData(item.address, item.password);
             return <div key={index}>
-                <p>
+                {/*<p>
                     Address: {item.address}
                 </p>
                 <p>
@@ -103,9 +103,9 @@ class WalletInvite extends Component {
                 </p>
                 <p>
                     Swarm hash: {item.walletSwarmHash}
-                </p>
+                </p>*/}
                 <p>
-                    URL: <a href={url}>{url}</a>
+                    Invite URL: <a href={url}>{url}</a>
                 </p>
                 <hr/>
             </div>
@@ -188,11 +188,16 @@ class WalletInvite extends Component {
                     </div>
 
                     <div>
-                        <button className="btn btn-primary"
-                                disabled={isCreateInvite}
-                                onClick={this.onCreateInvite}>
+                        {isCreateInvite && <button className="btn btn-primary" type="button" disabled>
+                            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"/>
+                            &nbsp;Creating invite...
+                        </button>}
+
+                        {!isCreateInvite && <button className="btn btn-primary"
+                                                    disabled={isCreateInvite}
+                                                    onClick={this.onCreateInvite}>
                             Create invite
-                        </button>
+                        </button>}
                     </div>
                     <hr/>
                     {invitesData}

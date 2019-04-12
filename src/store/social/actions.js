@@ -3,7 +3,6 @@ import Core from '../../Beefree/Core';
 import Utils from '../../Beefree/Utils';
 import Queue from 'promise-queue';
 import InviteWallet from "../../libs/InviteWallet/InviteWallet";
-import React from "react";
 
 const parts = window.location.href.split('/').filter(word => word.length === 64 || word.length === 128);
 let currentHash = null;
@@ -372,6 +371,7 @@ export const createInvite = () => {
                 return inviteWallet.createInvite(invite, address, hash);
             })
             .then(data => {
+                getBalance(inviteWallet.fromAddress)(dispatch);
                 dispatch({
                     type: types.INVITE_INVITE_CREATED,
                     data: {
@@ -384,7 +384,11 @@ export const createInvite = () => {
                 });
 
                 return true;
-            });
+            })
+            .catch(error => dispatch({
+                type: types.INVITE_INVITE_FAILED,
+                data: error.message
+            }));
     }
 };
 
@@ -501,11 +505,7 @@ export const registerUser = (invite, username, password) => {
 
                 return result;
             })
-            .then(() => inviteWallet.getBalance(parsedInvite.address)
-                .then(balance => dispatch({
-                    type: types.RECEIVED_BALANCE,
-                    data: balance
-                })))
+            .then(() => getBalance(parsedInvite.address)(dispatch))
             .catch(error =>
                 dispatch({
                     type: types.INVITE_REGISTRATION_FAILED,
@@ -515,17 +515,15 @@ export const registerUser = (invite, username, password) => {
     };
 };
 
-/*export const storeAuth = (address, walletHash) => {
+export const getBalance = (address) => {
     return dispatch => {
-        console.log(address, walletHash);
-        localStorage.setItem('social_address', address.toLowerCase());
-        localStorage.setItem('social_wallet_hash', walletHash.toLowerCase());
-
-        dispatch({
-            type: types.INVITE_STORE_AUTH
-        });
+        return inviteWallet.getBalance(address)
+            .then(balance => dispatch({
+                type: types.RECEIVED_BALANCE,
+                data: balance
+            }));
     };
-};*/
+};
 
 export const getAuthData = () => {
     return dispatch => {
@@ -534,11 +532,7 @@ export const getAuthData = () => {
         const privateKey = localStorage.getItem('social_private_key');
         const isValid = address.length === 42 && (walletHash.length === 64 || walletHash.length === 128) && privateKey.length > 0;
         if (isValid) {
-            inviteWallet.getBalance(address)
-                .then(balance => dispatch({
-                    type: types.RECEIVED_BALANCE,
-                    data: balance
-                }));
+            getBalance(address)(dispatch);
         }
 
         inviteWallet.setAccount(address, privateKey);
@@ -553,23 +547,6 @@ export const getAuthData = () => {
     };
 };
 
-/*export const getBalance = () => {
-    return dispatch => {
-        const address = localStorage.getItem('social_address').toLowerCase();
-        const walletHash = localStorage.getItem('social_wallet_hash').toLowerCase();
-        const isValid = address.length === 42 && (walletHash.length === 64 || walletHash.length === 128);
-
-        dispatch({
-            type: types.INVITE_RECEIVED_STORED_AUTH,
-            data: {
-                isValid,
-                address,
-                walletHash
-            }
-        });
-    };
-};*/
-
 export const login = (username, password) => {
     return dispatch => {
         dispatch({
@@ -580,7 +557,7 @@ export const login = (username, password) => {
         let privateKey = '';
 
         return inviteWallet.getAddressByUsername(username)
-            .then(address => address === '0x0000000000000000000000000000000000000000' ? null : address)
+            .then(address => address === '0x0000000000000000000000000000000000000000' || !address ? null : address)
             .then(adr => {
                 console.log('address is ' + adr);
                 if (!adr) {
@@ -640,11 +617,7 @@ export const login = (username, password) => {
 
                 init()(dispatch);
 
-                return inviteWallet.getBalance(address)
-                    .then(balance => dispatch({
-                        type: types.RECEIVED_BALANCE,
-                        data: balance
-                    }));
+                getBalance(address)(dispatch);
             })
             .catch(error =>
                 dispatch({
@@ -685,11 +658,7 @@ export const saveChanges = () => {
                 type: types.CHANGES_SAVE_COMPLETE,
                 data
             }))
-            .then(() => inviteWallet.getBalance(inviteWallet.fromAddress)
-                .then(balance => dispatch({
-                    type: types.RECEIVED_BALANCE,
-                    data: balance
-                })))
+            .then(() => getBalance(inviteWallet.fromAddress)(dispatch))
             .catch(error => dispatch({
                 type: types.CHANGES_SAVE_FAILED,
                 data: error.message
