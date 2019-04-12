@@ -5,12 +5,12 @@ import './LoginRegisterPage.css';
 
 class LoginRegisterPage extends Component {
     constructor(props) {
-        super();
+        super(props);
         this.state = {
             onAuth: false,
-            page: 'login',
+            page: props.invite ? 'registration' : 'login',
             password: '',
-            invite: props.auth.hash,
+            invite: props.invite,
             username: ''
         };
     }
@@ -70,7 +70,7 @@ class LoginRegisterPage extends Component {
     }
 
     render() {
-        const {auth, redirect, isRegistration, isLogin, loginError} = this.props;
+        const {auth, redirect, isRegistration, isLogin, loginError, registrationError} = this.props;
         if (auth.isValid) {
             return redirect;
         }
@@ -120,6 +120,10 @@ class LoginRegisterPage extends Component {
         </Fragment>;
         if (this.state.page === 'registration') {
             page = <Fragment>
+                {registrationError && <div className="alert alert-danger" role="alert">
+                    {registrationError}
+                </div>}
+
                 <div className="form-group">
                     <label>Invite</label>
                     <input
@@ -207,6 +211,7 @@ class LoginRegisterPage extends Component {
 const mapStateToProps = state => ({
     user: state.social.user,
     isRegistration: state.social.isRegistration,
+    registrationError: state.social.registrationError,
     loginError: state.social.loginError,
     isLogin: state.social.isLogin,
     auth: state.social.auth

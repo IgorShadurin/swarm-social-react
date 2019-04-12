@@ -17,49 +17,14 @@ import InviteWallet from "../libs/InviteWallet/InviteWallet";
 
 library.add(faComment, faWallet, faCog);
 
-/*const auth = {
-    isAuthenticated: localStorage.getItem('social_address').length > 0 && localStorage.getItem('social_wallet_hash').length > 0,
-    //isAuthenticated: true,
-    hash: '',
-    check() {
-        const address = localStorage.getItem('social_address');
-        const walletHash = localStorage.getItem('social_wallet_hash');
-        console.log(address, walletHash);
-        this.isAuthenticated = address && walletHash;
-
-        return address && walletHash;
-    },
-    authenticate() {
-        this.isAuthenticated = true;
-
-        return new Promise((resolve) => {
-            resolve();
-        });
-    },
-    signout() {
-        this.isAuthenticated = false;
-        return new Promise((resolve) => {
-            resolve();
-        });
-    }
-};*/
-
 const PrivateRoute = ({component: Component, ...rest}) => (
-    <Route {...rest} render={(props) => {
+    <Route {...rest} render={props => {
         const {auth} = rest;
-        console.log(rest);
-        if (props.location.hash) {
-            let invite = props.location.hash.replace('#', '');
-            try {
-                InviteWallet.parseInvite(invite);
-                auth.hash = invite;
-            } catch (error) {
+        //console.log(rest);
 
-            }
-        }
 
         return (
-            auth.isValid === true
+            auth.isValid
                 ? <Component {...props} />
                 : <Redirect to={`/${props.match.params.swarm_protocol}/${props.match.params.swarm_hash}/login`}/>
         );
@@ -69,8 +34,19 @@ const PrivateRoute = ({component: Component, ...rest}) => (
 class App extends Component {
     constructor(props) {
         super(props);
+        let invite = '';
+        if (window.location.hash) {
+            try {
+                invite = window.location.hash.replace('#', '');
+                InviteWallet.parseInvite(invite);
+            } catch (error) {
+                invite = '';
+            }
+        }
+
         this.state = {
-            isAuth: false
+            isAuth: false,
+            invite
         };
     }
 
@@ -103,8 +79,7 @@ class App extends Component {
 
                                 <Route path="/:swarm_protocol?/:swarm_hash?/login/"
                                        render={(props) => <LoginRegisterPage {...props}
-                                           //auth={auth}
-                                           //onAuth={() => this.setState({isAuth: true})}
+                                                                             invite={this.state.invite}
                                                                              redirect={<Redirect
                                                                                  to={`/${props.match.params.swarm_protocol}/${props.match.params.swarm_hash}/`}/>}/>}/>
 
@@ -131,12 +106,5 @@ App.propTypes = {
 const mapStateToProps = state => ({
     auth: state.social.auth
 });
-
-/*const mapDispatchToProps = dispatch => ({
-    init: () => {
-        dispatch(init());
-        //dispatch(navigateTo({ routeName: 'messagesList' }));
-    },
-});*/
 
 export default connect(mapStateToProps, actions)(App);

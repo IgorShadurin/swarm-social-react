@@ -46,7 +46,7 @@ export const init = () => {
         }
 
         inviteWallet.getHashByAddress(inviteWallet.fromAddress)
-            .then((hash) => bee.setHash(hash))
+            .then((hash) => hash ? bee.setHash(hash) : bee.setHash(currentHash))
             .then(() => bee.getMyProfile())
             .then(data => {
                 dispatch({
@@ -441,7 +441,6 @@ export const registerUser = (invite, username, password) => {
         dispatch({
             type: types.INVITE_REGISTRATION_STARTED
         });
-        //let walletSwarmHash = '';
         let newWalletSwarmHash = '';
         let privateKey = '';
         let parsedInvite = {};
@@ -459,6 +458,7 @@ export const registerUser = (invite, username, password) => {
             .then(swarmHash => bee.downloadWallet(swarmHash))
             .then(data => data.json())
             .then(dataKeyObject => {
+                console.log(dataKeyObject);
                 return inviteWallet.validate(dataKeyObject, parsedInvite.password)
                     .then(() => dataKeyObject)
                     .catch(() => null);
@@ -505,6 +505,7 @@ export const registerUser = (invite, username, password) => {
 
                 return result;
             })
+            .then(() => init()(dispatch))
             .then(() => getBalance(parsedInvite.address)(dispatch))
             .catch(error =>
                 dispatch({
