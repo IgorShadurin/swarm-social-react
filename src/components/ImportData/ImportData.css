@@ -1,0 +1,14 @@
+.ImportData {
+
+}
+
+.ImportData-buttons {
+    padding-right: 8px;
+    padding-left: 8px;
+}
+
+.ImportData-buttons > button {
+    margin-right: 5px;
+    margin-top: 5px;
+    width: 400px;
+}

@@ -4,6 +4,7 @@ import './UserPage.css';
 import UserFollowings from "../../UserFollowings";
 import UserWallet from "../../UserWallet";
 import Wall from "../../Wall";
+import ImportData from "../../ImportData";
 
 class UserPage extends Component {
     render() {
@@ -15,6 +16,8 @@ class UserPage extends Component {
                             <div className="row">
                                 <div className="col-md-12">
                                     <div className="main-l-bar-wrap">
+
+                                        <ImportData/>
 
                                         <UserFollowings/>
 

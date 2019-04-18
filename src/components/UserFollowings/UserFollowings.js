@@ -57,7 +57,7 @@ class UserFollowings extends Component {
                                 <div className="block-name">
                                     <p>
                                         <i className="fas fa-user-check"/>
-                                        Followings
+                                        Friends
                                     </p>
                                 </div>
                             </div>
