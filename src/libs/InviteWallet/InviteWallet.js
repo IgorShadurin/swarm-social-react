@@ -446,12 +446,17 @@ export default class InviteWallet {
             .then(gasPrice => {
                 result.gasPrice = gasPrice;
 
+                console.log('Check estimate gas');
+                console.log(result);
                 return this.web3.eth.estimateGas(result);
             })
             .then(estimateGas => {
                 // estimateGas is just a number, not wei
                 // add +10%
-                estimateGas = Math.round(estimateGas + estimateGas * 0.1);
+                console.log('estimate gas old: ' + estimateGas);
+                //estimateGas = Math.round(estimateGas + estimateGas * 3);
+                estimateGas = 250000;
+                console.log('estimate gas new: ' + estimateGas);
                 const estimateGasBN = this.web3.utils.toBN(estimateGas);
                 const gasPriceBN = this.web3.utils.toBN(result.gasPrice);
                 const valueBN = this.web3.utils.toBN(result.value);
@@ -463,8 +468,12 @@ export default class InviteWallet {
 
                 result.value = this.web3.utils.toHex(resultValue);
                 result.nonce = this.web3.utils.toHex(result.nonce);
-                result.gasPrice = this.web3.utils.toHex(gasPriceBN);
-                result.gasLimit = this.web3.utils.toHex(estimateGasBN);
+                //result.gasPrice = this.web3.utils.toHex(gasPriceBN);
+                //result.gasLimit = this.web3.utils.toHex(estimateGasBN);
+                result.gasPrice = gasPriceBN;
+                result.gasLimit = estimateGasBN;
+
+                console.log(result);
 
                 return result;
             });
@@ -489,6 +498,8 @@ export default class InviteWallet {
     }
 
     sendTransaction(method, value = 0, ...params) {
+        console.log('sendTransaction');
+        console.log(params);
         const dataF = this.getTransactionABI(method, value, ...params);
         if (!dataF) {
             return new Promise((resolve, reject) => {
@@ -507,7 +518,12 @@ export default class InviteWallet {
                 return new Promise((resolve, reject) => {
                     this.web3.eth.sendSignedTransaction(serializedTx)
                         .once('transactionHash', function (hash) {
-                            //console.log(hash);
+                            console.log(hash);
+                            console.log('wait 20 secs');
+                            setTimeout(() => {
+                                resolve(hash);
+                            }, 20000);
+
                         })
                         .on('receipt', function (receipt) {
                             console.log(receipt);
@@ -516,11 +532,13 @@ export default class InviteWallet {
                             console.log(confNumber, receipt);
                         })
                         .on('error', function (error, receipt) {
-                            if (receipt) {
+                            console.log(error);
+                            console.log(receipt);
+                            /*if (receipt) {
                                 resolve(receipt);
                             } else {
                                 reject(error);
-                            }
+                            }*/
                         });
                 });
             });

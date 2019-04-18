@@ -305,7 +305,7 @@ export const inviteSetAccount = (wallet, privateKey) => {
     }
 };
 
-export const createInvite = () => {
+export const createInvite = (balance) => {
     return dispatch => {
         const socialAddress = localStorage.getItem('social_address');
         const socialPrivateKey = localStorage.getItem('social_private_key');
@@ -368,7 +368,7 @@ export const createInvite = () => {
                     data: hash
                 });
 
-                return inviteWallet.createInvite(invite, address, hash);
+                return inviteWallet.createInvite(invite, address, hash, balance);
             })
             .then(data => {
                 getBalance(inviteWallet.fromAddress)(dispatch);
