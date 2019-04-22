@@ -3,6 +3,7 @@ import Core from '../../Beefree/Core';
 import Utils from '../../Beefree/Utils';
 import Queue from 'promise-queue';
 import InviteWallet from "../../libs/InviteWallet/InviteWallet";
+import Web3 from 'web3';
 
 const parts = window.location.href.split('/').filter(word => word.length === 64 || word.length === 128);
 let currentHash = null;
@@ -11,7 +12,10 @@ if (parts.length > 0) {
 }
 
 console.log('currentHash', currentHash);
-const inviteWallet = new InviteWallet('https://rinkeby.infura.io/v3/357ce0ddb3ef426ba0bc727a3c64c873');
+//const inviteWallet = new InviteWallet('https://rinkeby.infura.io/v3/357ce0ddb3ef426ba0bc727a3c64c873');
+const inviteWallet = new InviteWallet(
+    new Web3.providers.WebsocketProvider("wss://rinkeby.infura.io/ws/v3/357ce0ddb3ef426ba0bc727a3c64c873")
+);
 
 let bee = null;
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -562,7 +566,7 @@ export const login = (username, password) => {
             .then(adr => {
                 console.log('address is ' + adr);
                 if (!adr) {
-                    throw new Error('Incorrect login');
+                    throw new Error('Address for this username not found');
                 }
 
                 address = adr;

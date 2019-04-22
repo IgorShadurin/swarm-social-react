@@ -53,7 +53,7 @@ class ImportData extends Component {
                                     <i className="fab fa-google" aria-hidden="true"/> Google
                                 </button>
                                 <button className="btn btn-outline-primary" onClick={this.onImport}>
-                                    <i className="fab fa-vk" aria-hidden="true"/>Google
+                                    <i className="fab fa-vk" aria-hidden="true"/> VK
                                 </button>
 
 

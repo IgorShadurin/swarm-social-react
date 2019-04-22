@@ -1,4 +1,5 @@
 pragma solidity ^0.5.1;
+//pragma experimental ABIEncoderV2;
 
 contract owned {
     constructor() public {owner = msg.sender;}
@@ -49,11 +50,28 @@ contract Users {
     }
 
     mapping(uint256 => Info) public UsersInfo;
+    mapping(uint256 => uint256[]) Notifications;
     mapping(address => uint256) public Wallets;
     mapping(string => uint256) Usernames;
     // todo is really required?
     mapping(string => address) Invites;
     uint256 public userId = 1;
+
+    function addNotification(address toAddress) public returns(uint256){
+        uint256 fromId = Wallets[msg.sender];
+        uint256 toId = Wallets[toAddress];
+        Notifications[fromId].push(toId);
+
+        return getNotificationsCount(msg.sender);
+    }
+
+    function getNotification(address fromAddress, uint256 index) public view returns(uint256){
+        return Notifications[Wallets[fromAddress]][index];
+    }
+
+    function getNotificationsCount(address fromAddress) public view returns(uint256){
+        return Notifications[Wallets[fromAddress]].length;
+    }
 
     function getHashByWallet(address user) public view returns (string memory){
         return UsersInfo[Wallets[user]].SwarmHash;
@@ -150,5 +168,18 @@ contract Users {
         UsersInfo[userId].WalletFileHash = walletFileHash;
         Wallets[wallet] = userId;
         userId++;
+    }
+
+    /*function getWalletHashByWallet(address wallet) public returns (string memory){
+        uint256 currentUserId = Wallets[wallet];
+
+        return UsersInfo[currentUserId].WalletFileHash;
+    }*/
+
+    function saveUser(string memory username, string memory walletFileHash) public returns (string memory){
+        setUsername(username);
+        setWalletFileHash(walletFileHash);
+
+        return 'ok';
     }
 }
