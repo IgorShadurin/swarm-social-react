@@ -168,10 +168,12 @@ export default function reduce(state = initialState, action = {}) {
         case types.INVITE_START_CREATION:
             return state.merge({
                 isCreateInvite: true,
+                createInviteError: ''
             });
         case types.INVITE_INVITE_FAILED:
             return state.merge({
                 isCreateInvite: false,
+                createInviteError: action.data
             });
         case types.INVITE_INVITE_CREATED:
             items = Immutable.asMutable(state.invites);

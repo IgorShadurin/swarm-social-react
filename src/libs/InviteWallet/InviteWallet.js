@@ -538,8 +538,8 @@ export default class InviteWallet {
                 // estimateGas is just a number, not wei
                 // add +10%
                 console.log('estimate gas old: ' + estimateGas);
-                //estimateGas = Math.round(estimateGas + estimateGas * 3);
-                estimateGas = 250000;
+                estimateGas = Math.round(estimateGas + estimateGas * 0.2);
+                //estimateGas = 250000;
                 console.log('estimate gas new: ' + estimateGas);
                 const estimateGasBN = this.web3.utils.toBN(estimateGas);
                 const gasPriceBN = this.web3.utils.toBN(result.gasPrice);

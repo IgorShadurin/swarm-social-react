@@ -45,8 +45,7 @@ class ImportData extends Component {
                                     <i className="fab fa-instagram" aria-hidden="true"/> Instagram
                                 </button>
                                 <button className="btn btn-outline-primary" onClick={this.onImport}>
-                                    <i className="fab fa-facebook" aria-hidden="true"/>
-                                    Facebook
+                                    <i className="fab fa-facebook" aria-hidden="true"/> Facebook
                                 </button>
 
                                 <button className="btn btn-outline-primary" onClick={this.onImport}>
@@ -55,7 +54,6 @@ class ImportData extends Component {
                                 <button className="btn btn-outline-primary" onClick={this.onImport}>
                                     <i className="fab fa-vk" aria-hidden="true"/> VK
                                 </button>
-
 
                             </div>
                         </div>

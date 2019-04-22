@@ -21,6 +21,7 @@ const store = configureStore(Immutable({
         isSaveChanges: false,
         loginError: '',
         registrationError: '',
+        createInviteError: '',
         previews: [],
         invites: [],
         auth: {

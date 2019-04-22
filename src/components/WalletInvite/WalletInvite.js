@@ -88,7 +88,7 @@ class WalletInvite extends Component {
     };
 
     render() {
-        const {invites, isCreateInvite} = this.props;
+        const {invites, isCreateInvite, createInviteError} = this.props;
         const invitesData = invites.map((item, index) => {
             const url = InviteWallet.createInviteFromData(item.address, item.password);
             return <div key={index}>
@@ -114,6 +114,10 @@ class WalletInvite extends Component {
         return (
             <div className="follows-block _block">
                 <div className="header-wrap">
+                    {createInviteError && <div className="alert alert-danger" role="alert">
+                        {createInviteError}
+                    </div>}
+
                     {/*<div className="container">*/}
                     {/*<div className="row">
                             <div className="col-md-7">
@@ -222,6 +226,7 @@ const mapStateToProps = state => ({
     user: state.social.user,
     invites: state.social.invites,
     isCreateInvite: state.social.isCreateInvite,
+    createInviteError: state.social.createInviteError,
 });
 
 export default connect(mapStateToProps, actions)(WalletInvite);
