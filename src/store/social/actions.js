@@ -485,7 +485,8 @@ export const registerUser = (invite, username, password) => {
                     });
             })
             .then(privateKey => inviteWallet.setAccount(parsedInvite.address, privateKey))
-            .then(() => inviteWallet.setWalletFileHash(newWalletSwarmHash))
+            //.then(() => inviteWallet.setWalletFileHash(newWalletSwarmHash))
+            .then(() => inviteWallet.saveUser(username, newWalletSwarmHash))
             .then(() => {
                 localStorage.setItem('social_address', parsedInvite.address.toLowerCase());
                 localStorage.setItem('social_wallet_hash', newWalletSwarmHash.toLowerCase());
@@ -495,7 +496,7 @@ export const registerUser = (invite, username, password) => {
                     type: types.INVITE_STORE_AUTH
                 });
             })
-            .then(() => inviteWallet.setUsername(username))
+            //.then(() => inviteWallet.setUsername(username))
             .then(result => {
                 dispatch({
                     type: types.INVITE_REGISTRATION_COMPLETE,

@@ -58,6 +58,7 @@ contract Users {
     uint256 public userId = 1;
 
     function addNotification(address toAddress) public returns(uint256){
+        // todo init event
         uint256 fromId = Wallets[msg.sender];
         uint256 toId = Wallets[toAddress];
         Notifications[fromId].push(toId);
