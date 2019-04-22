@@ -449,11 +449,15 @@ export const registerUser = (invite, username, password) => {
         let privateKey = '';
         let parsedInvite = {};
         try {
+            if (!invite || !username || !password) {
+                throw new Error('Please, enter invite, username and password');
+            }
+
             parsedInvite = InviteWallet.parseInvite(invite);
         } catch (error) {
             dispatch({
                 type: types.INVITE_REGISTRATION_FAILED,
-                data: error
+                data: error.message
             });
             return;
         }

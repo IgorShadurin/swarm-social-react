@@ -46,11 +46,6 @@ class LoginRegisterPage extends Component {
         e.preventDefault();
         const {registerUser, isRegistration} = this.props;
 
-        if (!this.state.invite || !this.state.username || !this.state.password) {
-            alert('Please, enter invite, username and password');
-            return;
-        }
-
         if (isRegistration) {
             alert('Registration in progress. Please, wait.');
 

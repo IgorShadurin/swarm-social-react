@@ -114,10 +114,6 @@ class WalletInvite extends Component {
         return (
             <div className="follows-block _block">
                 <div className="header-wrap">
-                    {createInviteError && <div className="alert alert-danger" role="alert">
-                        {createInviteError}
-                    </div>}
-
                     {/*<div className="container">*/}
                     {/*<div className="row">
                             <div className="col-md-7">
@@ -179,6 +175,10 @@ class WalletInvite extends Component {
                         </div>*/}
 
                     <hr/>
+
+                    {createInviteError && <div className="alert alert-danger" role="alert">
+                        {createInviteError}
+                    </div>}
 
                     <div className="form-group">
                         <label>Invite balance (ETH)</label>
