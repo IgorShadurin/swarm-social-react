@@ -682,4 +682,36 @@ export default class InviteWallet {
     getAddressByUsername(username) {
         return this.getTransaction('getAddressByUsername', 0, username).call();
     }
+
+    getUsername(address) {
+        return this.getTransaction('getUsername', 0, address).call();
+    }
+
+    getHashByUsername(username) {
+        return this.getTransaction('getHashByUsername', 0, username).call();
+    }
+
+    findUser(username) {
+        return this.getAddressByUsername(username)
+            .then(address => {
+                const addr = address === '0x0000000000000000000000000000000000000000' || !address ? null : address;
+                if (addr) {
+                    return this.getTransaction('Wallets', 0, addr).call()
+                        .then(userId => {
+                            if (userId) {
+                                return this.getTransaction('UsersInfo', 0, userId).call()
+                                    .then(data => {
+                                        data.userId = userId;
+
+                                        return data;
+                                    });
+                            } else {
+                                return null;
+                            }
+                        });
+                } else {
+                    return null;
+                }
+            });
+    }
 }

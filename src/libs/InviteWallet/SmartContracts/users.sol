@@ -183,4 +183,6 @@ contract Users {
 
         return 'ok';
     }
+
+    // todo get userid by username
 }

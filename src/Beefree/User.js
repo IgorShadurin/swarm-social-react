@@ -28,7 +28,7 @@ export default class User extends BaseObject {
     }
 
     prepareData() {
-        const iFollow = [
+        /*const iFollow = [
             {
                 'username': 'user1'
             },
@@ -49,7 +49,7 @@ export default class User extends BaseObject {
             constructor.fillObject(user);
 
             return user;
-        });
+        });*/
     }
 
     static getNotifications(user) {
@@ -65,6 +65,14 @@ export default class User extends BaseObject {
 
     static getAvatar(user, size = 'preview') {
         return user && user.avatar && user.avatar.original ? user.avatar.original : defaultAvatar;
+    }
+
+    static getIFollow(user) {
+        return user && user.i_follow ? user.i_follow : []
+    }
+
+    static getUsername(username) {
+        return username ? '@' + username : '';
     }
 
     static getClassName() {

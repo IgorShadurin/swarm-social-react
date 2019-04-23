@@ -83,6 +83,15 @@ export const init = () => {
                         });
                     });
                 }
+            })
+            .then(() => inviteWallet.getUsername(inviteWallet.fromAddress))
+            .then(username => dispatch({
+                type: types.SOCIAL_USERNAME,
+                data: username
+            }))
+            .catch(error => {
+                // todo dispatch error
+                console.error(error.message);
             });
     };
 };
@@ -293,6 +302,18 @@ export const getImagePreviewUrl = (fileId, width = 300, height = 300) => {
                 width,
                 height,
                 preview: bee.getImagePreviewUrl(fileId, width, height)
+            }
+        });
+    };
+};
+
+export const getAvatarByHash = (swarmHash) => {
+    return dispatch => {
+        return dispatch({
+            type: types.AVATAR_RECEIVED,
+            data: {
+                swarmHash,
+                avatar: bee.getAvatarUrl(swarmHash)
             }
         });
     };
@@ -671,6 +692,39 @@ export const saveChanges = () => {
             .then(() => getBalance(inviteWallet.fromAddress)(dispatch))
             .catch(error => dispatch({
                 type: types.CHANGES_SAVE_FAILED,
+                data: error.message
+            }));
+    };
+};
+
+export const findUser = (username) => {
+    username = username.trim().toLowerCase();
+
+    return dispatch => {
+        dispatch({
+            type: types.FIND_USER_START,
+            data: username
+        });
+
+        if (!username) {
+            dispatch({
+                type: types.FIND_USER_FAILED,
+                data: 'Empty username'
+            });
+
+            return;
+        }
+
+        inviteWallet.findUser(username)
+            .then(data => {
+                getAvatarByHash(data.SwarmHash)(dispatch);
+                dispatch({
+                    type: types.FIND_USER_COMPLETE,
+                    data
+                });
+            })
+            .catch(error => dispatch({
+                type: types.FIND_USER_FAILED,
                 data: error.message
             }));
     };

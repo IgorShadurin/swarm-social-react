@@ -1,4 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
 import './css/style.css';
 import './css/adaptiv.css';
 import App from './App';
@@ -11,6 +12,7 @@ import Immutable from "seamless-immutable";
 const store = configureStore(Immutable({
     social: {
         user: null,
+        username: null,
         wallPosts: Immutable([]),
         isInit: false,
         uploadStatus: Immutable([]),
@@ -22,7 +24,10 @@ const store = configureStore(Immutable({
         loginError: '',
         registrationError: '',
         createInviteError: '',
+        findUserError: '',
+        foundUsers: [],
         previews: [],
+        avatars: [],
         invites: [],
         auth: {
             isValid: false,

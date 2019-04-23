@@ -259,6 +259,10 @@ export default class Core {
         return this.swarm.bzz.getDownloadURL(this.currentHash, {path: `${this.socialDirectory}/file/${fileId}/preview/file_${width}x${height}`});
     }
 
+    getAvatarUrl(swarmHash) {
+        return this.swarm.bzz.getDownloadURL(swarmHash, {path: `${this.socialDirectory}/file/avatar/original.jpg`});
+    }
+
     /**
      *
      * @param file

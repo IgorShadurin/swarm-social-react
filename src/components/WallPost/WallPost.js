@@ -101,8 +101,9 @@ class WallPost extends Component {
     };
 
     render() {
-        const {user, item, getImagePreviewUrl, previews} = this.props;
-        const fullName = User.getFullName(user);
+        const {user, item, getImagePreviewUrl, previews, username} = this.props;
+        //const fullName = User.getFullName(user);
+        const fullName = User.getUsername(username);
         const avatar = User.getAvatar(user);
         const itemDate = item.created_at ? new Date(item.created_at) : null;
         const descriptionText = item.description.split('\n').map((item, i) => {
@@ -202,6 +203,7 @@ WallPost.propTypes = {
 const mapStateToProps = state => ({
     user: state.social.user,
     previews: state.social.previews,
+    username: state.social.username,
 });
 
 export default connect(mapStateToProps, actions)(WallPost);

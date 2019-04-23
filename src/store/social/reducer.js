@@ -18,6 +18,10 @@ export default function reduce(state = initialState, action = {}) {
             return state.merge({
                 isInit: true
             });
+        case types.SOCIAL_USERNAME:
+            return state.merge({
+                username: action.data
+            });
         case types.SOCIAL_USER_FETCHED:
             return state.merge({
                 user: action.data,
@@ -111,6 +115,12 @@ export default function reduce(state = initialState, action = {}) {
             return state.merge({
                 previews: Immutable(items)
             });
+        case types.AVATAR_RECEIVED:
+            items = Immutable.asMutable(state.avatars);
+            items.push(action.data);
+            return state.merge({
+                avatars: Immutable(items)
+            });
         case types.INVITE_REGISTRATION_STARTED:
             return state.merge({
                 isRegistration: true,
@@ -181,6 +191,24 @@ export default function reduce(state = initialState, action = {}) {
             return state.merge({
                 invites: Immutable(items),
                 isCreateInvite: false,
+            });
+        case types.FIND_USER_START:
+            return state.merge({
+                isFindUser: true,
+                findUserError: '',
+                foundUsers: []
+            });
+        case types.FIND_USER_COMPLETE:
+            return state.merge({
+                isFindUser: false,
+                findUserError: '',
+                foundUsers: [action.data]
+            });
+        case types.FIND_USER_FAILED:
+            return state.merge({
+                isFindUser: false,
+                findUserError: action.data,
+                foundUsers: []
             });
         default:
             return state;

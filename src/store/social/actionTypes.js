@@ -1,4 +1,5 @@
 export const SOCIAL_INIT = 'social.init';
+export const SOCIAL_USERNAME = 'social.username';
 export const SOCIAL_USER_FETCHED = 'social.userFetched';
 export const SOCIAL_WALL_POST_STARTED = 'social.wallPostStarted';
 export const SOCIAL_WALL_POST_CREATED = 'social.wallPostCreated';
@@ -18,6 +19,7 @@ export const SOCIAL_WALL_POST_IMAGE_PREVIEW_COMPLETE = 'social.wallPostImagePrev
 export const SOCIAL_WALL_POST_VIDEO_PREVIEW_COMPLETE = 'social.wallPostVideoPreviewComplete';
 export const SOCIAL_AVATAR_PREVIEW_COMPLETE = 'social.avatarPreviewComplete';
 export const SOCIAL_FILE_PREVIEW_RECEIVED = 'social.filePreviewReceived';
+export const AVATAR_RECEIVED = 'social.avatarReceived';
 
 export const RECEIVED_BALANCE = 'receivedBalance';
 export const AUTH_START = 'authStart';
@@ -47,3 +49,7 @@ export const INVITE_RECEIVED_STORED_AUTH = 'invite.receivedStoredAuth';
 export const CHANGES_SAVE_START = 'invite.changesSaveStart';
 export const CHANGES_SAVE_COMPLETE = 'invite.changesSaveComplete';
 export const CHANGES_SAVE_FAILED = 'invite.changesSaveFailed';
+
+export const FIND_USER_START = 'find.start';
+export const FIND_USER_COMPLETE = 'find.complete';
+export const FIND_USER_FAILED = 'find.failed';

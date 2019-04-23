@@ -12,8 +12,9 @@ class Navigation extends Component {
     };
 
     render() {
-        const {user, isAuth, balance, userLogout, isSaveChanges, pageChanged} = this.props;
-        const fullName = User.getFullName(user);
+        const {user, isAuth, balance, userLogout, isSaveChanges, pageChanged, username} = this.props;
+        //const fullName = User.getFullName(user);
+        const fullName = User.getUsername(username);
         const avatar = User.getAvatar(user);
         let isDisableSaveButton = true;
 
@@ -35,8 +36,9 @@ class Navigation extends Component {
 
                         <div className="col-md-3">
                             <div className="r-bar-wrap">
-                                {isSaveChanges &&  <button className="btn btn-beefree" type="button" disabled>
-                                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"/>
+                                {isSaveChanges && <button className="btn btn-beefree" type="button" disabled>
+                                    <span className="spinner-border spinner-border-sm" role="status"
+                                          aria-hidden="true"/>
                                     &nbsp;Saving to blockchain...
                                 </button>}
 
@@ -103,6 +105,7 @@ const mapStateToProps = state => ({
     balance: state.social.balance,
     isSaveChanges: state.social.isSaveChanges,
     pageChanged: state.social.pageChanged,
+    username: state.social.username,
 });
 
 export default connect(mapStateToProps, actions)(Navigation);
