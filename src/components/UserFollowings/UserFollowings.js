@@ -24,8 +24,9 @@ class UserFollowings extends Component {
     };
 
     onAddToFriends = (userId) => {
+        const {addFriend} = this.props;
         console.log('onAddToFriends', userId);
-        // todo add user here
+        addFriend(userId);
     };
 
     onFindByUsername = () => {
@@ -33,42 +34,51 @@ class UserFollowings extends Component {
         findUser(this.state.username);
     };
 
+    onUserMail = (userId) => {
+        console.log('userid', userId);
+    };
+
     render() {
-        const {isFindUser, findUserError, foundUsers, avatars, getAvatarByHash} = this.props;
-        const iFollow = User.getIFollow(this.props.user);
-        let users = iFollow.map((item, index) => (
-            (
-                <div key={index} className="item">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-9">
-                                <div className="l-bar">
-                                    <div className="avatar-wrap">
-                                        <img src={User.getAvatar(item)} alt=""/>
-                                    </div>
-                                    <div className="nickname-wrap">
-                                        <p>
+        const {isFindUser, findUserError, foundUsers, avatars, i_follow} = this.props;
+        let users = i_follow.map((item, index) => {
+                return (
+                    <div key={index} className="item">
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-9">
+                                    <div className="l-bar">
+                                        <div className="avatar-wrap">
+                                            <img src={User.getAvatar(item)} alt=""/>
+                                        </div>
+                                        <div className="nickname-wrap">
+                                            <p>
                                             <span className="following-username" onClick={this.onUsernameClick}>
-                                                @{item.username}
+                                                @{item.Username}
                                             </span>
-                                        </p>
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="col-3">
-                                <div className="followers">
-                                    <div className="ammount-wrap">
-                                        <span>{User.getNotifications(item)}</span>
-                                    </div>
+                                <div className="col-3">
+                                    <button className="btn btn-primary-outline"
+                                            onClick={() => this.onUserMail(item.userId)}
+                                    >
+                                        <i className="fas fa-envelope"/>
+                                    </button>
+                                    {/*<div className="followers">
+                                        <div className="ammount-wrap">
+                                            <span>{User.getNotifications(item)}</span>
+                                        </div>
+                                    </div>*/}
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )
-        ));
+                )
+            }
+        );
 
-        if (iFollow.length === 0) {
+        if (i_follow.length === 0) {
             users = (<div className="container">
                 <small className="text-muted">Add friends or be alone</small>
             </div>);
@@ -197,6 +207,7 @@ const mapStateToProps = state => ({
     findUserError: state.social.findUserError,
     isFindUser: state.social.isFindUser,
     avatars: state.social.avatars,
+    i_follow: state.social.i_follow,
 });
 
 export default connect(mapStateToProps, actions)(UserFollowings);

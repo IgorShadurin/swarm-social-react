@@ -53,3 +53,9 @@ export const CHANGES_SAVE_FAILED = 'invite.changesSaveFailed';
 export const FIND_USER_START = 'find.start';
 export const FIND_USER_COMPLETE = 'find.complete';
 export const FIND_USER_FAILED = 'find.failed';
+
+export const ADD_USER_START = 'add.start';
+export const ADD_USER_COMPLETE = 'add.complete';
+export const ADD_USER_FAILED = 'add.failed';
+
+export const RECEIVED_I_FOLLOW_USER = 'i_follow.received';

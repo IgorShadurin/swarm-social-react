@@ -346,4 +346,14 @@ export default class Core {
     downloadWallet(hash) {
         return this.swarm.bzz.download(hash);
     }
+
+    addFriend(friendId) {
+        if (!this.user._data.i_follow) {
+            this.user._data.i_follow = [];
+        }
+
+        this.user._data.i_follow.push(friendId);
+
+        return this.saveProfile({i_follow: this.user._data.i_follow}, true);
+    }
 }

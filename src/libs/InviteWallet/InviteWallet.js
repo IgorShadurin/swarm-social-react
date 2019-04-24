@@ -662,6 +662,10 @@ export default class InviteWallet {
         return this.sendTransaction('saveUser', '0', username, swarmWalletHash);
     }
 
+    getUserInfo(userId) {
+        return this.getTransaction('UsersInfo', 0, userId).call();
+    }
+
     getWalletHashByAddress(address) {
         return this.getTransaction('Wallets', 0, address).call()
             .then(userId => this.getTransaction('UsersInfo', 0, userId).call())

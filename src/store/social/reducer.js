@@ -210,6 +210,34 @@ export default function reduce(state = initialState, action = {}) {
                 findUserError: action.data,
                 foundUsers: []
             });
+        /*case types.ADD_USER_START:
+            return state.merge({
+                isFindUser: true,
+                findUserError: '',
+                foundUsers: []
+            });
+        case types.ADD_USER_COMPLETE:
+            return state.merge({
+                isFindUser: false,
+                findUserError: '',
+                foundUsers: [action.data]
+            });
+        case types.ADD_USER_FAILED:
+            return state.merge({
+                isFindUser: false,
+                findUserError: action.data,
+                foundUsers: []
+            });*/
+        case types.RECEIVED_I_FOLLOW_USER:
+            if (action.data && action.data.Username) {
+                items = Immutable.asMutable(state.i_follow);
+                items.push(action.data);
+                return state.merge({
+                    i_follow: Immutable(items)
+                });
+            } else {
+                return state;
+            }
         default:
             return state;
     }

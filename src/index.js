@@ -29,6 +29,7 @@ const store = configureStore(Immutable({
         previews: [],
         avatars: [],
         invites: [],
+        i_follow:[],
         auth: {
             isValid: false,
             address: '',

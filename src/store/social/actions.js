@@ -4,6 +4,7 @@ import Utils from '../../Beefree/Utils';
 import Queue from 'promise-queue';
 import InviteWallet from "../../libs/InviteWallet/InviteWallet";
 import Web3 from 'web3';
+import User from "../../Beefree/User";
 
 const parts = window.location.href.split('/').filter(word => word.length === 64 || word.length === 128);
 let currentHash = null;
@@ -42,7 +43,8 @@ const queue = new Queue(1, Infinity);
 
 export const init = () => {
     return (dispatch) => {
-        bee.setDispatch(dispatch);
+        let profile =
+            bee.setDispatch(dispatch);
 
         if (!inviteWallet.isAccountExists()) {
             console.error('Account not set');
@@ -53,6 +55,7 @@ export const init = () => {
             .then((hash) => hash ? bee.setHash(hash) : bee.setHash(currentHash))
             .then(() => bee.getMyProfile())
             .then(data => {
+                profile = data;
                 dispatch({
                     type: types.SOCIAL_USER_FETCHED,
                     data,
@@ -89,6 +92,10 @@ export const init = () => {
                 type: types.SOCIAL_USERNAME,
                 data: username
             }))
+            .then(() => {
+                let iFollowList = User.getIFollow(profile);
+                iFollowList.forEach(userId => getFriendInfo(userId)(dispatch));
+            })
             .catch(error => {
                 // todo dispatch error
                 console.error(error.message);
@@ -717,7 +724,10 @@ export const findUser = (username) => {
 
         inviteWallet.findUser(username)
             .then(data => {
-                getAvatarByHash(data.SwarmHash)(dispatch);
+                if (data && data.SwarmHash) {
+                    getAvatarByHash(data.SwarmHash)(dispatch);
+                }
+
                 dispatch({
                     type: types.FIND_USER_COMPLETE,
                     data
@@ -725,6 +735,42 @@ export const findUser = (username) => {
             })
             .catch(error => dispatch({
                 type: types.FIND_USER_FAILED,
+                data: error.message
+            }));
+    };
+};
+
+export const getFriendInfo = (userId) => {
+    return dispatch => {
+        return inviteWallet.getUserInfo(userId)
+            .then(data => {
+                data.userId = userId;
+                dispatch({
+                    type: types.RECEIVED_I_FOLLOW_USER,
+                    data
+                });
+            });
+    };
+};
+
+export const addFriend = (userId) => {
+    return dispatch => {
+        dispatch({
+            type: types.ADD_USER_START,
+            data: userId
+        });
+
+        bee.addFriend(userId)
+            .then(data => {
+                dispatch({
+                    type: types.ADD_USER_COMPLETE,
+                    data
+                });
+
+                getFriendInfo(userId)(dispatch);
+            })
+            .catch(error => dispatch({
+                type: types.ADD_USER_FAILED,
                 data: error.message
             }));
     };
