@@ -210,30 +210,26 @@ export default function reduce(state = initialState, action = {}) {
                 findUserError: action.data,
                 foundUsers: []
             });
-        /*case types.ADD_USER_START:
+        case types.ADD_USER_START:
+            items = Immutable.asMutable(state.iFollowWait);
+            items.push(action.data);
             return state.merge({
-                isFindUser: true,
-                findUserError: '',
-                foundUsers: []
+                iFollowWait: Immutable(items)
             });
         case types.ADD_USER_COMPLETE:
             return state.merge({
-                isFindUser: false,
-                findUserError: '',
-                foundUsers: [action.data]
+                iFollowWait: state.iFollowWait.filter(item => Number(item) !== Number(action.userId))
             });
         case types.ADD_USER_FAILED:
             return state.merge({
-                isFindUser: false,
-                findUserError: action.data,
-                foundUsers: []
-            });*/
+                iFollowWait: state.iFollowWait.filter(item => Number(item) !== Number(action.userId))
+            });
         case types.RECEIVED_I_FOLLOW_USER:
             if (action.data && action.data.Username) {
-                items = Immutable.asMutable(state.i_follow);
+                items = Immutable.asMutable(state.iFollow);
                 items.push(action.data);
                 return state.merge({
-                    i_follow: Immutable(items)
+                    iFollow: Immutable(items)
                 });
             } else {
                 return state;

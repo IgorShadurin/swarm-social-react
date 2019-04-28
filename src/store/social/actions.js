@@ -764,14 +764,46 @@ export const addFriend = (userId) => {
             .then(data => {
                 dispatch({
                     type: types.ADD_USER_COMPLETE,
-                    data
+                    data,
+                    userId
                 });
 
                 getFriendInfo(userId)(dispatch);
             })
             .catch(error => dispatch({
                 type: types.ADD_USER_FAILED,
-                data: error.message
+                data: error.message,
+                userId
+            }));
+    };
+};
+
+export const addMessage = (toUserId, message) => {
+    return dispatch => {
+        dispatch({
+            type: types.SEND_MESSAGE_START,
+            data: {
+                toUserId,
+                message
+            }
+        });
+
+        inviteWallet.addMessage(toUserId, message)
+            .then(data => {
+                dispatch({
+                    type: types.SEND_MESSAGE_COMPLETE,
+                    data,
+                    toUserId,
+                    message
+                });
+
+                //getFriendInfo(userId)(dispatch);
+            })
+            .catch(error => dispatch({
+                type: types.SEND_MESSAGE_FAILED,
+                data: error.message,
+                toUserId,
+                message
             }));
     };
 };

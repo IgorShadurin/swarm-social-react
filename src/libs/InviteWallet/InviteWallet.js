@@ -11,7 +11,7 @@ export default class InviteWallet {
     constructor(rpcUrl, networkId = 4) {
         this.networkContracts = {
             // rinkeby
-            4: '0xa3542f35e12480635272cf7a71df8f921c4ad420',
+            4: '0x3cb08bd051d86878b2cb8ba3f92f235bb0e0746d',
         };
         this.contractAddress = this.networkContracts[networkId];
         this.ABI = [
@@ -19,49 +19,59 @@ export default class InviteWallet {
                 "constant": false,
                 "inputs": [
                     {
-                        "name": "hash",
+                        "name": "toUserId",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "message",
                         "type": "string"
                     }
                 ],
-                "name": "setHash",
+                "name": "addMessage",
                 "outputs": [],
                 "payable": false,
                 "stateMutability": "nonpayable",
                 "type": "function"
             },
             {
-                "constant": true,
+                "constant": false,
                 "inputs": [
+                    {
+                        "name": "toAddress",
+                        "type": "address"
+                    }
+                ],
+                "name": "addNotification",
+                "outputs": [
                     {
                         "name": "",
                         "type": "uint256"
                     }
                 ],
-                "name": "UsersInfo",
-                "outputs": [
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "constant": false,
+                "inputs": [
                     {
-                        "name": "SwarmHash",
+                        "name": "invite",
                         "type": "string"
                     },
                     {
-                        "name": "SwarmType",
-                        "type": "uint32"
-                    },
-                    {
-                        "name": "Username",
-                        "type": "string"
-                    },
-                    {
-                        "name": "Wallet",
+                        "name": "wallet",
                         "type": "address"
                     },
                     {
-                        "name": "WalletFileHash",
+                        "name": "walletFileHash",
                         "type": "string"
                     }
                 ],
-                "payable": false,
-                "stateMutability": "view",
+                "name": "createInvite",
+                "outputs": [],
+                "payable": true,
+                "stateMutability": "payable",
                 "type": "function"
             },
             {
@@ -85,6 +95,190 @@ export default class InviteWallet {
                 ],
                 "payable": false,
                 "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "constant": false,
+                "inputs": [
+                    {
+                        "name": "newWallet",
+                        "type": "address"
+                    }
+                ],
+                "name": "resetWallet",
+                "outputs": [],
+                "payable": true,
+                "stateMutability": "payable",
+                "type": "function"
+            },
+            {
+                "constant": false,
+                "inputs": [
+                    {
+                        "name": "username",
+                        "type": "string"
+                    },
+                    {
+                        "name": "walletFileHash",
+                        "type": "string"
+                    }
+                ],
+                "name": "saveUser",
+                "outputs": [
+                    {
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "constant": false,
+                "inputs": [
+                    {
+                        "name": "hash",
+                        "type": "string"
+                    }
+                ],
+                "name": "setHash",
+                "outputs": [],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "constant": false,
+                "inputs": [
+                    {
+                        "name": "username",
+                        "type": "string"
+                    }
+                ],
+                "name": "setUsername",
+                "outputs": [
+                    {
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "constant": false,
+                "inputs": [
+                    {
+                        "name": "hash",
+                        "type": "string"
+                    }
+                ],
+                "name": "setWalletFileHash",
+                "outputs": [],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "payable": false,
+                "stateMutability": "nonpayable",
+                "type": "constructor"
+            },
+            {
+                "constant": true,
+                "inputs": [
+                    {
+                        "name": "username",
+                        "type": "string"
+                    }
+                ],
+                "name": "getAddressByUsername",
+                "outputs": [
+                    {
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "constant": true,
+                "inputs": [
+                    {
+                        "name": "username",
+                        "type": "string"
+                    }
+                ],
+                "name": "getHashByUsername",
+                "outputs": [
+                    {
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "constant": true,
+                "inputs": [
+                    {
+                        "name": "user",
+                        "type": "address"
+                    }
+                ],
+                "name": "getHashByWallet",
+                "outputs": [
+                    {
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "constant": true,
+                "inputs": [
+                    {
+                        "name": "fromUserId",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "toUserId",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "getMessages",
+                "outputs": [
+                    {
+                        "name": "",
+                        "type": "uint256[]"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "constant": true,
+                "inputs": [],
+                "name": "getMyUsername",
+                "outputs": [
+                    {
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "view",
                 "type": "function"
             },
             {
@@ -131,12 +325,17 @@ export default class InviteWallet {
             },
             {
                 "constant": true,
-                "inputs": [],
-                "name": "userId",
+                "inputs": [
+                    {
+                        "name": "wallet",
+                        "type": "address"
+                    }
+                ],
+                "name": "getUsername",
                 "outputs": [
                     {
                         "name": "",
-                        "type": "uint256"
+                        "type": "string"
                     }
                 ],
                 "payable": false,
@@ -164,17 +363,12 @@ export default class InviteWallet {
             },
             {
                 "constant": true,
-                "inputs": [
-                    {
-                        "name": "username",
-                        "type": "string"
-                    }
-                ],
-                "name": "getAddressByUsername",
+                "inputs": [],
+                "name": "messageId",
                 "outputs": [
                     {
                         "name": "",
-                        "type": "address"
+                        "type": "uint256"
                     }
                 ],
                 "payable": false,
@@ -182,41 +376,49 @@ export default class InviteWallet {
                 "type": "function"
             },
             {
-                "constant": false,
+                "constant": true,
                 "inputs": [
                     {
-                        "name": "username",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "Messages",
+                "outputs": [
+                    {
+                        "name": "message",
                         "type": "string"
                     },
                     {
-                        "name": "walletFileHash",
-                        "type": "string"
-                    }
-                ],
-                "name": "saveUser",
-                "outputs": [
+                        "name": "fromUserId",
+                        "type": "uint256"
+                    },
                     {
-                        "name": "",
-                        "type": "string"
+                        "name": "toUserId",
+                        "type": "uint256"
                     }
                 ],
                 "payable": false,
-                "stateMutability": "nonpayable",
+                "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": true,
                 "inputs": [
                     {
-                        "name": "user",
-                        "type": "address"
+                        "name": "",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "",
+                        "type": "uint256"
                     }
                 ],
-                "name": "getHashByWallet",
+                "name": "Notifications",
                 "outputs": [
                     {
                         "name": "",
-                        "type": "string"
+                        "type": "uint256"
                     }
                 ],
                 "payable": false,
@@ -226,26 +428,7 @@ export default class InviteWallet {
             {
                 "constant": true,
                 "inputs": [],
-                "name": "getMyUsername",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "string"
-                    }
-                ],
-                "payable": false,
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "constant": false,
-                "inputs": [
-                    {
-                        "name": "toAddress",
-                        "type": "address"
-                    }
-                ],
-                "name": "addNotification",
+                "name": "userId",
                 "outputs": [
                     {
                         "name": "",
@@ -253,21 +436,37 @@ export default class InviteWallet {
                     }
                 ],
                 "payable": false,
-                "stateMutability": "nonpayable",
+                "stateMutability": "view",
                 "type": "function"
             },
             {
                 "constant": true,
                 "inputs": [
                     {
-                        "name": "username",
-                        "type": "string"
+                        "name": "",
+                        "type": "uint256"
                     }
                 ],
-                "name": "getHashByUsername",
+                "name": "UsersInfo",
                 "outputs": [
                     {
-                        "name": "",
+                        "name": "SwarmHash",
+                        "type": "string"
+                    },
+                    {
+                        "name": "SwarmType",
+                        "type": "uint32"
+                    },
+                    {
+                        "name": "Username",
+                        "type": "string"
+                    },
+                    {
+                        "name": "Wallet",
+                        "type": "address"
+                    },
+                    {
+                        "name": "WalletFileHash",
                         "type": "string"
                     }
                 ],
@@ -293,100 +492,6 @@ export default class InviteWallet {
                 "payable": false,
                 "stateMutability": "view",
                 "type": "function"
-            },
-            {
-                "constant": true,
-                "inputs": [
-                    {
-                        "name": "wallet",
-                        "type": "address"
-                    }
-                ],
-                "name": "getUsername",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "string"
-                    }
-                ],
-                "payable": false,
-                "stateMutability": "view",
-                "type": "function"
-            },
-            {
-                "constant": false,
-                "inputs": [
-                    {
-                        "name": "newWallet",
-                        "type": "address"
-                    }
-                ],
-                "name": "resetWallet",
-                "outputs": [],
-                "payable": true,
-                "stateMutability": "payable",
-                "type": "function"
-            },
-            {
-                "constant": false,
-                "inputs": [
-                    {
-                        "name": "invite",
-                        "type": "string"
-                    },
-                    {
-                        "name": "wallet",
-                        "type": "address"
-                    },
-                    {
-                        "name": "walletFileHash",
-                        "type": "string"
-                    }
-                ],
-                "name": "createInvite",
-                "outputs": [],
-                "payable": true,
-                "stateMutability": "payable",
-                "type": "function"
-            },
-            {
-                "constant": false,
-                "inputs": [
-                    {
-                        "name": "hash",
-                        "type": "string"
-                    }
-                ],
-                "name": "setWalletFileHash",
-                "outputs": [],
-                "payable": false,
-                "stateMutability": "nonpayable",
-                "type": "function"
-            },
-            {
-                "constant": false,
-                "inputs": [
-                    {
-                        "name": "username",
-                        "type": "string"
-                    }
-                ],
-                "name": "setUsername",
-                "outputs": [
-                    {
-                        "name": "",
-                        "type": "string"
-                    }
-                ],
-                "payable": false,
-                "stateMutability": "nonpayable",
-                "type": "function"
-            },
-            {
-                "inputs": [],
-                "payable": false,
-                "stateMutability": "nonpayable",
-                "type": "constructor"
             }
         ];
         this.web3 = new Web3(rpcUrl);
@@ -717,5 +822,13 @@ export default class InviteWallet {
                     return null;
                 }
             });
+    }
+
+    addMessage(toUserId, message) {
+        return this.sendTransaction('addMessage', '0', toUserId, message);
+    }
+
+    getMessages(fromUserId, toUserId) {
+        return this.getTransaction('getMessages', 0, fromUserId, toUserId).call();
     }
 }

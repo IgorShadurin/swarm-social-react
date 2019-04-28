@@ -1,5 +1,5 @@
 pragma solidity ^0.5.1;
-//pragma experimental ABIEncoderV2;
+pragma experimental ABIEncoderV2;
 
 contract owned {
     constructor() public {owner = msg.sender;}
@@ -49,13 +49,35 @@ contract Users {
         string WalletFileHash;
     }
 
+    struct Message{
+        string message;
+        uint256 fromUserId;
+        uint256 toUserId;
+    }
+
     mapping(uint256 => Info) public UsersInfo;
-    mapping(uint256 => uint256[]) Notifications;
+    mapping(uint256 => uint256[]) public Notifications;
     mapping(address => uint256) public Wallets;
     mapping(string => uint256) Usernames;
     // todo is really required?
     mapping(string => address) Invites;
+    mapping(uint256 => uint256[][]) public Dialogs;
+    mapping(uint256 => Message) public Messages;
     uint256 public userId = 1;
+    uint256 public messageId = 1;
+
+    function getMessages(uint256 fromUserId, uint256 toUserId) public view returns(uint256[] memory){
+        return Dialogs[fromUserId][toUserId];
+    }
+
+    function addMessage(uint256 toUserId, string memory message) public {
+        uint256 fromUserId = Wallets[msg.sender];
+        require(fromUserId > 0, 'user_not_found');
+
+        Dialogs[fromUserId][toUserId].push(messageId);
+        Messages[messageId] = Message({message: message, fromUserId: fromUserId, toUserId: toUserId});
+        messageId++;
+    }
 
     function addNotification(address toAddress) public returns(uint256){
         // todo init event

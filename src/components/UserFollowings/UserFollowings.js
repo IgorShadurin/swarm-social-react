@@ -9,7 +9,9 @@ class UserFollowings extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: ''
+            username: '',
+            message: 'Hello 111',
+            currentUserId: 0
         };
     }
 
@@ -35,12 +37,17 @@ class UserFollowings extends Component {
     };
 
     onUserMail = (userId) => {
-        console.log('userid', userId);
+        this.setState({currentUserId: userId});
+    };
+
+    onSendMessage = () => {
+        const {addMessage} = this.props;
+        addMessage(this.state.currentUserId, this.state.message);
     };
 
     render() {
-        const {isFindUser, findUserError, foundUsers, avatars, i_follow} = this.props;
-        let users = i_follow.map((item, index) => {
+        const {isFindUser, findUserError, foundUsers, avatars, iFollow, iFollowWait} = this.props;
+        let users = iFollow.map((item, index) => {
                 return (
                     <div key={index} className="item">
                         <div className="container">
@@ -61,6 +68,8 @@ class UserFollowings extends Component {
                                 </div>
                                 <div className="col-3">
                                     <button className="btn btn-primary-outline"
+                                            data-toggle="modal"
+                                            data-target="#messagesModal"
                                             onClick={() => this.onUserMail(item.userId)}
                                     >
                                         <i className="fas fa-envelope"/>
@@ -78,7 +87,7 @@ class UserFollowings extends Component {
             }
         );
 
-        if (i_follow.length === 0) {
+        if (iFollow.length === 0) {
             users = (<div className="container">
                 <small className="text-muted">Add friends or be alone</small>
             </div>);
@@ -97,6 +106,7 @@ class UserFollowings extends Component {
                             <img src={avatar} alt="Avatar" className="UserFollowings-avatar"/> <span>{username}</span>
                             <div className="float-right">
                                 <button className="btn btn-success"
+                                        disabled={iFollowWait.filter(follow => follow === item.userId).length > 0 || iFollow.filter(follow => follow.userId === item.userId).length > 0}
                                         onClick={() => this.onAddToFriends(item.userId)}
                                 >
                                     <i className="fas fa-plus"/> Add
@@ -112,6 +122,51 @@ class UserFollowings extends Component {
 
         return (
             <Fragment>
+                <div className="modal fade" id="messagesModal" tabIndex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div className="modal-dialog" role="document">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="exampleModalLabel">Messages</h5>
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div className="modal-body">
+
+                                <p>Hello</p>
+                                <div className="form-group">
+                                    <label>Message</label>
+                                    <input type="text"
+                                           className="form-control"
+                                           placeholder="Message"
+                                           onChange={this.onChange}
+                                           data-field="message"
+                                           value={this.state.message}/>
+                                </div>
+
+                                <div>
+                                    {isFindUser && <button className="btn btn-primary" type="button" disabled>
+                                        <span className="spinner-border spinner-border-sm" role="status"
+                                              aria-hidden="true"/>
+                                        &nbsp;Send...
+                                    </button>}
+
+                                    {!isFindUser && <button className="btn btn-primary"
+                                                            onClick={this.onSendMessage}>
+                                        Send
+                                    </button>}
+                                </div>
+
+                                {foundUsersText}
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div className="modal fade" id="friendsModal" tabIndex="-1" role="dialog"
                      aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog" role="document">
@@ -207,7 +262,8 @@ const mapStateToProps = state => ({
     findUserError: state.social.findUserError,
     isFindUser: state.social.isFindUser,
     avatars: state.social.avatars,
-    i_follow: state.social.i_follow,
+    iFollow: state.social.iFollow,
+    iFollowWait: state.social.iFollowWait,
 });
 
 export default connect(mapStateToProps, actions)(UserFollowings);
