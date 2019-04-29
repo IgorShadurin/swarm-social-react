@@ -63,3 +63,10 @@ export const SEND_MESSAGE_COMPLETE = 'sendMessage.complete';
 export const SEND_MESSAGE_FAILED = 'sendMessage.failed';
 
 export const RECEIVED_I_FOLLOW_USER = 'i_follow.received';
+export const RECEIVED_USER_ID = 'user.received_id';
+
+export const MESSAGES_LOAD_START = 'messages.load_start';
+export const MESSAGES_LOAD_IDS = 'messages.load_ids';
+export const MESSAGES_LOAD_COMPLETE = 'messages.load_complete';
+export const MESSAGES_LOAD_FAILED = 'messages.load_failed';
+export const MESSAGE_LOADED = 'message.loaded';

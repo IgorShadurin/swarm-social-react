@@ -12,6 +12,7 @@ import Immutable from "seamless-immutable";
 const store = configureStore(Immutable({
     social: {
         user: null,
+        userId: null,
         username: null,
         wallPosts: Immutable([]),
         isInit: false,

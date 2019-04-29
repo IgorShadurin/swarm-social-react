@@ -5,6 +5,7 @@ import Queue from 'promise-queue';
 import InviteWallet from "../../libs/InviteWallet/InviteWallet";
 import Web3 from 'web3';
 import User from "../../Beefree/User";
+import defaultAvatar from '../../img/user/default.jpg'
 
 const parts = window.location.href.split('/').filter(word => word.length === 64 || word.length === 128);
 let currentHash = null;
@@ -91,6 +92,19 @@ export const init = () => {
             .then(username => dispatch({
                 type: types.SOCIAL_USERNAME,
                 data: username
+            }))
+            /*.then(_ => inviteWallet.getUserInfo(userId)
+                .then(data => {
+                    data.userId = userId;
+                    dispatch({
+                        type: types.RECEIVED_I_FOLLOW_USER,
+                        data
+                    });
+                }))*/
+            .then(_ => inviteWallet.getUserIdByAddress(inviteWallet.fromAddress))
+            .then(userId => dispatch({
+                type: types.RECEIVED_USER_ID,
+                data: userId
             }))
             .then(() => {
                 let iFollowList = User.getIFollow(profile);
@@ -320,7 +334,7 @@ export const getAvatarByHash = (swarmHash) => {
             type: types.AVATAR_RECEIVED,
             data: {
                 swarmHash,
-                avatar: bee.getAvatarUrl(swarmHash)
+                avatar: swarmHash ? bee.getAvatarUrl(swarmHash) : defaultAvatar
             }
         });
     };
@@ -724,7 +738,7 @@ export const findUser = (username) => {
 
         inviteWallet.findUser(username)
             .then(data => {
-                if (data && data.SwarmHash) {
+                if (data && data.Username) {
                     getAvatarByHash(data.SwarmHash)(dispatch);
                 }
 
@@ -804,6 +818,43 @@ export const addMessage = (toUserId, message) => {
                 data: error.message,
                 toUserId,
                 message
+            }));
+    };
+};
+
+export const loadMessages = (fromUserId, toUserId) => {
+    return dispatch => {
+        dispatch({
+            type: types.MESSAGES_LOAD_START,
+            data: {
+                fromUserId,
+                toUserId
+            }
+        });
+
+        inviteWallet.getMessages(fromUserId, toUserId)
+            .then(data => {
+                dispatch({
+                    type: types.MESSAGES_LOAD_IDS,
+                    data,
+                    fromUserId,
+                    toUserId
+                });
+
+                data.forEach(id => {
+                    inviteWallet.getMessage(id)
+                        .then(data => dispatch({
+                            type: types.MESSAGE_LOADED,
+                            data,
+                            id
+                        }));
+                });
+            })
+            .catch(error => dispatch({
+                type: types.MESSAGES_LOAD_FAILED,
+                data: error.message,
+                fromUserId,
+                toUserId
             }));
     };
 };

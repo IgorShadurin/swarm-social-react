@@ -10,7 +10,7 @@ class UserFollowings extends Component {
         super(props);
         this.state = {
             username: '',
-            message: 'Hello 111',
+            message: '',
             currentUserId: 0
         };
     }
@@ -36,8 +36,11 @@ class UserFollowings extends Component {
         findUser(this.state.username);
     };
 
-    onUserMail = (userId) => {
+    onUserMail = (toUserId) => {
+        const {loadMessages, userId} = this.props;
         this.setState({currentUserId: userId});
+        console.log('from', toUserId, 'to', userId);
+        loadMessages(userId, toUserId);
     };
 
     onSendMessage = () => {
@@ -97,7 +100,8 @@ class UserFollowings extends Component {
             <Fragment>
                 <hr/>
                 {foundUsers.map((item, index) => {
-                    if (item && item.SwarmHash && item.Username) {
+                    //if (item && item.SwarmHash && item.Username) {
+                    if (item && item.Username) {
                         const username = User.getUsername(item.Username);
                         let foundAvatar = avatars.find(item => item.swarmHash.toLowerCase() === item.swarmHash.toLowerCase());
                         const avatar = foundAvatar ? foundAvatar.avatar : defaultAvatar;
@@ -133,8 +137,7 @@ class UserFollowings extends Component {
                                 </button>
                             </div>
                             <div className="modal-body">
-
-                                <p>Hello</p>
+                                <p>Messages</p>
                                 <div className="form-group">
                                     <label>Message</label>
                                     <input type="text"
@@ -157,8 +160,6 @@ class UserFollowings extends Component {
                                         Send
                                     </button>}
                                 </div>
-
-                                {foundUsersText}
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -264,6 +265,7 @@ const mapStateToProps = state => ({
     avatars: state.social.avatars,
     iFollow: state.social.iFollow,
     iFollowWait: state.social.iFollowWait,
+    userId: state.social.userId,
 });
 
 export default connect(mapStateToProps, actions)(UserFollowings);

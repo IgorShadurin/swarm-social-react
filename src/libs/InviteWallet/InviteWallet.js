@@ -11,7 +11,7 @@ export default class InviteWallet {
     constructor(rpcUrl, networkId = 4) {
         this.networkContracts = {
             // rinkeby
-            4: '0x3cb08bd051d86878b2cb8ba3f92f235bb0e0746d',
+            4: '0xe2381f2a4a178da08a73ff183c39ca140588a3a2',
         };
         this.contractAddress = this.networkContracts[networkId];
         this.ABI = [
@@ -249,11 +249,11 @@ export default class InviteWallet {
                 "inputs": [
                     {
                         "name": "fromUserId",
-                        "type": "uint256"
+                        "type": "string"
                     },
                     {
                         "name": "toUserId",
-                        "type": "uint256"
+                        "type": "string"
                     }
                 ],
                 "name": "getMessages",
@@ -419,6 +419,25 @@ export default class InviteWallet {
                     {
                         "name": "",
                         "type": "uint256"
+                    }
+                ],
+                "payable": false,
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "constant": true,
+                "inputs": [
+                    {
+                        "name": "v",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "uintToString",
+                "outputs": [
+                    {
+                        "name": "str",
+                        "type": "string"
                     }
                 ],
                 "payable": false,
@@ -771,6 +790,10 @@ export default class InviteWallet {
         return this.getTransaction('UsersInfo', 0, userId).call();
     }
 
+    getUserIdByAddress(address) {
+        return this.getTransaction('Wallets', 0, address).call();
+    }
+
     getWalletHashByAddress(address) {
         return this.getTransaction('Wallets', 0, address).call()
             .then(userId => this.getTransaction('UsersInfo', 0, userId).call())
@@ -829,6 +852,10 @@ export default class InviteWallet {
     }
 
     getMessages(fromUserId, toUserId) {
-        return this.getTransaction('getMessages', 0, fromUserId, toUserId).call();
+        return this.getTransaction('getMessages', 0, Math.min(fromUserId, toUserId).toString(), Math.max(fromUserId, toUserId).toString()).call();
+    }
+
+    getMessage(id) {
+        return this.getTransaction('Messages', 0, id).call();
     }
 }

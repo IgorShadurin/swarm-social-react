@@ -161,6 +161,10 @@ export default function reduce(state = initialState, action = {}) {
                 pageChanged: true,
                 hash: action.data
             });
+        case types.RECEIVED_USER_ID:
+            return state.merge({
+                userId: action.data
+            });
         case types.CHANGES_SAVE_START:
             return state.merge({
                 isSaveChanges: true

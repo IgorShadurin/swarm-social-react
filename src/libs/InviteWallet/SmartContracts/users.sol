@@ -38,6 +38,7 @@ contract Users {
         Usernames['admin'] = userId;
         Wallets[msg.sender] = userId;
         userId++;
+        addMessage(1, "Hello moto");
     }
 
     struct Info
@@ -59,22 +60,47 @@ contract Users {
     mapping(uint256 => uint256[]) public Notifications;
     mapping(address => uint256) public Wallets;
     mapping(string => uint256) Usernames;
-    // todo is really required?
     mapping(string => address) Invites;
-    mapping(uint256 => uint256[][]) public Dialogs;
     mapping(uint256 => Message) public Messages;
     uint256 public userId = 1;
     uint256 public messageId = 1;
+    mapping(string => uint256[]) Dialogs;
 
-    function getMessages(uint256 fromUserId, uint256 toUserId) public view returns(uint256[] memory){
-        return Dialogs[fromUserId][toUserId];
+    function append(string memory a, string memory b, string memory c) internal pure returns (string memory) {
+        return string(abi.encodePacked(a, b, c));
+    }
+
+    function uintToString(uint v) public view returns (string memory str) {
+        uint maxlength = 100;
+        bytes memory reversed = new bytes(maxlength);
+        uint i = 0;
+        while (v != 0) {
+            uint remainder = v % 10;
+            v = v / 10;
+            reversed[i++] = byte(uint8(48 + remainder));
+        }
+        bytes memory s = new bytes(i);
+        for (uint j = 0; j < i; j++) {
+            s[j] = reversed[i - 1 - j];
+        }
+        str = string(s);
+    }
+
+    function getMessages(string memory fromUserId, string memory toUserId) public view returns(uint256[] memory){
+        return Dialogs[append(fromUserId, "_", toUserId)];
     }
 
     function addMessage(uint256 toUserId, string memory message) public {
+        // todo check toUserId
         uint256 fromUserId = Wallets[msg.sender];
-        require(fromUserId > 0, 'user_not_found');
+        require(fromUserId > 0, 'from_user_not_found');
 
-        Dialogs[fromUserId][toUserId].push(messageId);
+        if(fromUserId < toUserId){
+            Dialogs[append(uintToString(fromUserId), "_", uintToString(toUserId))].push(messageId);
+        }else{
+            Dialogs[append(uintToString(toUserId), "_", uintToString(fromUserId))].push(messageId);
+        }
+
         Messages[messageId] = Message({message: message, fromUserId: fromUserId, toUserId: toUserId});
         messageId++;
     }
