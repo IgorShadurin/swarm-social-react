@@ -11,7 +11,8 @@ class UserFollowings extends Component {
         this.state = {
             username: '',
             message: '',
-            currentUserId: 0
+            currentUserId: 0,
+            toUserId: 0,
         };
     }
 
@@ -38,18 +39,20 @@ class UserFollowings extends Component {
 
     onUserMail = (toUserId) => {
         const {loadMessages, userId} = this.props;
-        this.setState({currentUserId: userId});
+        this.setState({currentUserId: userId, toUserId});
         console.log('from', toUserId, 'to', userId);
         loadMessages(userId, toUserId);
     };
 
     onSendMessage = () => {
         const {addMessage} = this.props;
-        addMessage(this.state.currentUserId, this.state.message);
+        console.log(this.state.toUserId);
+        addMessage(this.state.toUserId, this.state.message);
+        this.setState({message: ''});
     };
 
     render() {
-        const {isFindUser, findUserError, foundUsers, avatars, iFollow, iFollowWait} = this.props;
+        const {isFindUser, findUserError, foundUsers, avatars, iFollow, iFollowWait, currentDialogMessages, messages, username} = this.props;
         let users = iFollow.map((item, index) => {
                 return (
                     <div key={index} className="item">
@@ -58,7 +61,7 @@ class UserFollowings extends Component {
                                 <div className="col-9">
                                     <div className="l-bar">
                                         <div className="avatar-wrap">
-                                            <img src={User.getAvatar(item)} alt=""/>
+                                            <img src={User.getAvatar(item)} alt="User avatar"/>
                                         </div>
                                         <div className="nickname-wrap">
                                             <p>
@@ -124,11 +127,27 @@ class UserFollowings extends Component {
             </Fragment>
             : (<span/>);
 
+        let messagesText = currentDialogMessages.map(item => {
+            const recipientInfo = iFollow.find(iFollowItem => messages[item] ? Number(iFollowItem.userId) === Number(messages[item].fromUserId) : false);
+            const message = messages[item] ? messages[item].message : '...';
+            return <div key={item} style={{marginBottom: 8}}>
+                <p>@{recipientInfo ? recipientInfo.Username : username}</p>
+                <div className="row">
+                    <div className="col-sm-1">
+                        <img src={User.getAvatar(item)} style={{maxWidth: 30}} alt="User avatar"/>
+                    </div>
+                    <div className="col-sm-11">
+                        {message}
+                    </div>
+                </div>
+            </div>;
+        });
+
         return (
             <Fragment>
-                <div className="modal fade" id="messagesModal" tabIndex="-1" role="dialog"
+                <div className="modal fade bd-example-modal-lg" id="messagesModal" tabIndex="-1" role="dialog"
                      aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog" role="document">
+                    <div className="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title" id="exampleModalLabel">Messages</h5>
@@ -137,9 +156,11 @@ class UserFollowings extends Component {
                                 </button>
                             </div>
                             <div className="modal-body">
-                                <p>Messages</p>
-                                <div className="form-group">
-                                    <label>Message</label>
+                                {messagesText}
+                            </div>
+
+                            <div className="modal-footer">
+                                {/*<div className="form-group">
                                     <input type="text"
                                            className="form-control"
                                            placeholder="Message"
@@ -148,7 +169,7 @@ class UserFollowings extends Component {
                                            value={this.state.message}/>
                                 </div>
 
-                                <div>
+                               <div>
                                     {isFindUser && <button className="btn btn-primary" type="button" disabled>
                                         <span className="spinner-border spinner-border-sm" role="status"
                                               aria-hidden="true"/>
@@ -159,10 +180,27 @@ class UserFollowings extends Component {
                                                             onClick={this.onSendMessage}>
                                         Send
                                     </button>}
+                                </div>*/}
+
+
+                                <div className="input-group mb-3">
+                                    <input type="text" className="form-control" placeholder="Message"
+                                           aria-label="Recipient's username" aria-describedby="button-addon2"
+                                           onChange={this.onChange}
+                                           data-field="message"
+                                           value={this.state.message}
+                                    />
+                                    <div className="input-group-append">
+                                        <button className="btn btn-outline-secondary"
+                                                type="button"
+                                                disabled={this.state.message.length === 0}
+                                                onClick={this.onSendMessage}
+                                        >
+                                            Send
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+
                             </div>
                         </div>
                     </div>
@@ -266,6 +304,9 @@ const mapStateToProps = state => ({
     iFollow: state.social.iFollow,
     iFollowWait: state.social.iFollowWait,
     userId: state.social.userId,
+    currentDialogMessages: state.social.currentDialogMessages,
+    messages: state.social.messages,
+    username: state.social.username,
 });
 
 export default connect(mapStateToProps, actions)(UserFollowings);

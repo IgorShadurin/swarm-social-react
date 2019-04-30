@@ -220,6 +220,10 @@ export default function reduce(state = initialState, action = {}) {
             return state.merge({
                 iFollowWait: Immutable(items)
             });
+        case types.MESSAGE_LOADED:
+            return state.merge({
+                messages: {...state.messages, [action.id]: action.data}
+            });
         case types.ADD_USER_COMPLETE:
             return state.merge({
                 iFollowWait: state.iFollowWait.filter(item => Number(item) !== Number(action.userId))
@@ -238,6 +242,14 @@ export default function reduce(state = initialState, action = {}) {
             } else {
                 return state;
             }
+        case types.MESSAGES_LOAD_START:
+            return state.merge({
+                currentDialogMessages: []
+            });
+        case types.MESSAGES_LOAD_IDS:
+            return state.merge({
+                currentDialogMessages: action.data
+            });
         default:
             return state;
     }

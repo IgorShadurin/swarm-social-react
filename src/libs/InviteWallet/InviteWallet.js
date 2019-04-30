@@ -848,7 +848,7 @@ export default class InviteWallet {
     }
 
     addMessage(toUserId, message) {
-        return this.sendTransaction('addMessage', '0', toUserId, message);
+        return this.sendTransaction('addMessage', '0', Number(toUserId), message);
     }
 
     getMessages(fromUserId, toUserId) {

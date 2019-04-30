@@ -42,7 +42,9 @@ const store = configureStore(Immutable({
             isChanged: false,
             hash: ''
         },
-        balance: null
+        balance: null,
+        messages: {},
+        currentDialogMessages: [],
     }
 }));
 
