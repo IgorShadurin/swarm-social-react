@@ -130,8 +130,10 @@ class UserFollowings extends Component {
         let messagesText = currentDialogMessages.map(item => {
             const recipientInfo = iFollow.find(iFollowItem => messages[item] ? Number(iFollowItem.userId) === Number(messages[item].fromUserId) : false);
             const message = messages[item] ? messages[item].message : '...';
-            return <div key={item} style={{marginBottom: 8}}>
-                <p>@{recipientInfo ? recipientInfo.Username : username}</p>
+            return <div key={item} style={{marginBottom: 8, borderBottom: '1px solid lightgrey', padding: 8}}>
+                <p style={{marginBottom: 8}}>
+                    <small className="text-muted">@{recipientInfo ? recipientInfo.Username : username}</small>
+                </p>
                 <div className="row">
                     <div className="col-sm-1">
                         <img src={User.getAvatar(item)} style={{maxWidth: 30}} alt="User avatar"/>
