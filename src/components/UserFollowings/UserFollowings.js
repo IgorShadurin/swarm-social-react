@@ -14,6 +14,8 @@ class UserFollowings extends Component {
             currentUserId: 0,
             toUserId: 0,
         };
+        this.messagesEnd = null;
+        this.lastMessagesCount = 0;
     }
 
     onChange = (e) => {
@@ -51,8 +53,15 @@ class UserFollowings extends Component {
         this.setState({message: ''});
     };
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.lastMessagesCount !== this.props.currentDialogMessages.length) {
+            this.lastMessagesCount = this.props.currentDialogMessages.length;
+            setTimeout(_ => this.messagesEnd.scrollIntoView({behavior: "smooth"}), 300);
+        }
+    }
+
     render() {
-        const {isFindUser, findUserError, foundUsers, avatars, iFollow, iFollowWait, currentDialogMessages, messages, username} = this.props;
+        const {isFindUser, findUserError, foundUsers, avatars, iFollow, iFollowWait, currentDialogMessages, messages, username, isSendMessage} = this.props;
         let users = iFollow.map((item, index) => {
                 return (
                     <div key={index} className="item">
@@ -130,7 +139,7 @@ class UserFollowings extends Component {
         let messagesText = currentDialogMessages.map(item => {
             const recipientInfo = iFollow.find(iFollowItem => messages[item] ? Number(iFollowItem.userId) === Number(messages[item].fromUserId) : false);
             const message = messages[item] ? messages[item].message : '...';
-            return <div key={item} style={{marginBottom: 8, borderBottom: '1px solid lightgrey', padding: 8}}>
+            return <div key={item} className="UserFollowings-message">
                 <p style={{marginBottom: 8}}>
                     <small className="text-muted">@{recipientInfo ? recipientInfo.Username : username}</small>
                 </p>
@@ -152,39 +161,27 @@ class UserFollowings extends Component {
                     <div className="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel">Messages</h5>
+                                <h5 className="modal-title" id="exampleModalLabel">Messages <button
+                                    className="btn btn-sm btn-outline-secondary"
+                                    onClick={_ => this.onUserMail(this.state.toUserId)}
+                                >Refresh</button></h5>
                                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div className="modal-body">
-                                {messagesText}
+                                <div className="UserFollowings-messages">
+                                    {messagesText}
+                                </div>
+
+                                <div style={{float: "left", clear: "both"}}
+                                     ref={(el) => {
+                                         this.messagesEnd = el;
+                                     }}>
+                                </div>
                             </div>
 
                             <div className="modal-footer">
-                                {/*<div className="form-group">
-                                    <input type="text"
-                                           className="form-control"
-                                           placeholder="Message"
-                                           onChange={this.onChange}
-                                           data-field="message"
-                                           value={this.state.message}/>
-                                </div>
-
-                               <div>
-                                    {isFindUser && <button className="btn btn-primary" type="button" disabled>
-                                        <span className="spinner-border spinner-border-sm" role="status"
-                                              aria-hidden="true"/>
-                                        &nbsp;Send...
-                                    </button>}
-
-                                    {!isFindUser && <button className="btn btn-primary"
-                                                            onClick={this.onSendMessage}>
-                                        Send
-                                    </button>}
-                                </div>*/}
-
-
                                 <div className="input-group mb-3">
                                     <input type="text" className="form-control" placeholder="Message"
                                            aria-label="Recipient's username" aria-describedby="button-addon2"
@@ -193,13 +190,20 @@ class UserFollowings extends Component {
                                            value={this.state.message}
                                     />
                                     <div className="input-group-append">
-                                        <button className="btn btn-outline-secondary"
-                                                type="button"
-                                                disabled={this.state.message.length === 0}
-                                                onClick={this.onSendMessage}
-                                        >
+                                        {isSendMessage && <button className="btn btn-outline-primary"
+                                                                  type="button"
+                                                                  disabled={true}>
+                                           <span className="spinner-border spinner-border-sm" role="status"
+                                                 aria-hidden="true"/>
+                                            &nbsp;Send...
+                                        </button>}
+
+                                        {!isSendMessage && <button className="btn btn-outline-primary"
+                                                                   type="button"
+                                                                   disabled={this.state.message.length === 0}
+                                                                   onClick={this.onSendMessage}>
                                             Send
-                                        </button>
+                                        </button>}
                                     </div>
                                 </div>
 
@@ -309,6 +313,7 @@ const mapStateToProps = state => ({
     currentDialogMessages: state.social.currentDialogMessages,
     messages: state.social.messages,
     username: state.social.username,
+    isSendMessage: state.social.isSendMessage,
 });
 
 export default connect(mapStateToProps, actions)(UserFollowings);

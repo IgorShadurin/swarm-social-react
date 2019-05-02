@@ -44,6 +44,7 @@ const store = configureStore(Immutable({
         },
         balance: null,
         messages: {},
+        isSendMessage: false,
         currentDialogMessages: [],
     }
 }));

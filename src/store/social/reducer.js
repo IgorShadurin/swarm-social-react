@@ -246,6 +246,16 @@ export default function reduce(state = initialState, action = {}) {
             return state.merge({
                 currentDialogMessages: []
             });
+        case types.SEND_MESSAGE_START:
+            return state.merge({
+                isSendMessage: true,
+                messages: {...state.messages, [action.id]: action.data},
+                currentDialogMessages: state.currentDialogMessages.concat(action.id)
+            });
+        case types.SEND_MESSAGE_COMPLETE:
+            return state.merge({
+                isSendMessage: false,
+            });
         case types.MESSAGES_LOAD_IDS:
             return state.merge({
                 currentDialogMessages: action.data

@@ -755,6 +755,7 @@ export const findUser = (username) => {
 };
 
 export const getFriendInfo = (userId) => {
+    userId = Number(userId);
     return dispatch => {
         return inviteWallet.getUserInfo(userId)
             .then(data => {
@@ -798,8 +799,10 @@ export const addMessage = (toUserId, message) => {
             type: types.SEND_MESSAGE_START,
             data: {
                 toUserId,
+                fromUserId: 'me',
                 message
-            }
+            },
+            id: Math.floor(Math.random() * 100000000) + 1000000
         });
 
         inviteWallet.addMessage(toUserId, message)
@@ -823,6 +826,8 @@ export const addMessage = (toUserId, message) => {
 };
 
 export const loadMessages = (fromUserId, toUserId) => {
+    fromUserId = Number(fromUserId);
+    toUserId = Number(toUserId);
     return dispatch => {
         dispatch({
             type: types.MESSAGES_LOAD_START,
