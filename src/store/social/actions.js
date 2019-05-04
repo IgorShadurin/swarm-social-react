@@ -851,7 +851,7 @@ export const loadMessages = (fromUserId, toUserId) => {
                         .then(data => dispatch({
                             type: types.MESSAGE_LOADED,
                             data,
-                            id
+                            id: Number(id)
                         }));
                 });
             })

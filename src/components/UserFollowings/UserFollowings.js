@@ -154,6 +154,10 @@ class UserFollowings extends Component {
             </div>;
         });
 
+        if (currentDialogMessages.length === 0) {
+            messagesText = <p>Write first message!</p>;
+        }
+
         return (
             <Fragment>
                 <div className="modal fade bd-example-modal-lg" id="messagesModal" tabIndex="-1" role="dialog"

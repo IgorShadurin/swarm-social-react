@@ -163,7 +163,7 @@ export default function reduce(state = initialState, action = {}) {
             });
         case types.RECEIVED_USER_ID:
             return state.merge({
-                userId: action.data
+                userId: Number(action.data)
             });
         case types.CHANGES_SAVE_START:
             return state.merge({
@@ -258,7 +258,7 @@ export default function reduce(state = initialState, action = {}) {
             });
         case types.MESSAGES_LOAD_IDS:
             return state.merge({
-                currentDialogMessages: action.data
+                currentDialogMessages: action.data.map(item => Number(item))
             });
         default:
             return state;
