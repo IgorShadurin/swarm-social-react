@@ -674,8 +674,9 @@ export default class InviteWallet {
                     throw new Error('Too low balance');
                 }
 
-                result.value = this.web3.utils.toHex(resultValue);
-                result.nonce = this.web3.utils.toHex(result.nonce);
+                //result.value = this.web3.utils.toHex(resultValue);
+                result.value = resultValue;
+                //result.nonce = this.web3.utils.toHex(result.nonce);
                 //result.gasPrice = this.web3.utils.toHex(gasPriceBN);
                 //result.gasLimit = this.web3.utils.toHex(estimateGasBN);
                 result.gasPrice = gasPriceBN;
@@ -787,21 +788,22 @@ export default class InviteWallet {
     }
 
     getUserInfo(userId) {
-        return this.getTransaction('UsersInfo', 0, userId).call();
+        return this.getTransaction('UsersInfo', 0, Number(userId)).call();
     }
 
     getUserIdByAddress(address) {
-        return this.getTransaction('Wallets', 0, address).call();
+        return this.getTransaction('Wallets', 0, address).call()
+            .then(userId => Number(userId));
     }
 
     getWalletHashByAddress(address) {
-        return this.getTransaction('Wallets', 0, address).call()
+        return this.getUserIdByAddress(address)
             .then(userId => this.getTransaction('UsersInfo', 0, userId).call())
             .then(data => data.WalletFileHash);
     }
 
     getHashByAddress(address) {
-        return this.getTransaction('Wallets', 0, address).call()
+        return this.getUserIdByAddress(address)
             .then(userId => this.getTransaction('UsersInfo', 0, userId).call())
             .then(data => data.SwarmHash);
     }
@@ -828,8 +830,9 @@ export default class InviteWallet {
             .then(address => {
                 const addr = address === '0x0000000000000000000000000000000000000000' || !address ? null : address;
                 if (addr) {
-                    return this.getTransaction('Wallets', 0, addr).call()
+                    return this.getUserIdByAddress(address)
                         .then(userId => {
+                            userId = Number(userId);
                             if (userId) {
                                 return this.getTransaction('UsersInfo', 0, userId).call()
                                     .then(data => {

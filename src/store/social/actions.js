@@ -102,13 +102,18 @@ export const init = () => {
                     });
                 }))*/
             .then(_ => inviteWallet.getUserIdByAddress(inviteWallet.fromAddress))
-            .then(userId => dispatch({
-                type: types.RECEIVED_USER_ID,
-                data: userId
-            }))
+            .then(userId => {
+                dispatch({
+                    type: types.RECEIVED_USER_ID,
+                    data: Number(userId)
+                });
+            })
             .then(() => {
                 let iFollowList = User.getIFollow(profile);
-                iFollowList.forEach(userId => getFriendInfo(userId)(dispatch));
+                iFollowList.forEach(userId => {
+                    userId = Number(userId);
+                    getFriendInfo(userId)(dispatch);
+                });
             })
             .catch(error => {
                 // todo dispatch error
@@ -756,6 +761,7 @@ export const findUser = (username) => {
 
 export const getFriendInfo = (userId) => {
     userId = Number(userId);
+
     return dispatch => {
         return inviteWallet.getUserInfo(userId)
             .then(data => {
@@ -769,6 +775,7 @@ export const getFriendInfo = (userId) => {
 };
 
 export const addFriend = (userId) => {
+    userId = Number(userId);
     return dispatch => {
         dispatch({
             type: types.ADD_USER_START,
@@ -794,6 +801,7 @@ export const addFriend = (userId) => {
 };
 
 export const addMessage = (toUserId, message) => {
+    toUserId = Number(toUserId);
     return dispatch => {
         dispatch({
             type: types.SEND_MESSAGE_START,
@@ -847,11 +855,12 @@ export const loadMessages = (fromUserId, toUserId) => {
                 });
 
                 data.forEach(id => {
+                    id = Number(id);
                     inviteWallet.getMessage(id)
                         .then(data => dispatch({
                             type: types.MESSAGE_LOADED,
                             data,
-                            id: Number(id)
+                            id
                         }));
                 });
             })

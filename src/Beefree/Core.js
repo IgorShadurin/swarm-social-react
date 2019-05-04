@@ -348,6 +348,7 @@ export default class Core {
     }
 
     addFriend(friendId) {
+        friendId = Number(friendId);
         if (!this.user._data.i_follow) {
             this.user._data.i_follow = [];
         }
