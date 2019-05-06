@@ -847,6 +847,7 @@ export const loadMessages = (fromUserId, toUserId) => {
 
         inviteWallet.getMessages(fromUserId, toUserId)
             .then(data => {
+                data = data.map(item => Number(item));
                 dispatch({
                     type: types.MESSAGES_LOAD_IDS,
                     data,
@@ -857,11 +858,15 @@ export const loadMessages = (fromUserId, toUserId) => {
                 data.forEach(id => {
                     id = Number(id);
                     inviteWallet.getMessage(id)
-                        .then(data => dispatch({
-                            type: types.MESSAGE_LOADED,
-                            data,
-                            id
-                        }));
+                        .then(data => {
+                            data.fromUserId = Number(data.fromUserId);
+                            data.toUserId = Number(data.toUserId);
+                            dispatch({
+                                type: types.MESSAGE_LOADED,
+                                data,
+                                id
+                            });
+                        });
                 });
             })
             .catch(error => dispatch({

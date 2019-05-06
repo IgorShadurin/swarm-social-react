@@ -258,7 +258,7 @@ export default function reduce(state = initialState, action = {}) {
             });
         case types.MESSAGES_LOAD_IDS:
             return state.merge({
-                currentDialogMessages: action.data.map(item => Number(item))
+                currentDialogMessages: action.data
             });
         default:
             return state;
