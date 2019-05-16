@@ -20,7 +20,7 @@ const inviteWallet = new InviteWallet(
 );
 
 let bee = null;
-if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development' || window.location.host === 'lovenet.io') {
     // dev code
     //bee = new Core('https://swarm-gateways.net', currentHash);
     bee = new Core('http://prototype.beefree.me', currentHash);
