@@ -739,6 +739,9 @@ export default class InviteWallet {
                         })
                         .on('confirmation', function (confNumber, receipt) {
                             console.log(confNumber, receipt);
+                            if (confNumber >= 1) {
+                                resolve(receipt);
+                            }
                         })
                         .on('error', function (error, receipt) {
                             console.log(error);
