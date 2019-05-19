@@ -21,6 +21,7 @@ const inviteWallet = new InviteWallet(
 
 let bee = null;
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development' || User.isLovenet()) {
+    console.log('dev code');
     // dev code
     //bee = new Core('https://swarm-gateways.net', currentHash);
     bee = new Core('http://prototype.beefree.me', currentHash);
