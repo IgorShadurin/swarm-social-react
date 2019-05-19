@@ -623,7 +623,11 @@ export default class InviteWallet {
     }
 
     static createInviteFromData(address, password) {
-        return 'http://prototype.beefree.me/#' + address + password;
+        /*if (User.isLovenet()) {
+            return `http://lovenet.io/#${address}${password}`;
+        } else {*/
+        return `http://prototype.beefree.me/#${address}${password}`;
+        //}
     }
 
     getContract(fromAddress = this.fromAddress) {

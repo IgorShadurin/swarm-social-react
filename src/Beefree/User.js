@@ -1,5 +1,6 @@
 import BaseObject from "./BaseObject";
 import defaultAvatar from '../img/user/default.jpg'
+import butterflyAvatar from '../img/user/butterfly.png'
 import ObjectConstructor from "./ObjectConstructor";
 
 export default class User extends BaseObject {
@@ -64,7 +65,16 @@ export default class User extends BaseObject {
     }
 
     static getAvatar(user, size = 'preview') {
-        return user && user.avatar && user.avatar.original ? user.avatar.original : defaultAvatar;
+        return user && user.avatar && user.avatar.original ? user.avatar.original : User.getDefaultAvatar();
+    }
+
+    static getDefaultAvatar() {
+        return User.isLovenet() ? butterflyAvatar : defaultAvatar;
+    }
+
+    static isLovenet() {
+        //return window.location.host === 'localhost:3000';
+        return window.location.host === 'lovenet.io';
     }
 
     static getIFollow(user) {

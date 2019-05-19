@@ -8,6 +8,7 @@ import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import configureStore from './store/configureStore'
 import Immutable from "seamless-immutable";
+import User from "./Beefree/User";
 
 const store = configureStore(Immutable({
     social: {
@@ -46,6 +47,7 @@ const store = configureStore(Immutable({
         messages: {},
         isSendMessage: false,
         currentDialogMessages: [],
+        isLovenet: User.isLovenet()
     }
 }));
 

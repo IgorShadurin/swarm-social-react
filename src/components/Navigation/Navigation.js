@@ -29,7 +29,7 @@ class Navigation extends Component {
                         <div className="col-md-3">
                             <Link className="nav-link" to="./">
                                 <div className="logo-wrap">
-                                    beefree
+                                    {User.isLovenet() ? 'lovenet' : 'beefree'}
                                 </div>
                             </Link>
                         </div>
