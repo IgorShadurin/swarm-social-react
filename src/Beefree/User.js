@@ -74,7 +74,7 @@ export default class User extends BaseObject {
 
     static isLovenet() {
         //return window.location.host === 'localhost:3000';
-        return window.location.host === 'lovenet.io';
+        return window.location.host === 'lovenet.io' || window.location.host === 'www.lovenet.io';
     }
 
     static getIFollow(user) {
