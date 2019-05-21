@@ -1,6 +1,6 @@
 import BaseObject from "./BaseObject";
 import defaultAvatar from '../img/user/default.jpg'
-import butterflyAvatar from '../img/user/butterfly.png'
+import lovenetAvatar from '../img/user/lovenet.jpg'
 import ObjectConstructor from "./ObjectConstructor";
 
 export default class User extends BaseObject {
@@ -69,7 +69,7 @@ export default class User extends BaseObject {
     }
 
     static getDefaultAvatar() {
-        return User.isLovenet() ? butterflyAvatar : defaultAvatar;
+        return User.isLovenet() ? lovenetAvatar : defaultAvatar;
     }
 
     static isLovenet() {
