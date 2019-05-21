@@ -10,7 +10,8 @@ class ImportData extends Component {
     };
 
     onImport = () => {
-        alert('Not implemented');
+        //alert('Not implemented');
+        window.open("https://c3web.io/beefree/import.html", "_blank")
     };
 
     render() {
