@@ -1,6 +1,6 @@
 import BaseObject from "./BaseObject";
 import defaultAvatar from '../img/user/default.jpg'
-import lovenetAvatar from '../img/user/lovenet.jpg'
+import lovenetAvatar from '../img/user/butterfly-real.jpg'
 import ObjectConstructor from "./ObjectConstructor";
 
 export default class User extends BaseObject {
