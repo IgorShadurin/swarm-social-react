@@ -2,6 +2,7 @@ import keythereum from 'keythereum';
 import crypto from 'crypto';
 import EthereumTx from 'ethereumjs-tx';
 import Web3 from 'web3';
+import User from "../../Beefree/User";
 
 export const NETWORK_MAIN = 1;
 export const NETWORK_ROPSTEN = 3;
@@ -623,11 +624,11 @@ export default class InviteWallet {
     }
 
     static createInviteFromData(address, password) {
-        /*if (User.isLovenet()) {
-            return `http://lovenet.io/#${address}${password}`;
-        } else {*/
-        return `http://prototype.beefree.me/#${address}${password}`;
-        //}
+        if (User.isLovenet()) {
+            return `https://lovenet.io/ssr/build/#${address}${password}`;
+        } else {
+            return `http://prototype.beefree.me/#${address}${password}`;
+        }
     }
 
     getContract(fromAddress = this.fromAddress) {
