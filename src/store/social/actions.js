@@ -21,6 +21,11 @@ const inviteWallet = new InviteWallet(
 
 let bee = null;
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development' || User.isLovenet()) {
+    if (User.isLovenet()) {
+        console.log('Set hash only for lovenet: bf2fc34716f54565a87b490fcfd329ae6aef8421521328185a54f7483bddde97');
+        currentHash = 'bf2fc34716f54565a87b490fcfd329ae6aef8421521328185a54f7483bddde97';
+    }
+
     console.log('dev code');
     // dev code
     //bee = new Core('https://swarm-gateways.net', currentHash);
