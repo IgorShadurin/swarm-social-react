@@ -4,6 +4,7 @@ import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import User from "../../Beefree/User";
 import * as actions from "../../store/social/actions";
+import lovenetLogo from '../../img/user/infinity-lovenet.png'
 
 class Navigation extends Component {
     onSaveToBlockchain = () => {
@@ -29,7 +30,11 @@ class Navigation extends Component {
                         <div className="col-md-3">
                             <Link className="nav-link" to="./">
                                 <div className="logo-wrap">
-                                    {User.isLovenet() ? 'lovenet' : 'beefree'}
+                                    {User.isLovenet() ? (
+                                        <span>
+                                            <img src={lovenetLogo} alt=""/> lovenet
+                                        </span>
+                                    ) : 'beefree'}
                                 </div>
                             </Link>
                         </div>
