@@ -382,6 +382,10 @@ export const createInvite = (balance) => {
             type: types.INVITE_START_CREATION,
             data: {invite}
         });
+        dispatch({
+            type: types.INVITE_STATUS,
+            data: 'Creating Ethereum wallet...'
+        });
 
         return inviteWallet.createWallet()
             .then(data => {
@@ -393,6 +397,11 @@ export const createInvite = (balance) => {
                     data
                 });
 
+                dispatch({
+                    type: types.INVITE_STATUS,
+                    data: 'Wallet created!'
+                });
+
                 return data;
             })
             .then(data => {
@@ -400,8 +409,17 @@ export const createInvite = (balance) => {
                     type: types.INVITE_WALLET_UPLOADING_TO_SWARM
                 });
 
+                dispatch({
+                    type: types.INVITE_STATUS,
+                    data: 'Uploading wallet to SWARM...'
+                });
+
                 return bee.uploadWallet(JSON.stringify(data.data))
                     .then(hash => {
+                        dispatch({
+                            type: types.INVITE_STATUS,
+                            data: 'Wallet uploaded!'
+                        });
                         walletSwarmHash = hash;
                         console.log(hash);
                         dispatch({
@@ -426,6 +444,11 @@ export const createInvite = (balance) => {
                     data: hash
                 });
 
+                dispatch({
+                    type: types.INVITE_STATUS,
+                    data: 'Send transaction to Ethereum smart contract...'
+                });
+
                 return inviteWallet.createInvite(invite, address, hash, balance);
             })
             .then(data => {
@@ -439,6 +462,11 @@ export const createInvite = (balance) => {
                         address,
                         walletSwarmHash,
                     }
+                });
+
+                dispatch({
+                    type: types.INVITE_STATUS,
+                    data: 'Invite created! Now you can share invite.'
                 });
 
                 return true;

@@ -182,12 +182,14 @@ export default function reduce(state = initialState, action = {}) {
         case types.INVITE_START_CREATION:
             return state.merge({
                 isCreateInvite: true,
-                createInviteError: ''
+                createInviteError: '',
+                createInviteStatus: ''
             });
         case types.INVITE_INVITE_FAILED:
             return state.merge({
                 isCreateInvite: false,
-                createInviteError: action.data
+                createInviteError: action.data,
+                createInviteStatus: ''
             });
         case types.INVITE_INVITE_CREATED:
             items = Immutable.asMutable(state.invites);
@@ -195,7 +197,10 @@ export default function reduce(state = initialState, action = {}) {
             return state.merge({
                 invites: Immutable(items),
                 isCreateInvite: false,
+                //createInviteStatus: 'Invite created!'
             });
+        case types.INVITE_STATUS:
+            return state.merge({createInviteStatus: action.data});
         case types.FIND_USER_START:
             return state.merge({
                 isFindUser: true,

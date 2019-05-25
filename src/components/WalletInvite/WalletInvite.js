@@ -88,7 +88,7 @@ class WalletInvite extends Component {
     };
 
     render() {
-        const {invites, isCreateInvite, createInviteError} = this.props;
+        const {invites, isCreateInvite, createInviteError, createInviteStatus} = this.props;
         const invitesData = invites.map((item, index) => {
             const url = InviteWallet.createInviteFromData(item.address, item.password);
             return <div key={index}>
@@ -202,6 +202,7 @@ class WalletInvite extends Component {
                                                     onClick={this.onCreateInvite}>
                             Create invite
                         </button>}
+                        {createInviteStatus && <p style={{marginTop: 8}}>{createInviteStatus}</p>}
                     </div>
                     <hr/>
                     {invitesData}
@@ -227,6 +228,7 @@ const mapStateToProps = state => ({
     invites: state.social.invites,
     isCreateInvite: state.social.isCreateInvite,
     createInviteError: state.social.createInviteError,
+    createInviteStatus: state.social.createInviteStatus,
 });
 
 export default connect(mapStateToProps, actions)(WalletInvite);
