@@ -65,7 +65,7 @@ class LoginRegisterPage extends Component {
     }
 
     render() {
-        const {auth, redirect, isRegistration, isLogin, loginError, registrationError} = this.props;
+        const {auth, redirect, isRegistration, isLogin, loginError, registrationError, registrationStatus} = this.props;
         if (auth.isValid) {
             return redirect;
         }
@@ -166,6 +166,8 @@ class LoginRegisterPage extends Component {
                     (<button type="submit" className="btn btn-primary" onClick={this.onCreateAccount}>
                         Create account
                     </button>)}
+
+                {registrationStatus && <p style={{marginTop: 8}}>{registrationStatus}</p>}
             </Fragment>;
         }
 
@@ -207,6 +209,7 @@ const mapStateToProps = state => ({
     user: state.social.user,
     isRegistration: state.social.isRegistration,
     registrationError: state.social.registrationError,
+    registrationStatus: state.social.registrationStatus,
     loginError: state.social.loginError,
     isLogin: state.social.isLogin,
     auth: state.social.auth

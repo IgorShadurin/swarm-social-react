@@ -446,7 +446,7 @@ export const createInvite = (balance) => {
 
                 dispatch({
                     type: types.INVITE_STATUS,
-                    data: 'Send transaction to Ethereum smart contract...'
+                    data: 'Sending transaction to Ethereum smart contract...'
                 });
 
                 return inviteWallet.createInvite(invite, address, hash, balance);
@@ -544,11 +544,27 @@ export const registerUser = (invite, username, password) => {
             return;
         }
 
+        dispatch({
+            type: types.INVITE_REGISTRATION_STATUS,
+            data: 'Getting wallet information by invite...'
+        });
+
         return inviteWallet.getWalletHashByAddress(parsedInvite.address)
-            .then(swarmHash => bee.downloadWallet(swarmHash))
+            .then(swarmHash => {
+                dispatch({
+                    type: types.INVITE_REGISTRATION_STATUS,
+                    data: 'Downloading wallet...'
+                });
+
+                return bee.downloadWallet(swarmHash)
+            })
             .then(data => data.json())
             .then(dataKeyObject => {
                 console.log(dataKeyObject);
+                dispatch({
+                    type: types.INVITE_REGISTRATION_STATUS,
+                    data: 'Check is password for wallet is correct...'
+                });
                 return inviteWallet.validate(dataKeyObject, parsedInvite.password)
                     .then(() => dataKeyObject)
                     .catch(() => null);
@@ -558,14 +574,29 @@ export const registerUser = (invite, username, password) => {
                     throw new Error('Incorrect password for wallet');
                 }
 
+                dispatch({
+                    type: types.INVITE_REGISTRATION_STATUS,
+                    data: 'Changing wallet password...'
+                });
+
                 return inviteWallet.changeWalletPassword(data, parsedInvite.password, password)
             })
             .then(data => {
+                dispatch({
+                    type: types.INVITE_REGISTRATION_STATUS,
+                    data: 'Uploading wallet to SWARM...'
+                });
+
                 return bee.uploadWallet(JSON.stringify(data.data))
                     .then(hash => {
                         console.log('New wallet swarm hash', hash);
                         newWalletSwarmHash = hash;
                         privateKey = data.privateKey;
+
+                        dispatch({
+                            type: types.INVITE_REGISTRATION_STATUS,
+                            data: 'Sending transaction to Ethereum smart contract about new wallet...'
+                        });
 
                         return data.privateKey;
                     });
@@ -592,6 +623,11 @@ export const registerUser = (invite, username, password) => {
                         walletHash: newWalletSwarmHash,
                         privateKey
                     }
+                });
+
+                dispatch({
+                    type: types.INVITE_REGISTRATION_STATUS,
+                    data: 'Registration complete!'
                 });
 
                 return result;

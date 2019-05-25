@@ -132,6 +132,10 @@ export default function reduce(state = initialState, action = {}) {
                 registrationError: '',
                 auth: action.data
             });
+        case types.INVITE_REGISTRATION_STATUS:
+            return state.merge({
+                registrationStatus: action.data
+            });
         case types.INVITE_REGISTRATION_FAILED:
             return state.merge({
                 isRegistration: false,

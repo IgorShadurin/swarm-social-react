@@ -43,6 +43,7 @@ export const INVITE_SWARM_WALLET_BY_ADDRESS_FAILED = 'invite.swarmWalletByAddres
 export const INVITE_REGISTRATION_STARTED = 'invite.registrationStarted';
 export const INVITE_REGISTRATION_COMPLETE = 'invite.registrationComplete';
 export const INVITE_REGISTRATION_FAILED = 'invite.registrationFailed';
+export const INVITE_REGISTRATION_STATUS = 'invite.registrationStatus';
 export const INVITE_STORE_AUTH = 'invite.storeAuth';
 export const INVITE_RECEIVED_STORED_AUTH = 'invite.receivedStoredAuth';
 export const INVITE_STATUS = 'invite.status';
