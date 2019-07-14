@@ -3,7 +3,7 @@ import './UserFollowings.css';
 import {connect} from "react-redux";
 import * as actions from "../../store/social/actions";
 import User from "../../Beefree/User";
-import defaultAvatar from './../../img/user/default.jpg'
+import defaultAvatar from './../../img/user/weave.png'
 
 class UserFollowings extends Component {
     constructor(props) {

@@ -5,7 +5,15 @@ import Queue from 'promise-queue';
 import InviteWallet from "../../libs/InviteWallet/InviteWallet";
 import Web3 from 'web3';
 import User from "../../Beefree/User";
-import defaultAvatar from '../../img/user/default.jpg'
+import defaultAvatar from '../../img/user/weave.png';
+import {getWalletAddress} from '../../api';
+import Arweave from 'arweave/web';
+
+const arweave = Arweave.init({
+    host: 'arweave.net',
+    port: 443,
+    protocol: 'https'
+});
 
 const parts = window.location.href.split('/').filter(word => word.length === 64 || word.length === 128);
 let currentHash = null;
@@ -645,11 +653,15 @@ export const registerUser = (invite, username, password) => {
 
 export const getBalance = (address) => {
     return dispatch => {
-        return inviteWallet.getBalance(address)
-            .then(balance => dispatch({
-                type: types.RECEIVED_BALANCE,
-                data: balance
-            }));
+        console.log(arweave);
+        return arweave.wallets.getBalance(address)
+            .then((balance) => {
+                let ar = arweave.ar.winstonToAr(balance);
+                dispatch({
+                    type: types.RECEIVED_BALANCE,
+                    data: ar
+                })
+            });
     };
 };
 
@@ -658,10 +670,10 @@ export const getAuthData = () => {
         const address = localStorage.getItem('social_address');
         const walletHash = localStorage.getItem('social_wallet_hash');
         const privateKey = localStorage.getItem('social_private_key');
-        const isValid = (address && walletHash && privateKey) && address.length === 42 && (walletHash.length === 64 || walletHash.length === 128) && privateKey.length > 0;
+        const isValid = (address && walletHash && privateKey) && privateKey.length > 0;
         if (isValid) {
             getBalance(address)(dispatch);
-            inviteWallet.setAccount(address, privateKey);
+            //inviteWallet.setAccount(address, privateKey);
         }
 
         dispatch({
@@ -946,5 +958,36 @@ export const loadMessages = (fromUserId, toUserId) => {
                 fromUserId,
                 toUserId
             }));
+    };
+};
+
+export const setWallet = (wallet) => {
+    return dispatch => {
+        return getWalletAddress(wallet)
+            .then(address => {
+                dispatch({
+                    type: types.ARWEAVE_SET_WALLET,
+                    data: {
+                        wallet,
+                        address
+                    }
+                });
+
+                dispatch({
+                    type: types.AUTH_COMPLETE,
+                    data: {
+                        isValid: true,
+                        address: address,
+                        walletHash: '40556b0e72714d83aedff1bedda9b5255fa1afb8cf2b45d4bcb7b8311480e35f',
+                        privateKey: '0xFb08943D0a9F69A1c998C54046c7C5A851405782'
+                    }
+                });
+
+                localStorage.setItem('social_address', address);
+                localStorage.setItem('social_wallet_hash', '40556b0e72714d83aedff1bedda9b5255fa1afb8cf2b45d4bcb7b8311480e35f');
+                localStorage.setItem('social_private_key', JSON.stringify(wallet));
+
+                init()(dispatch)
+            });
     };
 };

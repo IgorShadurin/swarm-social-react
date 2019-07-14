@@ -17,11 +17,11 @@ class UserPage extends Component {
                                 <div className="col-md-12">
                                     <div className="main-l-bar-wrap">
 
-                                        <ImportData/>
+                                        {/*<ImportData/>*/}
 
                                         <UserFollowings/>
 
-                                        <UserWallet/>
+                                        {/*<UserWallet/>*/}
 
                                     </div>
                                 </div>

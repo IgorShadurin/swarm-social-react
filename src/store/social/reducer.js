@@ -269,6 +269,11 @@ export default function reduce(state = initialState, action = {}) {
             return state.merge({
                 currentDialogMessages: action.data
             });
+        case types.ARWEAVE_SET_WALLET:
+            return state.merge({
+                arweave_wallet: action.data.wallet,
+                arweave_address: action.data.address,
+            });
         default:
             return state;
     }

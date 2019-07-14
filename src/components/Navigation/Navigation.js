@@ -34,7 +34,7 @@ class Navigation extends Component {
                                         <span>
                                             <img src={lovenetLogo} alt=""/> lovenet
                                         </span>
-                                    ) : 'beefree'}
+                                    ) : 'weavez'}
                                 </div>
                             </Link>
                         </div>
@@ -47,12 +47,13 @@ class Navigation extends Component {
                                     &nbsp;Saving to blockchain...
                                 </button>}
 
+                                {/*
                                 {!isSaveChanges && <button className="btn btn-beefree"
                                                            disabled={isDisableSaveButton}
                                                            onClick={this.onSaveToBlockchain}>
                                     Save to blockchain
                                 </button>}
-
+*/}
                             </div>
                         </div>
 
@@ -64,7 +65,7 @@ class Navigation extends Component {
                                             <i className="fas fa-comment"/>
                                         </Link>
                                     </div>*/}
-                                    <div className="wallet _item">
+                                    {/*<div className="wallet _item">
                                         <Link className="nav-link" to="./wallet">
                                             <i className="fas fa-wallet"/>
                                         </Link>
@@ -73,7 +74,7 @@ class Navigation extends Component {
                                         <Link className="nav-link" to="./config">
                                             <i className="fas fa-cog"/>
                                         </Link>
-                                    </div>
+                                    </div>*/}
                                 </div>
                                 <div className="ac-info-wrap">
                                     <div className="info-wrap">
@@ -84,14 +85,14 @@ class Navigation extends Component {
                                         </div>
                                         <div className="balance">
                                             <p>
-                                                {balance ? `ETH ${balance}` : '...'}
+                                                {balance ? `AR ${balance}` : '...'}
                                             </p>
                                         </div>
                                     </div>
                                     <div className="avatar-wrap">
                                         <div className="img-wrap">
                                             <Link className="nav-link" to="./">
-                                                <img onClick={userLogout} src={avatar} alt="Profile"/>
+                                                <span onClick={userLogout}>Logout</span>
                                             </Link>
                                         </div>
                                     </div>

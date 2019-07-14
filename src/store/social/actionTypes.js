@@ -72,3 +72,5 @@ export const MESSAGES_LOAD_IDS = 'messages.load_ids';
 export const MESSAGES_LOAD_COMPLETE = 'messages.load_complete';
 export const MESSAGES_LOAD_FAILED = 'messages.load_failed';
 export const MESSAGE_LOADED = 'message.loaded';
+
+export const ARWEAVE_SET_WALLET = 'arweave.set_wallet';

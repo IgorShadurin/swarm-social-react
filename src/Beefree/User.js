@@ -1,5 +1,5 @@
 import BaseObject from "./BaseObject";
-import defaultAvatar from '../img/user/default.jpg'
+import defaultAvatar from '../img/user/weave.png'
 import lovenetAvatar from '../img/user/butterfly-real.jpg'
 import ObjectConstructor from "./ObjectConstructor";
 

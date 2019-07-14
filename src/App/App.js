@@ -14,6 +14,8 @@ import WalletPage from "../components/page/WalletPage";
 import LoginRegisterPage from "../components/page/LoginRegisterPage";
 import ConfigPage from "../components/page/ConfigPage/ConfigPage";
 import InviteWallet from "../libs/InviteWallet/InviteWallet";
+import KeyUpload from "../components/Arweave/KeyUpload";
+import 'antd/dist/antd.css';
 
 library.add(faComment, faWallet, faCog);
 
@@ -68,20 +70,18 @@ class App extends Component {
                     <section id="main-body">
                         <div className="container">
                             <Switch>
-                                <PrivateRoute auth={auth} path="/:swarm_protocol?/:swarm_hash?/config/:hash?"
-                                              component={ConfigPage}/>
+                                {/*<PrivateRoute auth={auth} path="/:swarm_protocol?/:swarm_hash?/config/:hash?"
+                                              component={ConfigPage}/>*/}
 
-                                {/*<PrivateRoute auth={auth} path="/:swarm_protocol?/:swarm_hash?/dialog/:hash?"
-                                              component={ChatPage}/>*/}
-
-                                <PrivateRoute auth={auth} path="/:swarm_protocol?/:swarm_hash?/wallet/:hash?"
-                                              component={WalletPage}/>
+                                {/*<PrivateRoute auth={auth} path="/:swarm_protocol?/:swarm_hash?/wallet/:hash?"
+                                              component={WalletPage}/>*/}
 
                                 <Route path="/:swarm_protocol?/:swarm_hash?/login/"
-                                       render={(props) => <LoginRegisterPage {...props}
-                                                                             invite={this.state.invite}
-                                                                             redirect={<Redirect
-                                                                                 to={`/${props.match.params.swarm_protocol}/${props.match.params.swarm_hash}/`}/>}/>}/>
+                                       render={(props) => <KeyUpload {...props}
+                                                                     auth={auth}
+                                                                     invite={this.state.invite}
+                                                                     redirect={<Redirect
+                                                                         to={`/${props.match.params.swarm_protocol}/${props.match.params.swarm_hash}/`}/>}/>}/>
 
                                 <PrivateRoute auth={auth} exact
                                               path="/:swarm_protocol?/:swarm_hash?/:hash?"
