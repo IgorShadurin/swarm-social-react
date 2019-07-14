@@ -131,10 +131,10 @@ class WallPost extends Component {
                                 </div>
                                 <div className="r-side">
                                     <div className="btns-wrap opacity-items">
-                                        <i className="far fa-edit cursor-pointer"
+                                        {/*<i className="far fa-edit cursor-pointer"
                                            onClick={(e) => this.onEditPost(e, item)}/>&nbsp;
                                         <i className="far fa-times-circle cursor-pointer"
-                                           onClick={(e) => this.onDeletePost(e, item.id)}/>
+                                           onClick={(e) => this.onDeletePost(e, item.id)}/>*/}
 
                                     </div>
                                 </div>
@@ -169,18 +169,14 @@ class WallPost extends Component {
                             <div className="post-end">
                                 <div className="likes-wrap">
                                     <span className="like cursor-pointer" onClick={(e) => this.onLike(e, item.id)}>
-                                        <i className="fas fa-thumbs-up"/> <span>0</span>
-                                    </span>
-                                    <span className="dislike cursor-pointer"
-                                          onClick={(e) => this.onDislike(e, item.id)}>
-                                        <i className="fas fa-thumbs-down"/> <span>0</span>
+                                        <i className="fas fa-thumbs-up"/> {/*<span>0</span>*/} <span>+0.1 AR</span>
                                     </span>
                                 </div>
-                                <div className="share-wrap cursor-pointer">
+                                {/*<div className="share-wrap cursor-pointer">
                                     <span onClick={(e) => this.onShare(e, item.id)}>
                                         Share <i className="fas fa-retweet"/>
                                     </span>
-                                </div>
+                                </div>*/}
                             </div>
                         </div>
                     </div>

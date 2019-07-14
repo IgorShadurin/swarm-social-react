@@ -54,6 +54,25 @@ const queue = new Queue(1, Infinity);
 
 export const init = () => {
     return (dispatch) => {
+        dispatch({
+            type: types.SOCIAL_WALL_POST_CLEAR
+        });
+
+        arweaveApi.getPosts(localStorage.getItem('social_address'))
+            .then(data => {
+                //console.log(data);
+                data.forEach(data => {
+                    if (!data.description) {
+                        return;
+                    }
+
+                    dispatch({
+                        type: types.SOCIAL_WALL_POST_LOADED,
+                        isAddReversed: false,
+                        data
+                    });
+                });
+            });
         /*let profile = bee.setDispatch(dispatch);
 
         if (!inviteWallet.isAccountExists()) {
@@ -661,8 +680,8 @@ export const getAuthData = () => {
             dispatch({
                 type: types.ARWEAVE_SET_WALLET,
                 data: {
-                    wallet: address,
-                    address: privateKey
+                    wallet: privateKey,
+                    address
                 }
             });
             getBalance(address)(dispatch);

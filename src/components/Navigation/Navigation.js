@@ -13,8 +13,8 @@ class Navigation extends Component {
     };
 
     render() {
-        const {user, isAuth, balance, userLogout, isSaveChanges, pageChanged, username, arweave_wallet} = this.props;
-        console.log(arweave_wallet);
+        const {user, isAuth, balance, userLogout, isSaveChanges, pageChanged, username, arweave_address} = this.props;
+        //console.log(arweave_address);
         //const fullName = User.getFullName(user);
         const fullName = User.getUsername(username);
         const avatar = User.getAvatar(user);
@@ -89,14 +89,15 @@ class Navigation extends Component {
                                                 {balance ? `AR ${balance}` : '...'}
                                             </p>
                                             <p>
-                                                <a href={`https://viewblock.io/arweave/address/${arweave_wallet}`} target="_blank">{arweave_wallet}</a>
+                                                <a href={`https://viewblock.io/arweave/address/${arweave_address}`}
+                                                   target="_blank">{arweave_address}</a>
                                             </p>
                                         </div>
                                     </div>
                                     <div className="avatar-wrap">
                                         <div className="img-wrap">
-                                            <Link className="nav-link" to="./">
-                                                <span onClick={userLogout}>Logout</span>
+                                            <Link className="nav-link" to="./" onClick={userLogout}>
+                                                <span>Logout</span>
                                             </Link>
                                         </div>
                                     </div>
@@ -116,7 +117,7 @@ const mapStateToProps = state => ({
     isSaveChanges: state.social.isSaveChanges,
     pageChanged: state.social.pageChanged,
     username: state.social.username,
-    arweave_wallet: state.social.arweave_wallet,
+    arweave_address: state.social.arweave_address,
 });
 
 export default connect(mapStateToProps, actions)(Navigation);

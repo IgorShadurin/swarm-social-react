@@ -17,7 +17,7 @@ class Wall extends Component {
         //let posts = <p>Wall is empty</p>;
         let posts = '';
         if (wallPosts.length) {
-            posts = wallPosts.map((item) => <WallPost key={item.id} item={item}/>);
+            posts = wallPosts.map((item, index) => <WallPost key={index} item={item}/>);
         }
 
         return (
@@ -32,7 +32,9 @@ class Wall extends Component {
                                 {posts}
                             </div>
                             {isInit && user && user.last_post_id > 10 && <div className="more-btn">
-                                <button disabled={true} className="btn btn-beefree" onClick={this.onShowMore}>Show more</button>
+                                <button disabled={true} className="btn btn-beefree" onClick={this.onShowMore}>Show
+                                    more
+                                </button>
                             </div>}
                         </div>
                     </div>
