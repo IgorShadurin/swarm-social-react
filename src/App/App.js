@@ -28,7 +28,7 @@ const PrivateRoute = ({component: Component, ...rest}) => (
         return (
             auth.isValid
                 ? <Component {...props} />
-                : <Redirect to={`/${props.match.params.swarm_protocol}/${props.match.params.swarm_hash}/login`}/>
+                : <Redirect to={`/login`}/>
         );
     }}/>
 );
@@ -76,15 +76,15 @@ class App extends Component {
                                 {/*<PrivateRoute auth={auth} path="/:swarm_protocol?/:swarm_hash?/wallet/:hash?"
                                               component={WalletPage}/>*/}
 
-                                <Route path="/:swarm_protocol?/:swarm_hash?/login/"
+                                <Route path="/login/"
                                        render={(props) => <KeyUpload {...props}
                                                                      auth={auth}
                                                                      invite={this.state.invite}
                                                                      redirect={<Redirect
-                                                                         to={`/${props.match.params.swarm_protocol}/${props.match.params.swarm_hash}/`}/>}/>}/>
+                                                                         to={`/`}/>}/>}/>
 
                                 <PrivateRoute auth={auth} exact
-                                              path="/:swarm_protocol?/:swarm_hash?/:hash?"
+                                              path="/:hash?"
                                               component={UserPage}/>
                             </Switch>
                         </div>

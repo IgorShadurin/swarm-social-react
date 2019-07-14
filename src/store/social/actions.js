@@ -7,13 +7,8 @@ import Web3 from 'web3';
 import User from "../../Beefree/User";
 import defaultAvatar from '../../img/user/weave.png';
 import {getWalletAddress} from '../../api';
-import Arweave from 'arweave/web';
-
-const arweave = Arweave.init({
-    host: 'arweave.net',
-    port: 443,
-    protocol: 'https'
-});
+import arweave from '../../api/arweaveSetup';
+import arweaveApi from '../../api';
 
 const parts = window.location.href.split('/').filter(word => word.length === 64 || word.length === 128);
 let currentHash = null;
@@ -59,8 +54,7 @@ const queue = new Queue(1, Infinity);
 
 export const init = () => {
     return (dispatch) => {
-        let profile =
-            bee.setDispatch(dispatch);
+        /*let profile = bee.setDispatch(dispatch);
 
         if (!inviteWallet.isAccountExists()) {
             console.error('Account not set');
@@ -108,14 +102,6 @@ export const init = () => {
                 type: types.SOCIAL_USERNAME,
                 data: username
             }))
-            /*.then(_ => inviteWallet.getUserInfo(userId)
-                .then(data => {
-                    data.userId = userId;
-                    dispatch({
-                        type: types.RECEIVED_I_FOLLOW_USER,
-                        data
-                    });
-                }))*/
             .then(_ => inviteWallet.getUserIdByAddress(inviteWallet.fromAddress))
             .then(userId => {
                 dispatch({
@@ -133,7 +119,7 @@ export const init = () => {
             .catch(error => {
                 // todo dispatch error
                 console.error(error.message);
-            });
+            });*/
     };
 };
 
@@ -189,11 +175,11 @@ export const createWallPost = (description, attachments) => {
                 type: types.SOCIAL_WALL_POST_STARTED
             });
 
-            return bee.createPost(description, attachments)
+            return arweaveApi.createPost(description, attachments, localStorage.getItem('social_private_key'))
                 .then(result => {
                     const dispatchData = {
                         type: types.SOCIAL_WALL_POST_CREATED,
-                        data: result.data
+                        data: result
                     };
 
                     return dispatch(dispatchData);
@@ -672,6 +658,13 @@ export const getAuthData = () => {
         const privateKey = localStorage.getItem('social_private_key');
         const isValid = (address && walletHash && privateKey) && privateKey.length > 0;
         if (isValid) {
+            dispatch({
+                type: types.ARWEAVE_SET_WALLET,
+                data: {
+                    wallet: address,
+                    address: privateKey
+                }
+            });
             getBalance(address)(dispatch);
             //inviteWallet.setAccount(address, privateKey);
         }
@@ -986,7 +979,7 @@ export const setWallet = (wallet) => {
                 localStorage.setItem('social_address', address);
                 localStorage.setItem('social_wallet_hash', '40556b0e72714d83aedff1bedda9b5255fa1afb8cf2b45d4bcb7b8311480e35f');
                 localStorage.setItem('social_private_key', JSON.stringify(wallet));
-
+                getBalance(address)(dispatch);
                 init()(dispatch)
             });
     };

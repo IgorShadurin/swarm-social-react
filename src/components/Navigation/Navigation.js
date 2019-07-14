@@ -13,7 +13,8 @@ class Navigation extends Component {
     };
 
     render() {
-        const {user, isAuth, balance, userLogout, isSaveChanges, pageChanged, username} = this.props;
+        const {user, isAuth, balance, userLogout, isSaveChanges, pageChanged, username, arweave_wallet} = this.props;
+        console.log(arweave_wallet);
         //const fullName = User.getFullName(user);
         const fullName = User.getUsername(username);
         const avatar = User.getAvatar(user);
@@ -87,6 +88,9 @@ class Navigation extends Component {
                                             <p>
                                                 {balance ? `AR ${balance}` : '...'}
                                             </p>
+                                            <p>
+                                                <a href={`https://viewblock.io/arweave/address/${arweave_wallet}`} target="_blank">{arweave_wallet}</a>
+                                            </p>
                                         </div>
                                     </div>
                                     <div className="avatar-wrap">
@@ -112,6 +116,7 @@ const mapStateToProps = state => ({
     isSaveChanges: state.social.isSaveChanges,
     pageChanged: state.social.pageChanged,
     username: state.social.username,
+    arweave_wallet: state.social.arweave_wallet,
 });
 
 export default connect(mapStateToProps, actions)(Navigation);
