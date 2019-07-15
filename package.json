@@ -4,15 +4,13 @@
   "private": true,
   "homepage": "./",
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.18",
-    "@fortawesome/free-solid-svg-icons": "^5.8.2",
-    "@fortawesome/react-fontawesome": "^0.1.4",
+    "antd": "^3.20.3",
+    "arweave": ">1.0.0",
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
     "connected-react-router": "^6.4.0",
-    "date-and-time": "^0.6.3",
-    "free-core": "git+https://github.com/SwarmOrange/free-core.git",
     "jquery": "^3.4.1",
+    "js-base64": "^2.5.1",
     "npm": "^6.9.0",
     "popper.js": "^1.15.0",
     "promise-queue": "^2.2.5",
@@ -25,9 +23,7 @@
     "react-scripts": "3.0.1",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
-    "seamless-immutable": "^7.1.4",
-    "antd": "^3.19.7",
-    "arweave": ">1.0.0"
+    "seamless-immutable": "^7.1.4"
   },
   "scripts": {
     "start": "react-scripts start",

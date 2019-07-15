@@ -1,4 +1,4 @@
-import {SwarmClient} from "@erebos/swarm-browser";
+//import {SwarmClient} from "@erebos/swarm-browser";
 import User from "./User";
 import Post from "./Post";
 import File from "./File";
@@ -12,9 +12,7 @@ export const FILE_TYPE_VIDEO = 'video';
 
 export default class Core {
     constructor(url = 'https://swarm-gateways.net', initHash = null, socialDirectory = 'social') {
-        this.swarm = new SwarmClient({
-            http: url,
-        });
+        this.swarm = {};
         this.currentHash = initHash;
         this.socialDirectory = socialDirectory;
         this.user = {};

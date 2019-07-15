@@ -2,13 +2,15 @@ import * as types from './actionTypes';
 import Core from '../../Beefree/Core';
 import Utils from '../../Beefree/Utils';
 import Queue from 'promise-queue';
-import InviteWallet from "../../libs/InviteWallet/InviteWallet";
+//import InviteWallet from "../../libs/InviteWallet/InviteWallet";
 import Web3 from 'web3';
 import User from "../../Beefree/User";
-import defaultAvatar from '../../img/user/weave.png';
+//import defaultAvatar from '../../img/user/weave.png';
+import defaultAvatar from '../../img/avatar'
 import {getWalletAddress} from '../../api';
 import arweave from '../../api/arweaveSetup';
 import arweaveApi from '../../api';
+
 
 const parts = window.location.href.split('/').filter(word => word.length === 64 || word.length === 128);
 let currentHash = null;
@@ -18,29 +20,11 @@ if (parts.length > 0) {
 
 console.log('currentHash', currentHash);
 //const inviteWallet = new InviteWallet('https://rinkeby.infura.io/v3/357ce0ddb3ef426ba0bc727a3c64c873');
-const inviteWallet = new InviteWallet(
+/*const inviteWallet = new InviteWallet(
     new Web3.providers.WebsocketProvider("wss://rinkeby.infura.io/ws/v3/357ce0ddb3ef426ba0bc727a3c64c873")
-);
+);*/
 
-let bee = null;
-if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development' || User.isLovenet()) {
-    if (User.isLovenet()) {
-        console.log('Set hash only for lovenet: bf2fc34716f54565a87b490fcfd329ae6aef8421521328185a54f7483bddde97');
-        currentHash = 'bf2fc34716f54565a87b490fcfd329ae6aef8421521328185a54f7483bddde97';
-    }
-
-    console.log('dev code');
-    // dev code
-    //bee = new Core('https://swarm-gateways.net', currentHash);
-    bee = new Core('http://prototype.beefree.me', currentHash);
-    //bee = new Core('https://testeron.pro/swarm-emulator/index.php/', currentHash);
-    //bee = new Core('http://127.0.0.1:1111/index.php/', currentHash);
-    //bee = new Core('http://127.0.0.1:8500', currentHash);
-} else {
-    console.log('prod code');
-    // production code
-    bee = new Core(window.location.origin, currentHash);
-}
+let bee = new Core('http://prototype.beefree.me', currentHash);
 
 bee.onChangeHash = (hash) => {
     console.log('new hash is: ' + hash);
@@ -67,6 +51,11 @@ export const init = (userWallet = null) => {
             type: types.ARWEAVE_SET_USER_PAGE,
             data: currentUser
         });
+        if (!currentUser) {
+            console.log('currentUser is empty');
+            return;
+        }
+
         arweaveApi.getPosts(currentUser)
             .then(data => {
                 //console.log(data);
@@ -94,72 +83,6 @@ export const init = (userWallet = null) => {
                     });
                 });
             });
-        /*let profile = bee.setDispatch(dispatch);
-
-        if (!inviteWallet.isAccountExists()) {
-            console.error('Account not set');
-            return;
-        }
-
-        inviteWallet.getHashByAddress(inviteWallet.fromAddress)
-            .then((hash) => hash ? bee.setHash(hash) : bee.setHash(currentHash))
-            .then(() => bee.getMyProfile())
-            .then(data => {
-                profile = data;
-                dispatch({
-                    type: types.SOCIAL_USER_FETCHED,
-                    data,
-                    bee
-                });
-
-                return data;
-            })
-            .then(data => {
-                if (data.last_post_id) {
-                    const lastPostId = data.last_post_id;
-                    for (let i = 0; i < 10; i++) {
-                        const id = lastPostId - i;
-
-                        //console.log('ID: ' + id);
-                        if (id <= 0) {
-                            break;
-                        }
-
-                        queue.add(() => {
-                            return getPost(id, true)(dispatch);
-                        });
-                    }
-
-                    queue.add(() => {
-                        dispatch({
-                            type: types.SOCIAL_INIT
-                        });
-                    });
-                }
-            })
-            .then(() => inviteWallet.getUsername(inviteWallet.fromAddress))
-            .then(username => dispatch({
-                type: types.SOCIAL_USERNAME,
-                data: username
-            }))
-            .then(_ => inviteWallet.getUserIdByAddress(inviteWallet.fromAddress))
-            .then(userId => {
-                dispatch({
-                    type: types.RECEIVED_USER_ID,
-                    data: Number(userId)
-                });
-            })
-            .then(() => {
-                let iFollowList = User.getIFollow(profile);
-                iFollowList.forEach(userId => {
-                    userId = Number(userId);
-                    getFriendInfo(userId)(dispatch);
-                });
-            })
-            .catch(error => {
-                // todo dispatch error
-                console.error(error.message);
-            });*/
     };
 };
 
@@ -388,7 +311,7 @@ export const getAvatarByHash = (swarmHash) => {
 
 export const inviteSetAccount = (wallet, privateKey) => {
     return dispatch => {
-        inviteWallet.setAccount(wallet, privateKey);
+        //inviteWallet.setAccount(wallet, privateKey);
         dispatch({
             type: types.INVITE_SET_ACCOUNT,
             data: {}
@@ -406,7 +329,7 @@ export const createInvite = (balance) => {
             alert('Empty address or private key');
         }
 
-        inviteWallet.setAccount(socialAddress, socialPrivateKey);
+        /*inviteWallet.setAccount(socialAddress, socialPrivateKey);
 
         const invite = InviteWallet.randomString(10);
         let walletData = null;
@@ -508,7 +431,7 @@ export const createInvite = (balance) => {
             .catch(error => dispatch({
                 type: types.INVITE_INVITE_FAILED,
                 data: error.message
-            }));
+            }));*/
     }
 };
 
@@ -517,7 +440,7 @@ export const getSwarmWallet = (address, password) => {
         dispatch({
             type: types.INVITE_SWARM_WALLET_BY_ADDRESS_START
         });
-        return inviteWallet.getWalletHashByAddress(address)
+        /*return inviteWallet.getWalletHashByAddress(address)
             .then(swarmHash => {
                 dispatch({
                     type: types.INVITE_SWARM_WALLET_BY_ADDRESS_HASH_RECEIVED,
@@ -552,7 +475,7 @@ export const getSwarmWallet = (address, password) => {
                     type: types.INVITE_SWARM_WALLET_BY_ADDRESS_FAILED,
                     data: error
                 })
-            );
+            );*/
     };
 };
 
@@ -569,7 +492,7 @@ export const registerUser = (invite, username, password) => {
                 throw new Error('Please, enter invite, username and password');
             }
 
-            parsedInvite = InviteWallet.parseInvite(invite);
+            //parsedInvite = InviteWallet.parseInvite(invite);
         } catch (error) {
             dispatch({
                 type: types.INVITE_REGISTRATION_FAILED,
@@ -583,7 +506,7 @@ export const registerUser = (invite, username, password) => {
             data: 'Getting wallet information by invite...'
         });
 
-        return inviteWallet.getWalletHashByAddress(parsedInvite.address)
+        /*return inviteWallet.getWalletHashByAddress(parsedInvite.address)
             .then(swarmHash => {
                 dispatch({
                     type: types.INVITE_REGISTRATION_STATUS,
@@ -673,7 +596,7 @@ export const registerUser = (invite, username, password) => {
                     type: types.INVITE_REGISTRATION_FAILED,
                     data: error.message
                 })
-            );
+            );*/
     };
 };
 
@@ -729,7 +652,7 @@ export const login = (username, password) => {
         let walletSwarmHash = '';
         let privateKey = '';
 
-        return inviteWallet.getAddressByUsername(username)
+        /*return inviteWallet.getAddressByUsername(username)
             .then(address => address === '0x0000000000000000000000000000000000000000' || !address ? null : address)
             .then(adr => {
                 console.log('address is ' + adr);
@@ -741,7 +664,7 @@ export const login = (username, password) => {
 
                 return adr;
             })
-            .then(address => inviteWallet.getWalletHashByAddress(address))
+            //.then(address => inviteWallet.getWalletHashByAddress(address))
             .then(swarmHash => {
                 console.log('hash is ' + swarmHash);
 
@@ -759,17 +682,14 @@ export const login = (username, password) => {
             })
             .then(swarmHash => bee.downloadWallet(swarmHash))
             .then(data => data.json())
-            .then(data => inviteWallet.validate(data, password).catch(() => null))
+            //.then(data => inviteWallet.validate(data, password).catch(() => null))
             .then(pKey => {
                 console.log('pk is ' + pKey);
                 if (pKey) {
                     privateKey = pKey;
-                    inviteWallet.setAccount(address, pKey);
+                    //inviteWallet.setAccount(address, pKey);
                 } else {
-                    /*dispatch({
-                        type: types.AUTH_INCORRECT_DATA,
-                        data: 'Incorrect password'
-                    });*/
+
                     throw new Error("Incorrect password");
                 }
             })
@@ -797,7 +717,7 @@ export const login = (username, password) => {
                     type: types.AUTH_FAILED,
                     data: error.message
                 })
-            );
+            );*/
     };
 };
 
@@ -826,7 +746,7 @@ export const saveChanges = () => {
             data: bee.currentHash
         });
 
-        inviteWallet.setHash(bee.currentHash)
+        /*inviteWallet.setHash(bee.currentHash)
             .then(data => dispatch({
                 type: types.CHANGES_SAVE_COMPLETE,
                 data
@@ -835,7 +755,7 @@ export const saveChanges = () => {
             .catch(error => dispatch({
                 type: types.CHANGES_SAVE_FAILED,
                 data: error.message
-            }));
+            }));*/
     };
 };
 
@@ -857,7 +777,7 @@ export const findUser = (username) => {
             return;
         }
 
-        inviteWallet.findUser(username)
+        /*inviteWallet.findUser(username)
             .then(data => {
                 if (data && data.Username) {
                     getAvatarByHash(data.SwarmHash)(dispatch);
@@ -871,7 +791,7 @@ export const findUser = (username) => {
             .catch(error => dispatch({
                 type: types.FIND_USER_FAILED,
                 data: error.message
-            }));
+            }));*/
     };
 };
 
@@ -879,14 +799,14 @@ export const getFriendInfo = (userId) => {
     userId = Number(userId);
 
     return dispatch => {
-        return inviteWallet.getUserInfo(userId)
+        /*return inviteWallet.getUserInfo(userId)
             .then(data => {
                 data.userId = userId;
                 dispatch({
                     type: types.RECEIVED_I_FOLLOW_USER,
                     data
                 });
-            });
+            });*/
     };
 };
 
@@ -929,7 +849,7 @@ export const addMessage = (toUserId, message) => {
             id: Math.floor(Math.random() * 100000000) + 1000000
         });
 
-        inviteWallet.addMessage(toUserId, message)
+        /*inviteWallet.addMessage(toUserId, message)
             .then(data => {
                 dispatch({
                     type: types.SEND_MESSAGE_COMPLETE,
@@ -945,7 +865,7 @@ export const addMessage = (toUserId, message) => {
                 data: error.message,
                 toUserId,
                 message
-            }));
+            }));*/
     };
 };
 
@@ -961,7 +881,7 @@ export const loadMessages = (fromUserId, toUserId) => {
             }
         });
 
-        inviteWallet.getMessages(fromUserId, toUserId)
+        /*inviteWallet.getMessages(fromUserId, toUserId)
             .then(data => {
                 data = data.map(item => Number(item));
                 dispatch({
@@ -990,7 +910,7 @@ export const loadMessages = (fromUserId, toUserId) => {
                 data: error.message,
                 fromUserId,
                 toUserId
-            }));
+            }));*/
     };
 };
 

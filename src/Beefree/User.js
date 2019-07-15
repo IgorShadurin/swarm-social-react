@@ -1,7 +1,8 @@
 import BaseObject from "./BaseObject";
-import defaultAvatar from '../img/user/weave.png'
+//import defaultAvatar from '../img/user/weave.png'
 import lovenetAvatar from '../img/user/butterfly-real.jpg'
 import ObjectConstructor from "./ObjectConstructor";
+import defaultAvatar from '../img/avatar'
 
 export default class User extends BaseObject {
     constructor(data = {}) {

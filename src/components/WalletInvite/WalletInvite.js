@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import './WalletInvite.css';
 import {connect} from "react-redux";
 import * as actions from "../../store/social/actions";
-import InviteWallet from "../../libs/InviteWallet/InviteWallet";
+//import InviteWallet from "../../libs/InviteWallet/InviteWallet";
 
 class WalletInvite extends Component {
     constructor() {
@@ -90,7 +90,8 @@ class WalletInvite extends Component {
     render() {
         const {invites, isCreateInvite, createInviteError, createInviteStatus} = this.props;
         const invitesData = invites.map((item, index) => {
-            const url = InviteWallet.createInviteFromData(item.address, item.password);
+            //const url = InviteWallet.createInviteFromData(item.address, item.password);
+            const url = '';
             return <div key={index}>
                 {/*<p>
                     Address: {item.address}

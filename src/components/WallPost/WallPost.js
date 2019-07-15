@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import User from "../../Beefree/User";
 import * as actions from "../../store/social/actions";
-import date from "date-and-time";
+//import date from "date-and-time";
 import arweaveApi from '../../api';
 
 class WallAttachmentImage extends Component {
@@ -127,7 +127,7 @@ class WallPost extends Component {
                                             {fullName}
                                         </p>
                                         <p className="date cursor-pointer" onClick={this.onPostClick}>
-                                            {itemDate ? date.format(itemDate, 'ddd MMM DD YYYY') : ''}
+
                                         </p>
                                     </div>
                                 </div>
