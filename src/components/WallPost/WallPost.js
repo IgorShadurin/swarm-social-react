@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import User from "../../Beefree/User";
 import * as actions from "../../store/social/actions";
 import date from "date-and-time";
+import arweaveApi from '../../api';
 
 class WallAttachmentImage extends Component {
     constructor(props) {
@@ -38,11 +39,12 @@ class WallPost extends Component {
         };
     }
 
-    onLike = (e, id) => {
+    onLike = async (e, id) => {
         e.preventDefault();
-        //console.log(id);
-        // todo move content type to consts
-        this.props.doLike('post', id);
+        const {arweave_user_page} = this.props;
+
+        await arweaveApi.sendDonate(arweave_user_page, 1, localStorage.getItem('social_private_key'));
+        alert('Donate sent! Wait 10-30 minutes to complete transaction');
     };
 
     onDislike = (e, id) => {
@@ -169,7 +171,7 @@ class WallPost extends Component {
                             <div className="post-end">
                                 <div className="likes-wrap">
                                     <span className="like cursor-pointer" onClick={(e) => this.onLike(e, item.id)}>
-                                        <i className="fas fa-thumbs-up"/> {/*<span>0</span>*/} <span>+0.1 AR</span>
+                                        <i className="fas fa-thumbs-up"/> {/*<span>0</span>*/} <span>+1 AR</span>
                                     </span>
                                 </div>
                                 {/*<div className="share-wrap cursor-pointer">
@@ -200,6 +202,7 @@ const mapStateToProps = state => ({
     user: state.social.user,
     previews: state.social.previews,
     username: state.social.username,
+    arweave_user_page: state.social.arweave_user_page,
 });
 
 export default connect(mapStateToProps, actions)(WallPost);

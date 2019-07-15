@@ -37,6 +37,7 @@ class UserFollowings extends Component {
         }
 
         addFriend(this.state.username);
+        alert('Transaction sent! Wait and check your friend list in 10-30 minutes');
     };
 
     /*onFindByUsername = () => {
@@ -68,7 +69,7 @@ class UserFollowings extends Component {
     render() {
         const {isFindUser, findUserError, foundUsers, avatars, iFollow, iFollowWait, currentDialogMessages, messages, username, isSendMessage} = this.props;
         let users = iFollow.map((item, index) => {
-                const shortItem = '...' + item.substr(10);
+                const shortItem = '...' + item.substr(13);
                 return (
                     <div key={index} className="item">
                         <div className="container">
@@ -254,6 +255,7 @@ class UserFollowings extends Component {
 
                                     {!isFindUser && <button className="btn btn-primary"
                                                             disabled={this.state.username.length === 0}
+                                                            data-dismiss="modal"
                                                             onClick={this.onAddToFriends}>
                                         Add
                                     </button>}

@@ -143,15 +143,19 @@ export const uploadFile = async (content, name, size, wallet) => {
     return true;
 };
 
-export const sendDonate = async (toWallet, sum) => {
-    /*const transaction = await arweave.createTransaction({data: content}, wallet);
-    transaction.addTag('name', name);
-    transaction.addTag('size', size);
+export const sendDonate = async (toWallet, sum, wallet) => {
+    if (typeof wallet === "string") {
+        wallet = JSON.parse(wallet);
+    }
+
+    console.log(toWallet, sum);
+    let transaction = await arweave.createTransaction({
+        target: toWallet,
+        quantity: arweave.ar.arToWinston(sum)
+    }, wallet);
 
     await arweave.transactions.sign(transaction, wallet);
-    await arweave.transactions.post(transaction);*/
-
-    return true;
+    return await arweave.transactions.post(transaction);
 };
 
 export default {createPost, getPosts, addFriend, getFriends, sendDonate};

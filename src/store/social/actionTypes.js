@@ -74,5 +74,6 @@ export const MESSAGES_LOAD_FAILED = 'messages.load_failed';
 export const MESSAGE_LOADED = 'message.loaded';
 
 export const ARWEAVE_SET_WALLET = 'arweave.set_wallet';
+export const ARWEAVE_SET_USER_PAGE = 'arweave.set_user_page';
 export const SOCIAL_WALL_POST_CLEAR = 'wall.clear';
 export const I_FOLLOW_CLEAR = 'i_follow.clear';

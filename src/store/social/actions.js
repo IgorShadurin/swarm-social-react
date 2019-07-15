@@ -63,6 +63,10 @@ export const init = (userWallet = null) => {
 
         const address = localStorage.getItem('social_address');
         const currentUser = userWallet ? userWallet : address;
+        dispatch({
+            type: types.ARWEAVE_SET_USER_PAGE,
+            data: currentUser
+        });
         arweaveApi.getPosts(currentUser)
             .then(data => {
                 //console.log(data);

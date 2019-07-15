@@ -282,6 +282,10 @@ export default function reduce(state = initialState, action = {}) {
                 arweave_wallet: action.data.wallet,
                 arweave_address: action.data.address,
             });
+        case types.ARWEAVE_SET_USER_PAGE:
+            return state.merge({
+                arweave_user_page: action.data
+            });
         default:
             return state;
     }

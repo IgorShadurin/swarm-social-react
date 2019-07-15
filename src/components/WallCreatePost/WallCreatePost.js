@@ -52,6 +52,7 @@ class WallCreatePost extends Component {
         this.setState({
             text: ''
         });
+        alert('Post sent! Wait 10-30 minutes to complete transaction');
     };
 
     onUserClick = () => {
