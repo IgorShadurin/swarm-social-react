@@ -28,6 +28,7 @@ export const getPosts = async walletAddress => {
         }
     };
 
+    // todo order by date
     const txids = await arweave.arql(query);
     let transactions = await Promise.all(txids.map(txid => arweave.transactions.get(txid)));
     transactions = transactions.map(tx => {
@@ -48,6 +49,44 @@ export const getPosts = async walletAddress => {
     return transactions;
 };
 
+export const getFriends = async walletAddress => {
+    const query = {
+        op: 'and',
+        expr1: {
+            op: 'equals',
+            expr1: 'from',
+            expr2: walletAddress
+        },
+        expr2: {
+            op: 'and',
+            expr1: {
+                op: 'equals',
+                expr1: 'app-name',
+                expr2: appName
+            },
+            expr2: {
+                op: 'equals',
+                expr1: 'weave-type',
+                expr2: 'friend'
+            }
+        }
+    };
+
+    const txids = await arweave.arql(query);
+    let transactions = await Promise.all(txids.map(txid => arweave.transactions.get(txid)));
+    transactions = transactions.map(tx => {
+        let result = tx.get('data', {decode: true, string: true});
+
+        console.log(tx);
+        console.log(result);
+
+        return result;
+    }).filter(item => item != null);
+
+    console.log(transactions);
+    return transactions;
+};
+
 export const createPost = async (description, attachments, wallet) => {
     if (typeof wallet === "string") {
         wallet = JSON.parse(wallet);
@@ -55,6 +94,7 @@ export const createPost = async (description, attachments, wallet) => {
 
     console.log(wallet);
 
+    // todo store date
     const data = {
         description,
         attachments: []
@@ -73,6 +113,25 @@ export const createPost = async (description, attachments, wallet) => {
     return data;
 };
 
+export const addFriend = async (friendWallet, wallet) => {
+    if (typeof wallet === "string") {
+        wallet = JSON.parse(wallet);
+    }
+
+    console.log(wallet);
+    const transaction = await arweave.createTransaction({
+        data: friendWallet
+    }, wallet);
+    transaction.addTag('weave-type', 'friend');
+    transaction.addTag('app-name', appName);
+
+    await arweave.transactions.sign(transaction, wallet);
+    const result = await arweave.transactions.post(transaction);
+    console.log(result);
+
+    return friendWallet;
+};
+
 export const uploadFile = async (content, name, size, wallet) => {
     const transaction = await arweave.createTransaction({data: content}, wallet);
     transaction.addTag('name', name);
@@ -84,4 +143,15 @@ export const uploadFile = async (content, name, size, wallet) => {
     return true;
 };
 
-export default {createPost, getPosts};
+export const sendDonate = async (toWallet, sum) => {
+    /*const transaction = await arweave.createTransaction({data: content}, wallet);
+    transaction.addTag('name', name);
+    transaction.addTag('size', size);
+
+    await arweave.transactions.sign(transaction, wallet);
+    await arweave.transactions.post(transaction);*/
+
+    return true;
+};
+
+export default {createPost, getPosts, addFriend, getFriends, sendDonate};

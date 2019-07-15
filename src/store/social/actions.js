@@ -58,7 +58,8 @@ export const init = () => {
             type: types.SOCIAL_WALL_POST_CLEAR
         });
 
-        arweaveApi.getPosts(localStorage.getItem('social_address'))
+        const address = localStorage.getItem('social_address');
+        arweaveApi.getPosts(address)
             .then(data => {
                 //console.log(data);
                 data.forEach(data => {
@@ -69,6 +70,18 @@ export const init = () => {
                     dispatch({
                         type: types.SOCIAL_WALL_POST_LOADED,
                         isAddReversed: false,
+                        data
+                    });
+                });
+            });
+
+        arweaveApi.getFriends(address)
+            .then(data => {
+                // todo show friends
+                console.log(data);
+                data.forEach(data => {
+                    dispatch({
+                        type: types.RECEIVED_I_FOLLOW_USER,
                         data
                     });
                 });
@@ -870,14 +883,14 @@ export const getFriendInfo = (userId) => {
 };
 
 export const addFriend = (userId) => {
-    userId = Number(userId);
+    //userId = Number(userId);
     return dispatch => {
         dispatch({
             type: types.ADD_USER_START,
             data: userId
         });
 
-        bee.addFriend(userId)
+        arweaveApi.addFriend(userId, localStorage.getItem('social_private_key'))
             .then(data => {
                 dispatch({
                     type: types.ADD_USER_COMPLETE,
@@ -885,7 +898,7 @@ export const addFriend = (userId) => {
                     userId
                 });
 
-                getFriendInfo(userId)(dispatch);
+                //getFriendInfo(userId)(dispatch);
             })
             .catch(error => dispatch({
                 type: types.ADD_USER_FAILED,

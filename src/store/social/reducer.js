@@ -246,7 +246,7 @@ export default function reduce(state = initialState, action = {}) {
                 iFollowWait: state.iFollowWait.filter(item => Number(item) !== Number(action.userId))
             });
         case types.RECEIVED_I_FOLLOW_USER:
-            if (action.data && action.data.Username) {
+            if (action.data) {
                 items = Immutable.asMutable(state.iFollow);
                 items.push(action.data);
                 return state.merge({

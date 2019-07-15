@@ -4,6 +4,7 @@ import {connect} from "react-redux";
 import * as actions from "../../store/social/actions";
 import User from "../../Beefree/User";
 import defaultAvatar from './../../img/user/weave.png'
+import {Link} from "react-router-dom";
 
 class UserFollowings extends Component {
     constructor(props) {
@@ -28,16 +29,20 @@ class UserFollowings extends Component {
         e.preventDefault();
     };
 
-    onAddToFriends = (userId) => {
+    onAddToFriends = () => {
         const {addFriend} = this.props;
-        console.log('onAddToFriends', userId);
-        addFriend(userId);
+        if (this.state.username.length <= 0) {
+            alert('Enter user wallet');
+            return;
+        }
+
+        addFriend(this.state.username);
     };
 
-    onFindByUsername = () => {
+    /*onFindByUsername = () => {
         const {findUser} = this.props;
         findUser(this.state.username);
-    };
+    };*/
 
     onUserMail = (toUserId) => {
         const {loadMessages, userId} = this.props;
@@ -63,25 +68,24 @@ class UserFollowings extends Component {
     render() {
         const {isFindUser, findUserError, foundUsers, avatars, iFollow, iFollowWait, currentDialogMessages, messages, username, isSendMessage} = this.props;
         let users = iFollow.map((item, index) => {
+                const shortItem = '...' + item.substr(10);
                 return (
                     <div key={index} className="item">
                         <div className="container">
                             <div className="row">
                                 <div className="col-9">
                                     <div className="l-bar">
-                                        <div className="avatar-wrap">
-                                            <img src={User.getAvatar(item)} alt="User avatar"/>
-                                        </div>
+
                                         <div className="nickname-wrap">
                                             <p>
-                                            <span className="following-username" onClick={this.onUsernameClick}>
-                                                @{item.Username}
+                                            <span className="following-username">
+                                                <Link to={`./${item}`}>{shortItem}</Link>
                                             </span>
                                             </p>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-3">
+                                {/*<div className="col-3">
                                     <button className="btn btn-primary-outline"
                                             data-toggle="modal"
                                             data-target="#messagesModal"
@@ -94,7 +98,7 @@ class UserFollowings extends Component {
                                             <span>{User.getNotifications(item)}</span>
                                         </div>
                                     </div>*/}
-                                </div>
+                                {/*</div>*/}
                             </div>
                         </div>
                     </div>
@@ -232,10 +236,10 @@ class UserFollowings extends Component {
                                 </div>}
 
                                 <div className="form-group">
-                                    <label>Find by Username</label>
+                                    <label>Add by wallet</label>
                                     <input type="text"
                                            className="form-control"
-                                           placeholder="Username"
+                                           placeholder="Wallet"
                                            onChange={this.onChange}
                                            data-field="username"
                                            value={this.state.username}/>
@@ -250,8 +254,8 @@ class UserFollowings extends Component {
 
                                     {!isFindUser && <button className="btn btn-primary"
                                                             disabled={this.state.username.length === 0}
-                                                            onClick={this.onFindByUsername}>
-                                        Find
+                                                            onClick={this.onAddToFriends}>
+                                        Add
                                     </button>}
                                 </div>
 
