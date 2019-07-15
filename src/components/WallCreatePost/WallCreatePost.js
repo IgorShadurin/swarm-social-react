@@ -110,10 +110,10 @@ class WallCreatePost extends Component {
                             </div>
                             <div className="btns-wrap">
                                 <div className="btns">
-                                    <i className="fas fa-images cursor-pointer WallCreatePost-attach"
+                                    {/*<i className="fas fa-images cursor-pointer WallCreatePost-attach"
                                        onClick={this.attachImage}/>
                                     <i className="fas fa-video cursor-pointer WallCreatePost-attach"
-                                       onClick={this.attachVideo}/>
+                                       onClick={this.attachVideo}/>*/}
                                     <button
                                         className="btn btn-primary"
                                         disabled={this.isPostButtonDisabled()}

@@ -50,6 +50,29 @@ class App extends Component {
             isAuth: false,
             invite
         };
+
+        this.currentUser = null;
+        setInterval(this.checkUser, 300);
+    }
+
+    checkUser = () => {
+        let currentPath = window.location.pathname.replace('/', '');
+        currentPath = currentPath ? currentPath : null;
+        //console.log(currentPath);
+        if (currentPath !== this.currentUser) {
+            if (!currentPath || currentPath.length === 43) {
+                console.log('user changed', currentPath);
+                this.currentUser = currentPath;
+                this.props.init(this.currentUser);
+            }
+        }
+    };
+
+    componentDidUpdate(prevProps, prevState) {
+        console.log(this.props);
+        /*if (this.props.location !== prevProps.location) {
+            this.onRouteChanged();
+        }*/
     }
 
     componentDidMount() {

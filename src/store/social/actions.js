@@ -52,14 +52,18 @@ bee.onChangeHash = (hash) => {
 
 const queue = new Queue(1, Infinity);
 
-export const init = () => {
+export const init = (userWallet = null) => {
     return (dispatch) => {
         dispatch({
             type: types.SOCIAL_WALL_POST_CLEAR
         });
+        dispatch({
+            type: types.I_FOLLOW_CLEAR
+        });
 
         const address = localStorage.getItem('social_address');
-        arweaveApi.getPosts(address)
+        const currentUser = userWallet ? userWallet : address;
+        arweaveApi.getPosts(currentUser)
             .then(data => {
                 //console.log(data);
                 data.forEach(data => {
@@ -69,13 +73,13 @@ export const init = () => {
 
                     dispatch({
                         type: types.SOCIAL_WALL_POST_LOADED,
-                        isAddReversed: false,
+                        isAddReversed: true,
                         data
                     });
                 });
             });
 
-        arweaveApi.getFriends(address)
+        arweaveApi.getFriends(currentUser)
             .then(data => {
                 // todo show friends
                 console.log(data);

@@ -89,7 +89,7 @@ class Navigation extends Component {
                                                 {balance ? `AR ${balance}` : '...'}
                                             </p>
                                             <p>
-                                                <a href={`https://viewblock.io/arweave/address/${arweave_address}`}
+                                                <a href={`https://arscan.io/address/${arweave_address}`}
                                                    target="_blank">{arweave_address}</a>
                                             </p>
                                         </div>

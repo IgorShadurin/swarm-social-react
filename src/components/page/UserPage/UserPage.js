@@ -7,7 +7,13 @@ import Wall from "../../Wall";
 import ImportData from "../../ImportData";
 
 class UserPage extends Component {
+    constructor(props) {
+        super(props);
+        console.log(this.props.match.params.hash);
+    }
+
     render() {
+        console.log(this.props.match.params.hash);
         return (
             <Fragment>
                 <div className="row">
