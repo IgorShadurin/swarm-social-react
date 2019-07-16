@@ -12,4 +12,4 @@ Social network based on Arweave. You can create text posts, add friends, view fr
 
 Video demo: https://youtu.be/K751rKPPZ6o
 
-Last build: https://arweave.net/gG1sW-AKRayXdip-YfiRkBDpqv5QnQdTXxxdSuKc-uM
+Last build: https://arweave.net/VunvbV4jJENn9yHaCi0E0mHHnqhLf_nQ0Q2tOHA0YHk
