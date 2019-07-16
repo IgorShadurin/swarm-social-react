@@ -1,7 +1,7 @@
 import * as types from './actionTypes';
 import Core from '../../Beefree/Core';
 import Utils from '../../Beefree/Utils';
-import Queue from 'promise-queue';
+//import Queue from 'promise-queue';
 //import InviteWallet from "../../libs/InviteWallet/InviteWallet";
 import Web3 from 'web3';
 import User from "../../Beefree/User";
@@ -34,7 +34,7 @@ bee.onChangeHash = (hash) => {
     });
 };
 
-const queue = new Queue(1, Infinity);
+//const queue = new Queue(1, Infinity);
 
 export const init = (userWallet = null) => {
     return (dispatch) => {
@@ -117,7 +117,7 @@ export const getProfile = (hash) => {
 
 export const saveMyProfile = (data) => {
     return dispatch => {
-        queue.add(() => {
+        /*queue.add(() => {
             bee.saveProfile(data)
                 .then(responseData => {
                     console.log(responseData);
@@ -127,13 +127,13 @@ export const saveMyProfile = (data) => {
                         data: responseData.data
                     });
                 });
-        });
+        });*/
     }
 };
 
 export const createWallPost = (description, attachments) => {
     return (dispatch, getState) => {
-        queue.add(() => {
+        /*queue.add(() => {
             dispatch({
                 type: types.SOCIAL_WALL_POST_STARTED
             });
@@ -147,7 +147,7 @@ export const createWallPost = (description, attachments) => {
 
                     return dispatch(dispatchData);
                 });
-        });
+        });*/
     }
 };
 
@@ -158,7 +158,7 @@ export const updateWallPost = (id, data) => {
             data
         });
 
-        queue.add(() => {
+        /*queue.add(() => {
             return bee.updatePost(id, data)
                 .then(result => {
                     const dispatchData = {
@@ -168,13 +168,13 @@ export const updateWallPost = (id, data) => {
 
                     return dispatch(dispatchData);
                 });
-        });
+        });*/
     }
 };
 
 export const deleteWallPost = (id) => {
     return (dispatch, getState) => {
-        queue.add(() => {
+        /*queue.add(() => {
             //console.log('run');
             dispatch({
                 type: types.SOCIAL_WALL_POST_DELETING,
@@ -191,7 +191,7 @@ export const deleteWallPost = (id) => {
 
                     return dispatch(dispatchData);
                 });
-        });
+        });*/
     }
 };
 
@@ -239,7 +239,7 @@ export const uploadUserFile = (uploadId, file, fileType) => {
             }
         });
 
-        queue.add(() => {
+        /*queue.add(() => {
             return Utils.resizeImages(file, [
                 {
                     width: 100,
@@ -278,7 +278,7 @@ export const uploadUserFile = (uploadId, file, fileType) => {
                         data
                     });
                 });
-        });
+        });*/
 
     }
 };

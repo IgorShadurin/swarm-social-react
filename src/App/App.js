@@ -15,7 +15,7 @@ import LoginRegisterPage from "../components/page/LoginRegisterPage";
 import ConfigPage from "../components/page/ConfigPage/ConfigPage";
 //import InviteWallet from "../libs/InviteWallet/InviteWallet";
 import KeyUpload from "../components/Arweave/KeyUpload";
-import 'antd/dist/antd.css';
+//import 'antd/dist/antd.css';
 
 //library.add(faComment, faWallet, faCog);
 

@@ -4,7 +4,7 @@ import Post from "./Post";
 import File from "./File";
 import ObjectConstructor from "./ObjectConstructor";
 import CoreResponse from "./CoreResponse";
-import Queue from 'promise-queue';
+//import Queue from 'promise-queue';
 
 export const FILE_TYPE_ANY_BINARY = 'any_binary';
 export const FILE_TYPE_IMAGE = 'image';
@@ -269,7 +269,7 @@ export default class Core {
      * @returns {Promise<any>}
      */
     uploadUserFile(file, type = File, previews = []) {
-        const queue = new Queue(1, Infinity);
+        /*const queue = new Queue(1, Infinity);
         let id = this._getProfileParam('last_file_id', 0) + 1;
         let user = this._getUserData();
         user = Object.assign({}, user, {
@@ -320,7 +320,7 @@ export default class Core {
             queue.add(() => {
                 resolve(returnData);
             });
-        });
+        });*/
     }
 
     /**
