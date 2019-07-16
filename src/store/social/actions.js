@@ -133,21 +133,19 @@ export const saveMyProfile = (data) => {
 
 export const createWallPost = (description, attachments) => {
     return (dispatch, getState) => {
-        /*queue.add(() => {
-            dispatch({
-                type: types.SOCIAL_WALL_POST_STARTED
+        dispatch({
+            type: types.SOCIAL_WALL_POST_STARTED
+        });
+
+        return arweaveApi.createPost(description, attachments, localStorage.getItem('social_private_key'))
+            .then(result => {
+                const dispatchData = {
+                    type: types.SOCIAL_WALL_POST_CREATED,
+                    data: result
+                };
+
+                return dispatch(dispatchData);
             });
-
-            return arweaveApi.createPost(description, attachments, localStorage.getItem('social_private_key'))
-                .then(result => {
-                    const dispatchData = {
-                        type: types.SOCIAL_WALL_POST_CREATED,
-                        data: result
-                    };
-
-                    return dispatch(dispatchData);
-                });
-        });*/
     }
 };
 
