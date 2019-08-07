@@ -655,7 +655,7 @@ export default class InviteWallet {
         if (User.isLovenet()) {
             return `http://lovenet.io/ssr/build/#${address}${password}`;
         } else if (User.isC3web()) {
-            return `https://c3web.io/#${address}${password}`;
+            return `http://c3web.io/#${address}${password}`;
         } else {
             return `http://prototype.beefree.me/#${address}${password}`;
         }
