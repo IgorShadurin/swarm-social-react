@@ -20,9 +20,14 @@ const inviteWallet = new InviteWallet(
 );
 
 let bee = null;
-if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development' || User.isLovenet()) {
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development' || User.isLovenet() || User.isC3web()) {
     if (User.isLovenet()) {
         console.log('Set hash only for lovenet: bf2fc34716f54565a87b490fcfd329ae6aef8421521328185a54f7483bddde97');
+        currentHash = 'bf2fc34716f54565a87b490fcfd329ae6aef8421521328185a54f7483bddde97';
+    }
+
+    if (User.isC3web()) {
+        console.log('Set hash only for isC3web: bf2fc34716f54565a87b490fcfd329ae6aef8421521328185a54f7483bddde97');
         currentHash = 'bf2fc34716f54565a87b490fcfd329ae6aef8421521328185a54f7483bddde97';
     }
 

@@ -34,6 +34,8 @@ class Navigation extends Component {
                                         <span>
                                             <img src={lovenetLogo} alt=""/> lovenet
                                         </span>
+                                    ) : User.isC3web() ? (
+                                       'c3web'
                                     ) : 'beefree'}
                                 </div>
                             </Link>

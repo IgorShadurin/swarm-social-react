@@ -77,6 +77,11 @@ export default class User extends BaseObject {
         return window.location.host === 'lovenet.io' || window.location.host === 'www.lovenet.io';
     }
 
+    static isC3web() {
+        return window.location.host === 'localhost:3000';
+        //return window.location.host === 'c3web.io' || window.location.host === 'www.c3web.io';
+    }
+
     static getIFollow(user) {
         return user && user.i_follow ? user.i_follow : []
     }

@@ -47,7 +47,8 @@ const store = configureStore(Immutable({
         messages: {},
         isSendMessage: false,
         currentDialogMessages: [],
-        isLovenet: User.isLovenet()
+        isLovenet: User.isLovenet(),
+        isC3Web: User.isC3web(),
     }
 }));
 
