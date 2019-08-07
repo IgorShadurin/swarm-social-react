@@ -78,8 +78,8 @@ export default class User extends BaseObject {
     }
 
     static isC3web() {
-        return window.location.host === 'localhost:3000';
-        //return window.location.host === 'c3web.io' || window.location.host === 'www.c3web.io';
+        //return window.location.host === 'localhost:3000';
+        return window.location.host === 'c3web.io' || window.location.host === 'www.c3web.io';
     }
 
     static getIFollow(user) {
