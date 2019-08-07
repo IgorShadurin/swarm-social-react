@@ -521,7 +521,7 @@ export default class InviteWallet {
     }
 
     setAccount(fromAddress, privateKey) {
-        this.fromAddress = fromAddress;
+        this.fromAddress = fromAddress.toLowerCase();
         //this.privateKey = new Buffer(privateKey, 'hex');
         this.privateKey = toBuffer(privateKey);
         //this.privateKey = Buffer.from(privateKey, 'utf8');
@@ -754,8 +754,7 @@ export default class InviteWallet {
 
         return this.getTransactionData(this.contractAddress, value, dataF)
             .then(rawTx => {
-                const tx = new EthereumTx(rawTx);
-                console.log(this.privateKey);
+                const tx = new EthereumTx(rawTx, {chain: 'rinkeby'});
                 tx.sign(this.privateKey);
                 let serializedTx = tx.serialize();
                 serializedTx = '0x' + serializedTx.toString('hex');
@@ -765,11 +764,6 @@ export default class InviteWallet {
                     this.web3.eth.sendSignedTransaction(serializedTx)
                         .once('transactionHash', function (hash) {
                             console.log(hash);
-                            /*console.log('wait 20 secs');
-                            setTimeout(() => {
-                                resolve(hash);
-                            }, 20000);*/
-
                         })
                         .on('receipt', function (receipt) {
                             console.log(receipt);
