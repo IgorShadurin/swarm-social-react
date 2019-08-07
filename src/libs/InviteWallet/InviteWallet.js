@@ -1,8 +1,9 @@
-import keythereum from 'keythereum';
+import ethWallet from 'ethereumjs-wallet';
 import crypto from 'crypto';
-import EthereumTx from 'ethereumjs-tx';
+import {Transaction as EthereumTx} from 'ethereumjs-tx';
 import Web3 from 'web3';
 import User from "../../Beefree/User";
+import {toBuffer} from 'ethereumjs-util';
 
 export const NETWORK_MAIN = 1;
 export const NETWORK_ROPSTEN = 3;
@@ -521,7 +522,11 @@ export default class InviteWallet {
 
     setAccount(fromAddress, privateKey) {
         this.fromAddress = fromAddress;
-        this.privateKey = new Buffer(privateKey, 'hex');
+        //this.privateKey = new Buffer(privateKey, 'hex');
+        this.privateKey = toBuffer(privateKey);
+        //this.privateKey = Buffer.from(privateKey, 'utf8');
+        //console.log(privateKey);
+        //this.privateKey = (privateKey);
 
         return true;
     }
@@ -532,12 +537,23 @@ export default class InviteWallet {
 
     createWallet(password = null) {
         return new Promise((resolve, reject) => {
-            const dk = keythereum.create();
+            //const dk = keythereum.create();
+            const wallet = ethWallet.generate();
             if (!password) {
                 password = InviteWallet.randomString(10);
             }
 
-            const options = {
+            const v3 = wallet.toV3(password);
+            console.log(v3);
+            console.log(wallet.getPrivateKeyString());
+            console.log(wallet.getAddressString());
+            resolve({
+                data: v3,
+                privateKey: wallet.getPrivateKeyString(),
+                password
+            });
+
+            /*const options = {
                 kdf: "pbkdf2",
                 cipher: "aes-128-ctr",
                 kdfparams: {
@@ -553,7 +569,7 @@ export default class InviteWallet {
                     privateKey: dk.privateKey.toString('hex'),
                     password
                 });
-            });
+            });*/
         });
     }
 
@@ -561,7 +577,7 @@ export default class InviteWallet {
         return new Promise((resolve, reject) => {
             this.validate(keyObject, oldPassword)
                 .then(privateKey => {
-                    const options = {
+                    /*const options = {
                         kdf: "pbkdf2",
                         cipher: "aes-128-ctr",
                         kdfparams: {
@@ -577,6 +593,12 @@ export default class InviteWallet {
                             data: keyObject,
                             privateKey: privateKey.toString('hex'),
                         });
+                    });*/
+                    const walletObject = ethWallet.fromPrivateKey(privateKey);
+                    const v3 = walletObject.toV3(newPassword);
+                    resolve({
+                        data: v3,
+                        privateKey: privateKey,
                     });
                 });
         });
@@ -590,13 +612,19 @@ export default class InviteWallet {
      */
     validate(keyObject, password) {
         return new Promise((resolve, reject) => {
-            keythereum.recover(password, keyObject, data => {
+            /*keythereum.recover(password, keyObject, data => {
                 if (data instanceof Error) {
                     reject(data);
                 } else {
                     resolve(data.toString('hex'));
                 }
-            });
+            });*/
+            try {
+                const v3 = ethWallet.fromV3(keyObject, password);
+                resolve(v3.getPrivateKeyString());
+            } catch (e) {
+                reject(e);
+            }
         });
     }
 
@@ -634,7 +662,7 @@ export default class InviteWallet {
     }
 
     getContract(fromAddress = this.fromAddress) {
-        return this.web3.eth.Contract(this.ABI, this.contractAddress, {from: fromAddress});
+        return new this.web3.eth.Contract(this.ABI, this.contractAddress, {from: fromAddress});
     }
 
     /**
@@ -652,6 +680,7 @@ export default class InviteWallet {
             chainId: 4,
             data
         };
+
         return this.web3.eth.getTransactionCount(this.fromAddress)
             .then(nonce => {
                 result.nonce = nonce;
@@ -726,6 +755,7 @@ export default class InviteWallet {
         return this.getTransactionData(this.contractAddress, value, dataF)
             .then(rawTx => {
                 const tx = new EthereumTx(rawTx);
+                console.log(this.privateKey);
                 tx.sign(this.privateKey);
                 let serializedTx = tx.serialize();
                 serializedTx = '0x' + serializedTx.toString('hex');

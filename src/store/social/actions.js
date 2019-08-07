@@ -19,6 +19,10 @@ const inviteWallet = new InviteWallet(
     new Web3.providers.WebsocketProvider("wss://rinkeby.infura.io/ws/v3/357ce0ddb3ef426ba0bc727a3c64c873")
 );
 
+inviteWallet.web3.eth.net.getId(_=>{
+    console.log(_);
+});
+
 let bee = null;
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development' || User.isLovenet() || User.isC3web()) {
     if (User.isLovenet()) {
@@ -375,6 +379,7 @@ export const createInvite = (balance) => {
         if (!socialAddress || !socialPrivateKey) {
             // todo send error
             alert('Empty address or private key');
+            return;
         }
 
         inviteWallet.setAccount(socialAddress, socialPrivateKey);

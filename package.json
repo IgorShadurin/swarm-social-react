@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "./",
   "dependencies": {
-    "@erebos/swarm-browser": "^0.6.3",
+    "@erebos/swarm-browser": "^0.8.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.18",
     "@fortawesome/free-solid-svg-icons": "^5.8.2",
     "@fortawesome/react-fontawesome": "^0.1.4",
@@ -12,11 +12,11 @@
     "bootstrap": "^4.3.1",
     "connected-react-router": "^6.4.0",
     "date-and-time": "^0.6.3",
-    "ethereumjs-tx": "^1.3.7",
-    "free-core": "git+https://github.com/SwarmOrange/free-core.git",
+    "ethereumjs-tx": "^2.1.0",
+    "ethereumjs-wallet": "^0.6.3",
+    "fsevents": "^2.0.7",
     "history": "^4.9.0",
     "jquery": "^3.4.1",
-    "keythereum": "^1.0.4",
     "npm": "^6.9.0",
     "popper.js": "^1.15.0",
     "promise-queue": "^2.2.5",
@@ -30,8 +30,7 @@
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "seamless-immutable": "^7.1.4",
-    "web3": "^1.0.0-beta.55",
-    "web3-eth-accounts": "^1.0.0-beta.55"
+    "web3": "^1.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
