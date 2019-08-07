@@ -14,7 +14,6 @@
     "date-and-time": "^0.6.3",
     "ethereumjs-tx": "^2.1.0",
     "ethereumjs-wallet": "^0.6.3",
-    "fsevents": "^2.0.7",
     "history": "^4.9.0",
     "jquery": "^3.4.1",
     "npm": "^6.9.0",
