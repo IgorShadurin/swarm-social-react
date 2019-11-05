@@ -19,13 +19,13 @@ const inviteWallet = new InviteWallet(
     new Web3.providers.WebsocketProvider("wss://rinkeby.infura.io/ws/v3/357ce0ddb3ef426ba0bc727a3c64c873")
 );
 
-inviteWallet.web3.eth.net.getId(_=>{
+inviteWallet.web3.eth.net.getId(_ => {
     console.log(_);
 });
 
 let bee = null;
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development' || User.isLovenet() || User.isC3web()) {
-    if (User.isLovenet()) {
+    /*if (User.isLovenet()) {
         console.log('Set hash only for lovenet: bf2fc34716f54565a87b490fcfd329ae6aef8421521328185a54f7483bddde97');
         currentHash = 'bf2fc34716f54565a87b490fcfd329ae6aef8421521328185a54f7483bddde97';
     }
@@ -33,15 +33,16 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development' || User.isLo
     if (User.isC3web()) {
         console.log('Set hash only for isC3web: bf2fc34716f54565a87b490fcfd329ae6aef8421521328185a54f7483bddde97');
         currentHash = 'bf2fc34716f54565a87b490fcfd329ae6aef8421521328185a54f7483bddde97';
-    }
+    }*/
+    currentHash = '62ec8f99f1515fcd925e0f8eef33b5c775e0dc1c12ef4d584a5ee5bf2c6eea44';
 
     console.log('dev code');
     // dev code
     //bee = new Core('https://swarm-gateways.net', currentHash);
-    bee = new Core('http://prototype.beefree.me', currentHash);
+    //bee = new Core('http://prototype.beefree.me', currentHash);
     //bee = new Core('https://testeron.pro/swarm-emulator/index.php/', currentHash);
     //bee = new Core('http://127.0.0.1:1111/index.php/', currentHash);
-    //bee = new Core('http://127.0.0.1:8500', currentHash);
+    bee = new Core('http://127.0.0.1:8500', currentHash);
 } else {
     console.log('prod code');
     // production code
