@@ -38,11 +38,11 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development' || User.isLo
 
     console.log('dev code');
     // dev code
-    //bee = new Core('https://swarm-gateways.net', currentHash);
+    bee = new Core('https://swarm-gateways.net', currentHash);
     //bee = new Core('http://prototype.beefree.me', currentHash);
     //bee = new Core('https://testeron.pro/swarm-emulator/index.php/', currentHash);
     //bee = new Core('http://127.0.0.1:1111/index.php/', currentHash);
-    bee = new Core('http://127.0.0.1:8500', currentHash);
+    //bee = new Core('http://127.0.0.1:8500', currentHash);
 } else {
     console.log('prod code');
     // production code
