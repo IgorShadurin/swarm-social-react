@@ -594,7 +594,7 @@ export default class InviteWallet {
                             privateKey: privateKey.toString('hex'),
                         });
                     });*/
-                    const walletObject = ethWallet.fromPrivateKey(privateKey);
+                    const walletObject = ethWallet.fromPrivateKey(toBuffer(privateKey));
                     const v3 = walletObject.toV3(newPassword);
                     resolve({
                         data: v3,
